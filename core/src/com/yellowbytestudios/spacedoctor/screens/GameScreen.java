@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
         //Setup camera.
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
-        world = new World(new Vector2(0, -5f), true);
+        world = new World(new Vector2(0, -9.8f), true);
 
         b2dr = new Box2DDebugRenderer();
         b2dCam = new BoundedCamera();
@@ -76,6 +76,7 @@ public class GameScreen implements Screen {
         // create fixturedef for player collision box
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
+        fdef.restitution = 0.03f;
         fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
         fdef.filter.maskBits = Box2DVars.BIT_WALL;
         body.createFixture(fdef).setUserData("player");
@@ -104,17 +105,17 @@ public class GameScreen implements Screen {
 
         //Render tiles.
         tmr.setView(cam);
-        tmr.render();
+        //tmr.render();
 
         sb.setProjectionMatrix(cam.combined);
 
         sb.begin();
-        player.render(sb);
+        //player.render(sb);
         sb.end();
 
 
         //Render Box2D world.
-        //b2dr.render(world, b2dCam.combined);
+        b2dr.render(world, b2dCam.combined);
     }
 
     @Override

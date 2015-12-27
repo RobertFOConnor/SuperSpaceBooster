@@ -47,7 +47,7 @@ public class Player {
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             moveUp();
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             moveDown();
         } else {
             movingRight = false;
@@ -101,8 +101,8 @@ public class Player {
     }
 
     protected void moveUp() {
-        if (velY > SPEED) {
-            body.applyForce(0, ACCELERATION, posX, posY, true);
+        if (velY < SPEED) {
+            body.applyForce(0, 20, posX, posY, true);
         } else {
             body.setLinearVelocity(velX, SPEED);
         }
@@ -116,11 +116,7 @@ public class Player {
     }
 
     protected void moveDown() {
-        if (velY > -SPEED) {
-            body.applyForce(0, -ACCELERATION, posX, posY, true);
-        } else {
-            body.setLinearVelocity(velX, -SPEED);
-        }
+        body.setLinearVelocity(0, -40);
 
         if (!movingDown) {
             movingUp = false;
