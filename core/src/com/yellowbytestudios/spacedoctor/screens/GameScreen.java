@@ -1,13 +1,22 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.yellowbytestudios.spacedoctor.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.Player;
+import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 
 /**
@@ -19,8 +28,11 @@ public class GameScreen implements Screen {
     private World world;
     private TiledMap tileMap;
     private Box2DDebugRenderer b2dr;
-    private int PPM = 100;
     private OrthogonalTiledMapRenderer tmr;
+
+    private TileManager tileManager;
+    private Player player;
+    private float PPM = 100;
 
     @Override
     public void create() {
@@ -28,7 +40,7 @@ public class GameScreen implements Screen {
         //Setup camera.
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
-        world = new World(new Vector2(0, -30f), true);
+        world = new World(new Vector2(0, -5f), true);
 
         b2dr = new Box2DDebugRenderer();
         b2dCam = new BoundedCamera();
@@ -39,19 +51,70 @@ public class GameScreen implements Screen {
 
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
+
+        tileManager = new TileManager();
+        tileManager.createWalls(world, tileMap);
+
+        setupPlayer();
+    }
+
+    private void setupPlayer() {
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.DynamicBody;
+
+        bdef.fixedRotation = true;
+        bdef.linearVelocity.set(0f, 0f);
+        bdef.position.set(2, 5);
+
+        // create body from bodydef
+        Body body = world.createBody(bdef);
+
+        // create box shape for player collision box
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(40 / PPM, 60 / PPM);
+
+        // create fixturedef for player collision box
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = shape;
+        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+        fdef.filter.maskBits = Box2DVars.BIT_WALL;
+        body.createFixture(fdef).setUserData("player");
+
+        shape.dispose();
+
+        player = new Player(body);
     }
 
     @Override
     public void update(float step) {
+        world.step(step, 8, 3);
+
         b2dCam.update();
         cam.update();
+
+        player.update();
     }
 
     @Override
     public void render(SpriteBatch sb) {
+        // Clear screen.
+        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl20.glClearColor(0, 0, 0, 0);
+
+
+        //Render tiles.
         tmr.setView(cam);
         tmr.render();
-        b2dr.render(world, b2dCam.combined);
+
+        sb.setProjectionMatrix(cam.combined);
+
+        sb.begin();
+        player.render(sb);
+        sb.end();
+
+
+        //Render Box2D world.
+        //b2dr.render(world, b2dCam.combined);
     }
 
     @Override
