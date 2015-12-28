@@ -13,17 +13,21 @@ import com.badlogic.gdx.physics.box2d.World;
  */
 public class TileManager {
 
+    private int tileSize, tileMapWidth, tileMapHeight;
 
     public void createWalls(World world, TiledMap tileMap) {
         TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
 
-        float tileSize = layer.getTileWidth();
+        tileMapWidth = tileMap.getProperties().get("width", Integer.class);
+        tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+        tileSize = (int) layer.getTileWidth();
+
         float PPM = 100;
 
-        Vector2 bot_L = new Vector2((-tileSize / 2)/(PPM), (-tileSize / 2)/(PPM));
-        Vector2 top_L = new Vector2((-tileSize / 2)/(PPM), ( tileSize / 2)/(PPM));
-        Vector2 top_R = new Vector2(( tileSize / 2)/(PPM), ( tileSize / 2)/(PPM));
-        Vector2 bot_R = new Vector2(( tileSize / 2)/(PPM), (-tileSize / 2)/(PPM));
+        Vector2 bot_L = new Vector2((-tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
+        Vector2 top_L = new Vector2((-tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
+        Vector2 top_R = new Vector2((tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
+        Vector2 bot_R = new Vector2((tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
 
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
@@ -61,5 +65,13 @@ public class TileManager {
                 chainShape.dispose();
             }
         }
+    }
+
+    public int getMapWidth() {
+        return tileSize * tileMapWidth;
+    }
+
+    public int getMapHeight() {
+        return tileSize * tileMapHeight;
     }
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.Player;
@@ -34,6 +35,10 @@ public class GameScreen implements Screen {
     private Player player;
     private float PPM = 100;
 
+    private Box2DContactListeners contactListener;
+    private Vector2 playerPos;
+
+
     @Override
     public void create() {
 
@@ -41,6 +46,10 @@ public class GameScreen implements Screen {
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
         world = new World(new Vector2(0, -9.8f), true);
+
+        //Setup contact listeners.
+        contactListener = new Box2DContactListeners();
+        world.setContactListener(contactListener);
 
         b2dr = new Box2DDebugRenderer();
         b2dCam = new BoundedCamera();
@@ -54,6 +63,10 @@ public class GameScreen implements Screen {
 
         tileManager = new TileManager();
         tileManager.createWalls(world, tileMap);
+
+        // Set camera boundries.
+        b2dCam.setBounds(0, tileManager.getMapWidth() / PPM, 0, tileManager.getMapHeight() / PPM);
+        cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
         setupPlayer();
     }
@@ -81,6 +94,21 @@ public class GameScreen implements Screen {
         fdef.filter.maskBits = Box2DVars.BIT_WALL;
         body.createFixture(fdef).setUserData("player");
 
+        //PLAYER FOOT
+
+        shape = new PolygonShape();
+        shape.setAsBox(37 / PPM, 20 / PPM, new Vector2(0, -45 / PPM), 0);
+
+        // create fixturedef for player foot
+        fdef.shape = shape;
+        fdef.isSensor = true;
+        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+        fdef.filter.maskBits = Box2DVars.BIT_WALL;
+
+        // create player foot fixture
+        body.createFixture(fdef).setUserData("foot");
+
+
         shape.dispose();
 
         player = new Player(body);
@@ -90,11 +118,23 @@ public class GameScreen implements Screen {
     public void update(float step) {
         world.step(step, 8, 3);
 
-        b2dCam.update();
-        cam.update();
+        updateCameras();
 
         player.update();
     }
+
+    private void updateCameras() {
+        playerPos = player.getBody().getPosition();
+        float targetX = playerPos.x * PPM + MainGame.WIDTH / 50;
+        float targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
+
+        cam.setPosition(targetX, targetY);
+        b2dCam.setPosition(playerPos.x + MainGame.WIDTH / 50 / PPM, playerPos.y + MainGame.HEIGHT / 50 / PPM);
+
+        b2dCam.update();
+        cam.update();
+    }
+
 
     @Override
     public void render(SpriteBatch sb) {
@@ -105,12 +145,12 @@ public class GameScreen implements Screen {
 
         //Render tiles.
         tmr.setView(cam);
-        //tmr.render();
+        tmr.render();
 
         sb.setProjectionMatrix(cam.combined);
 
         sb.begin();
-        //player.render(sb);
+        player.render(sb);
         sb.end();
 
 

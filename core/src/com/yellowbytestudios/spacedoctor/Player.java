@@ -133,4 +133,8 @@ public class Player {
     public void flipSprite(boolean dir) {
         sprite.setFlip(dir, false);
     }
+
+    public Body getBody() {
+        return body;
+    }
 }
