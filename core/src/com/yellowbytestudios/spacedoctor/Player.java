@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 /**
  * Created by BobbyBoy on 26-Dec-15.
@@ -113,6 +114,8 @@ public class Player {
             movingLeft = false;
             movingRight = false;
         }
+
+        GameScreen.particleManager.addEffect((int) (posX * 100 - sprite.getWidth() / 2), (int) (posY * 100 - sprite.getHeight() / 2));
     }
 
     protected void moveDown() {

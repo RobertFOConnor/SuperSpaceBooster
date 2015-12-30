@@ -10,4 +10,5 @@ public class Box2DVars {
     // category bits
     public static final short BIT_PLAYER = 2;
     public static final short BIT_WALL = 4;
+    public static final short BIT_BULLET = 8;
 }

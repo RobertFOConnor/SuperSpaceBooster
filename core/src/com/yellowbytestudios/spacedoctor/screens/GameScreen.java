@@ -10,12 +10,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.ParticleManager;
 import com.yellowbytestudios.spacedoctor.Player;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -37,6 +40,10 @@ public class GameScreen implements Screen {
 
     private Box2DContactListeners contactListener;
     private Vector2 playerPos;
+
+    private Array<Body> bullets;
+
+    public static ParticleManager particleManager;
 
 
     @Override
@@ -69,6 +76,10 @@ public class GameScreen implements Screen {
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
         setupPlayer();
+
+        bullets = new Array<Body>();
+
+        particleManager = new ParticleManager();
     }
 
     private void setupPlayer() {
@@ -123,6 +134,34 @@ public class GameScreen implements Screen {
         player.update();
     }
 
+    public void addBullet() {
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.DynamicBody;
+
+        bdef.fixedRotation = true;
+        bdef.linearVelocity.set(0f, 0f);
+        bdef.position.set(2, 5);
+
+        // create body from bodydef
+        Body body = world.createBody(bdef);
+
+        // create box shape for player collision box
+        PolygonShape shape = new PolygonShape();
+        shape.setRadius(10 / PPM);
+
+        // create fixturedef for player collision box
+        FixtureDef cfdef = new FixtureDef();
+        CircleShape cshape = new CircleShape();
+        cshape.setRadius(10 / PPM);
+        cfdef.shape = cshape;
+        cfdef.isSensor = true;
+        cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
+        cfdef.filter.maskBits = Box2DVars.BIT_WALL;
+        body.createFixture(cfdef).setUserData("bullet");
+
+        shape.dispose();
+    }
+
     private void updateCameras() {
         playerPos = player.getBody().getPosition();
         float targetX = playerPos.x * PPM + MainGame.WIDTH / 50;
@@ -151,11 +190,13 @@ public class GameScreen implements Screen {
 
         sb.begin();
         player.render(sb);
+
+        particleManager.render(sb);
         sb.end();
 
 
         //Render Box2D world.
-        b2dr.render(world, b2dCam.combined);
+        //b2dr.render(world, b2dCam.combined);
     }
 
     @Override
