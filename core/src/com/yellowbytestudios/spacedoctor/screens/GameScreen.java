@@ -19,7 +19,7 @@ import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.ParticleManager;
-import com.yellowbytestudios.spacedoctor.Player;
+import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 
@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer tmr;
 
     private TileManager tileManager;
-    private Player player;
+    private SpacemanPlayer player;
     private float PPM = 100;
 
     private Box2DContactListeners contactListener;
@@ -122,7 +122,7 @@ public class GameScreen implements Screen {
 
         shape.dispose();
 
-        player = new Player(body);
+        player = new SpacemanPlayer(body, contactListener);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
 
 public class MainGame extends ApplicationAdapter {
 
@@ -16,9 +17,12 @@ public class MainGame extends ApplicationAdapter {
     public static final float STEP = 1 / 60f;
     private float accum;
 
+    public static SpriterManager spriterManager;
+
     @Override
     public void create() {
         sb = new SpriteBatch();
+        spriterManager = new SpriterManager(sb);
         ScreenManager.setScreen(new GameScreen());
     }
 

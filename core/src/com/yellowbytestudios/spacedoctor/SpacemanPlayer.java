@@ -2,8 +2,6 @@ package com.yellowbytestudios.spacedoctor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
@@ -11,10 +9,9 @@ import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 /**
  * Created by BobbyBoy on 26-Dec-15.
  */
-public class Player {
+public class SpacemanPlayer {
 
     private Body body;
-    private Sprite sprite;
 
     private float SPEED = 5f;
     private float ACCELERATION = 30f;
@@ -22,10 +19,18 @@ public class Player {
     private float posX, posY;
     private float velX, velY;
     protected boolean movingLeft, movingRight, movingUp, movingDown = false;
+    public static float WIDTH, HEIGHT;
 
-    public Player(Body body) {
+    private com.brashmonkey.spriter.Player spriter;
+    private Box2DContactListeners contactListener;
+
+    public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
         this.body = body;
-        sprite = new Sprite(new Texture(Gdx.files.internal("player.png")));
+        this.contactListener = contactListener;
+        spriter = MainGame.spriterManager.initPlayer();
+
+        WIDTH = 80;
+        HEIGHT = 118;
     }
 
     public void update() {
@@ -35,6 +40,7 @@ public class Player {
         posX = body.getPosition().x;
         posY = body.getPosition().y;
 
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             moveLeft();
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -42,8 +48,13 @@ public class Player {
         } else {
             movingRight = false;
             movingLeft = false;
-            movingUp = false;
-            movingDown = false;
+
+            if (!contactListener.playerInAir()) {
+                spriter.setAnimation("idle");
+                body.setLinearVelocity(0, velY);
+            } else {
+                spriter.setAnimation("jump");
+            }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -51,16 +62,14 @@ public class Player {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             moveDown();
         } else {
-            movingRight = false;
-            movingLeft = false;
             movingUp = false;
             movingDown = false;
         }
     }
 
     public void render(SpriteBatch sb) {
-        sprite.setPosition((int) (posX * 100 - sprite.getWidth() / 2), (int) (posY * 100 - sprite.getHeight() / 2));
-        sprite.draw(sb);
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM-20));
+        MainGame.spriterManager.draw(spriter);
     }
 
     protected void moveLeft() {
@@ -73,12 +82,16 @@ public class Player {
         if (!movingLeft) {
             movingLeft = true;
             movingRight = false;
-            movingUp = false;
-            movingDown = false;
         }
 
         if (!facingLeft()) {
-            flipSprite(false);
+            flipSprite();
+        }
+
+        if(!contactListener.playerInAir()) {
+            spriter.setAnimation("running");
+        } else {
+            spriter.setAnimation("jump");
         }
     }
 
@@ -92,12 +105,16 @@ public class Player {
         if (!movingRight) {
             movingRight = true;
             movingLeft = false;
-            movingUp = false;
-            movingDown = false;
         }
 
         if (facingLeft()) {
-            flipSprite(true);
+            flipSprite();
+        }
+
+        if(!contactListener.playerInAir()) {
+            spriter.setAnimation("running");
+        } else {
+            spriter.setAnimation("jump");
         }
     }
 
@@ -111,11 +128,10 @@ public class Player {
         if (!movingUp) {
             movingUp = true;
             movingDown = false;
-            movingLeft = false;
-            movingRight = false;
         }
 
-        GameScreen.particleManager.addEffect((int) (posX * 100 - sprite.getWidth() / 2), (int) (posY * 100 - sprite.getHeight() / 2));
+        addSmoke();
+        spriter.setAnimation("jump");
     }
 
     protected void moveDown() {
@@ -124,20 +140,26 @@ public class Player {
         if (!movingDown) {
             movingUp = false;
             movingDown = true;
-            movingLeft = false;
-            movingRight = false;
         }
     }
 
     public boolean facingLeft() {
-        return sprite.isFlipX();
+        return spriter.flippedX() == 1;
     }
 
-    public void flipSprite(boolean dir) {
-        sprite.setFlip(dir, false);
+    public void flipSprite() {
+        spriter.flip(true, false);
     }
 
     public Body getBody() {
         return body;
+    }
+
+    private void addSmoke() {
+        if (!facingLeft()) {
+            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2), (int) (posY * 100 - HEIGHT / 2));
+        } else {
+            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2));
+        }
     }
 }

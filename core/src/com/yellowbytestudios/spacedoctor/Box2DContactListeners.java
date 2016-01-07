@@ -49,8 +49,8 @@ public class Box2DContactListeners implements ContactListener {
         }
     }
 
-    public boolean playerCanJump() {
-        return numFootContacts > 0;
+    public boolean playerInAir() {
+        return numFootContacts == 0;
     }
 
     public void preSolve(Contact c, Manifold m) {
