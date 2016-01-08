@@ -1,22 +1,21 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
-import com.yellowbytestudios.spacedoctor.Box2DVars;
+import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.ParticleManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
@@ -41,7 +40,8 @@ public class GameScreen implements Screen {
     private Box2DContactListeners contactListener;
     private Vector2 playerPos;
 
-    private Array<Body> bullets;
+    private Array<Bullet> bullets;
+    private Texture bg;
 
     public static ParticleManager particleManager;
 
@@ -75,54 +75,30 @@ public class GameScreen implements Screen {
         b2dCam.setBounds(0, tileManager.getMapWidth() / PPM, 0, tileManager.getMapHeight() / PPM);
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
-        setupPlayer();
+        player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
 
-        bullets = new Array<Body>();
+        bullets = new Array<Bullet>();
 
         particleManager = new ParticleManager();
+
+        bg = new Texture(Gdx.files.internal("bg.png"));
     }
 
-    private void setupPlayer() {
-        BodyDef bdef = new BodyDef();
-        bdef.type = BodyDef.BodyType.DynamicBody;
 
-        bdef.fixedRotation = true;
-        bdef.linearVelocity.set(0f, 0f);
-        bdef.position.set(2, 5);
+    public void addBullet() {
 
-        // create body from bodydef
-        Body body = world.createBody(bdef);
+        Bullet bullet = new Bullet(BodyFactory.createBody(world, "BULLET"));
 
-        // create box shape for player collision box
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(40 / PPM, 60 / PPM);
+        float speed = Bullet.SPEED;
 
-        // create fixturedef for player collision box
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape = shape;
-        fdef.restitution = 0.03f;
-        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-        fdef.filter.maskBits = Box2DVars.BIT_WALL;
-        body.createFixture(fdef).setUserData("player");
-
-        //PLAYER FOOT
-
-        shape = new PolygonShape();
-        shape.setAsBox(37 / PPM, 20 / PPM, new Vector2(0, -45 / PPM), 0);
-
-        // create fixturedef for player foot
-        fdef.shape = shape;
-        fdef.isSensor = true;
-        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-        fdef.filter.maskBits = Box2DVars.BIT_WALL;
-
-        // create player foot fixture
-        body.createFixture(fdef).setUserData("foot");
-
-
-        shape.dispose();
-
-        player = new SpacemanPlayer(body, contactListener);
+        if(player.facingLeft()) {
+            bullet.getBody().setLinearVelocity(-speed, 0f);
+            bullet.getBody().setTransform(player.getBody().getPosition().x-1.2f, player.getBody().getPosition().y, 0);
+        } else {
+            bullet.getBody().setLinearVelocity(speed, 0f);
+            bullet.getBody().setTransform(player.getBody().getPosition().x+1.2f, player.getBody().getPosition().y, 0);
+        }
+        bullets.add(bullet);
     }
 
     @Override
@@ -132,34 +108,18 @@ public class GameScreen implements Screen {
         updateCameras();
 
         player.update();
-    }
 
-    public void addBullet() {
-        BodyDef bdef = new BodyDef();
-        bdef.type = BodyDef.BodyType.DynamicBody;
+        if (contactListener.getBodies().size > 0) {
+            for(Body b : contactListener.getBodies()) {
+                bullets.removeValue((Bullet) b.getUserData(), true);
+                world.destroyBody(b);
+            }
+        }
 
-        bdef.fixedRotation = true;
-        bdef.linearVelocity.set(0f, 0f);
-        bdef.position.set(2, 5);
-
-        // create body from bodydef
-        Body body = world.createBody(bdef);
-
-        // create box shape for player collision box
-        PolygonShape shape = new PolygonShape();
-        shape.setRadius(10 / PPM);
-
-        // create fixturedef for player collision box
-        FixtureDef cfdef = new FixtureDef();
-        CircleShape cshape = new CircleShape();
-        cshape.setRadius(10 / PPM);
-        cfdef.shape = cshape;
-        cfdef.isSensor = true;
-        cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
-        cfdef.filter.maskBits = Box2DVars.BIT_WALL;
-        body.createFixture(cfdef).setUserData("bullet");
-
-        shape.dispose();
+        if(player.isShooting()) {
+            addBullet();
+            player.setShooting(false);
+        }
     }
 
     private void updateCameras() {
@@ -182,14 +142,28 @@ public class GameScreen implements Screen {
         Gdx.gl20.glClearColor(0, 0, 0, 0);
 
 
+        sb.setProjectionMatrix(cam.combined);
+        sb.begin();
+        sb.draw(bg, cam.position.x - bg.getWidth() / 2, cam.position.y - bg.getHeight() / 2);
+        sb.end();
+
+
         //Render tiles.
         tmr.setView(cam);
         tmr.render();
 
-        sb.setProjectionMatrix(cam.combined);
 
         sb.begin();
         player.render(sb);
+
+        for(Bullet b : bullets) { //DRAW BULLETS.
+            b.render(sb);
+
+            if(Math.abs(b.getBody().getPosition().x-player.getBody().getPosition().x) > 100) {
+                world.destroyBody(b.getBody());
+                bullets.removeValue(b, true);
+            }
+        }
 
         particleManager.render(sb);
         sb.end();

@@ -38,7 +38,7 @@ public class SpriterManager {
 
     public Player initPlayer() {
         Player player = new Player(data.getEntity(0));
-        player.setScale(0.5f);
+        player.setScale(0.6f);
         player.setAnimation("idle");
         return player;
     }

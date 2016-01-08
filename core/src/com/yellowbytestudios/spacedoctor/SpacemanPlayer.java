@@ -12,17 +12,16 @@ import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 public class SpacemanPlayer {
 
     private Body body;
-
-    private float SPEED = 5f;
+    private float SPEED = 7f;
     private float ACCELERATION = 30f;
-
     private float posX, posY;
     private float velX, velY;
-    protected boolean movingLeft, movingRight, movingUp, movingDown = false;
+    private boolean movingLeft, movingRight, movingUp, movingDown = false;
     public static float WIDTH, HEIGHT;
-
     private com.brashmonkey.spriter.Player spriter;
     private Box2DContactListeners contactListener;
+    private boolean shooting = false;
+
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
         this.body = body;
@@ -33,6 +32,7 @@ public class SpacemanPlayer {
         HEIGHT = 118;
     }
 
+
     public void update() {
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
@@ -41,23 +41,15 @@ public class SpacemanPlayer {
         posY = body.getPosition().y;
 
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) { // LEFT | RIGHT MOVEMENT
             moveLeft();
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             moveRight();
         } else {
-            movingRight = false;
-            movingLeft = false;
-
-            if (!contactListener.playerInAir()) {
-                spriter.setAnimation("idle");
-                body.setLinearVelocity(0, velY);
-            } else {
-                spriter.setAnimation("jump");
-            }
+            idle();
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) { // UP | DOWN MOVEMENT
             moveUp();
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             moveDown();
@@ -65,14 +57,20 @@ public class SpacemanPlayer {
             movingUp = false;
             movingDown = false;
         }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            shooting = true;
+        }
     }
 
+
     public void render(SpriteBatch sb) {
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM-20));
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
         MainGame.spriterManager.draw(spriter);
     }
 
-    protected void moveLeft() {
+
+    private void moveLeft() {
         if (velX > -SPEED) {
             body.applyForce(-ACCELERATION, 0, posX, posY, true);
         } else {
@@ -87,15 +85,11 @@ public class SpacemanPlayer {
         if (!facingLeft()) {
             flipSprite();
         }
-
-        if(!contactListener.playerInAir()) {
-            spriter.setAnimation("running");
-        } else {
-            spriter.setAnimation("jump");
-        }
+        setMovingHorImage();
     }
 
-    protected void moveRight() {
+
+    private void moveRight() {
         if (velX < SPEED) {
             body.applyForce(ACCELERATION, 0, posX, posY, true);
         } else {
@@ -110,15 +104,11 @@ public class SpacemanPlayer {
         if (facingLeft()) {
             flipSprite();
         }
-
-        if(!contactListener.playerInAir()) {
-            spriter.setAnimation("running");
-        } else {
-            spriter.setAnimation("jump");
-        }
+        setMovingHorImage();
     }
 
-    protected void moveUp() {
+
+    private void moveUp() {
         if (velY < SPEED) {
             body.applyForce(0, 20, posX, posY, true);
         } else {
@@ -134,7 +124,8 @@ public class SpacemanPlayer {
         spriter.setAnimation("jump");
     }
 
-    protected void moveDown() {
+
+    private void moveDown() {
         body.setLinearVelocity(0, -40);
 
         if (!movingDown) {
@@ -143,17 +134,42 @@ public class SpacemanPlayer {
         }
     }
 
+    private void idle() {
+        movingRight = false;
+        movingLeft = false;
+
+        if (!contactListener.playerInAir()) {
+            spriter.setAnimation("idle");
+            body.setLinearVelocity(0, velY);
+        } else {
+            spriter.setAnimation("jump");
+        }
+    }
+
+
     public boolean facingLeft() {
         return spriter.flippedX() == 1;
     }
 
-    public void flipSprite() {
+
+    private void flipSprite() {
         spriter.flip(true, false);
     }
+
+
+    private void setMovingHorImage() {
+        if (!contactListener.playerInAir()) {
+            spriter.setAnimation("running");
+        } else {
+            spriter.setAnimation("jump");
+        }
+    }
+
 
     public Body getBody() {
         return body;
     }
+
 
     private void addSmoke() {
         if (!facingLeft()) {
@@ -161,5 +177,15 @@ public class SpacemanPlayer {
         } else {
             GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2));
         }
+    }
+
+
+    public boolean isShooting() {
+        return shooting;
+    }
+
+
+    public void setShooting(boolean shooting) {
+        this.shooting = shooting;
     }
 }

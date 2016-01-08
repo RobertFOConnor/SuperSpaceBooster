@@ -41,6 +41,8 @@ public class TileManager {
                 if (cell == null) continue;
                 if (cell.getTile() == null) continue;
 
+                Object property = cell.getTile().getProperties().get("type");
+
                 bdef.type = BodyDef.BodyType.StaticBody;
                 bdef.position.set((col + 0.5f), (row + 0.5f));
 
@@ -57,8 +59,18 @@ public class TileManager {
                 chainShape.createChain(v);
                 fdef.density = 1f;
                 fdef.shape = chainShape;
-                fdef.filter.categoryBits = Box2DVars.BIT_WALL;
-                fdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+
+                if(property != null) {
+                    if (property.equals("spike")) {
+                        fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+                    }
+                } else {
+                    fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                }
+
+
+                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET;
 
 
                 world.createBody(bdef).createFixture(fdef).setUserData("ground");
