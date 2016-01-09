@@ -3,6 +3,7 @@ package com.yellowbytestudios.spacedoctor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
@@ -166,8 +167,8 @@ public class SpacemanPlayer {
     }
 
 
-    public Body getBody() {
-        return body;
+    public Vector2 getPos() {
+        return body.getPosition();
     }
 
 

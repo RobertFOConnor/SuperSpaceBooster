@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,9 +14,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
+import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.ParticleManager;
+import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -38,12 +38,12 @@ public class GameScreen implements Screen {
     private float PPM = 100;
 
     private Box2DContactListeners contactListener;
-    private Vector2 playerPos;
 
     private Array<Bullet> bullets;
     private Texture bg;
 
     public static ParticleManager particleManager;
+    public static LightManager lightManager;
 
 
     @Override
@@ -80,6 +80,7 @@ public class GameScreen implements Screen {
         bullets = new Array<Bullet>();
 
         particleManager = new ParticleManager();
+        //lightManager = new LightManager(world, player, cam);
 
         bg = new Texture(Gdx.files.internal("bg.png"));
     }
@@ -93,10 +94,10 @@ public class GameScreen implements Screen {
 
         if(player.facingLeft()) {
             bullet.getBody().setLinearVelocity(-speed, 0f);
-            bullet.getBody().setTransform(player.getBody().getPosition().x-1.2f, player.getBody().getPosition().y, 0);
+            bullet.getBody().setTransform(player.getPos().x-1.2f, player.getPos().y, 0);
         } else {
             bullet.getBody().setLinearVelocity(speed, 0f);
-            bullet.getBody().setTransform(player.getBody().getPosition().x+1.2f, player.getBody().getPosition().y, 0);
+            bullet.getBody().setTransform(player.getPos().x+1.2f, player.getPos().y, 0);
         }
         bullets.add(bullet);
     }
@@ -116,19 +117,27 @@ public class GameScreen implements Screen {
             }
         }
 
+        for(Bullet b : bullets) { //DRAW BULLETS.
+            if(Math.abs(b.getBody().getPosition().x-player.getPos().x) > 100) {
+                world.destroyBody(b.getBody());
+                bullets.removeValue(b, true);
+            }
+        }
+
         if(player.isShooting()) {
             addBullet();
             player.setShooting(false);
         }
+
+        //lightManager.update();
     }
 
     private void updateCameras() {
-        playerPos = player.getBody().getPosition();
-        float targetX = playerPos.x * PPM + MainGame.WIDTH / 50;
-        float targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
+        float targetX = player.getPos().x * PPM + MainGame.WIDTH / 50;
+        float targetY = player.getPos().y * PPM + MainGame.HEIGHT / 50;
 
         cam.setPosition(targetX, targetY);
-        b2dCam.setPosition(playerPos.x + MainGame.WIDTH / 50 / PPM, playerPos.y + MainGame.HEIGHT / 50 / PPM);
+        b2dCam.setPosition(player.getPos().x + MainGame.WIDTH / 50 / PPM, player.getPos().y + MainGame.HEIGHT / 50 / PPM);
 
         b2dCam.update();
         cam.update();
@@ -152,23 +161,17 @@ public class GameScreen implements Screen {
         tmr.setView(cam);
         tmr.render();
 
-
         sb.begin();
         player.render(sb);
 
         for(Bullet b : bullets) { //DRAW BULLETS.
             b.render(sb);
-
-            if(Math.abs(b.getBody().getPosition().x-player.getBody().getPosition().x) > 100) {
-                world.destroyBody(b.getBody());
-                bullets.removeValue(b, true);
-            }
         }
 
         particleManager.render(sb);
         sb.end();
 
-
+        //lightManager.render();
         //Render Box2D world.
         //b2dr.render(world, b2dCam.combined);
     }
