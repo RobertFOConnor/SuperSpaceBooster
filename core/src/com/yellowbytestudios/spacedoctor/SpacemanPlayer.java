@@ -1,10 +1,11 @@
 package com.yellowbytestudios.spacedoctor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.yellowbytestudios.spacedoctor.controllers.BasicController;
+import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
+import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 /**
@@ -23,6 +24,7 @@ public class SpacemanPlayer {
     private Box2DContactListeners contactListener;
     private boolean shooting = false;
 
+    private BasicController controller;
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
         this.body = body;
@@ -31,6 +33,14 @@ public class SpacemanPlayer {
 
         WIDTH = 80;
         HEIGHT = 118;
+
+
+        //Assign type of controls for player. (XBox or Keyboard controls).
+        if (MainGame.hasControllers) {
+            controller = new XBoxController();
+        } else {
+            controller = new KeyboardController();
+        }
     }
 
 
@@ -42,24 +52,24 @@ public class SpacemanPlayer {
         posY = body.getPosition().y;
 
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) { // LEFT | RIGHT MOVEMENT
+        if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
             moveLeft();
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (controller.rightPressed()) {
             moveRight();
         } else {
             idle();
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) { // UP | DOWN MOVEMENT
+        if (controller.upPressed()) { // UP | DOWN MOVEMENT
             moveUp();
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+        } else if (controller.downPressed()) {
             moveDown();
         } else {
             movingUp = false;
             movingDown = false;
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (controller.shootPressed()) {
             shooting = true;
         }
     }
