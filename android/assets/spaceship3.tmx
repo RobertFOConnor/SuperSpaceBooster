@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="4">
+ <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
+  <image source="tileset.png" width="500" height="300"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="50" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztWdEOgzAI7HxwJtv+/3fnHpqwy0HBaYexlxDTDByHUON1LqXcV7s5belo3pw+9ljt6chbri14c2zB4tHiqv0W4bEX8D+tnDwcWMw/eET7rMW3F4+5fM8ty0f6oL/nuR0Nz9yij+av9eTRPF6N3KN95O1HFvcrvHsn5rB1z2Zxez0ved/a+6xm1bT5YDWwfPeGrDPr/ZpLvUbeg9W3x5xgz+J7tOZSr9PB+WxFJK8p6N8Tg0cuDB65MHjkwuCRC4NHLgweuXBFHlv8e+EKPPBb8Gx9hXqP/BbMyAN1ALlmukZWHlIzWMgadZ6sPCJ61Bl4MGOabmYemm7INN2sPLQ5Rz0w+/NAbVDqf9q+y/rOa1aMNaNYT68+rvnLGKyBpQmzOkX0eqxniztqoaxm1jmO50yI1YTVzjpPWYw47f44K4xji7/HtFprddDiNMMc309lCtA=
+  </data>
+ </layer>
+ <objectgroup name="boxes">
+  <object id="1" x="1700" y="3500" width="100" height="100"/>
+  <object id="2" x="1800" y="3300" width="100" height="100"/>
+  <object id="3" x="1800" y="3500" width="100" height="100"/>
+ </objectgroup>
+</map>

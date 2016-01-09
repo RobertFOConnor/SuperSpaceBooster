@@ -1,11 +1,17 @@
 package com.yellowbytestudios.spacedoctor;
 
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.objects.Box;
+import com.yellowbytestudios.spacedoctor.objects.Door;
 
 /**
  * Created by BobbyBoy on 08-Jan-16.
@@ -34,7 +40,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.restitution = 0.03f;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
             body.createFixture(fdef).setUserData("player");
 
             //PLAYER FOOT
@@ -46,7 +52,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.isSensor = true;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_DOOR;
 
             // create player foot fixture
             body.createFixture(fdef).setUserData("foot");
@@ -72,9 +78,8 @@ public class BodyFactory {
             // create fixturedef for bullet.
             FixtureDef cfdef = new FixtureDef();
             cfdef.shape = shape;
-            cfdef.isSensor = true;
             cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
-            cfdef.filter.maskBits = Box2DVars.BIT_WALL;
+            cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
             body.createFixture(cfdef).setUserData("bullet");
             body.setGravityScale(0f);
             shape.dispose();
@@ -83,6 +88,84 @@ public class BodyFactory {
 
         } else {
             return null;
+        }
+    }
+
+
+    public static void createDoors(World world, TiledMap tm) {
+
+        MapLayer ml = tm.getLayers().get("exits");
+
+        if (ml == null) return;
+
+        float width = 50 / Box2DVars.PPM;
+        float height = 100 / Box2DVars.PPM;
+
+        for (MapObject mo : ml.getObjects()) {
+
+            BodyDef cdef = new BodyDef();
+            cdef.type = BodyDef.BodyType.StaticBody;
+            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
+            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
+            cdef.position.set(x, y);
+
+            Body body = world.createBody(cdef);
+
+            FixtureDef cfdef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width, height);
+            cfdef.shape = shape;
+            cfdef.isSensor = true;
+            cfdef.filter.categoryBits = Box2DVars.BIT_DOOR;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+            body.createFixture(cfdef).setUserData("door");
+            shape.dispose();
+
+            Door d = new Door(body);
+
+            //Custom values.
+            d.setDestination(mo.getProperties().get("link", String.class));
+            int exitX = Integer.parseInt(mo.getProperties().get("exitX", String.class));
+            int exitY = Integer.parseInt(mo.getProperties().get("exitY", String.class));
+            d.setPlayerPos(new Vector2(exitX, exitY));
+            body.setUserData(d);
+        }
+    }
+
+
+    public static void createBoxes(World world, TiledMap tm) {
+
+        MapLayer ml = tm.getLayers().get("boxes");
+
+        if (ml == null) return;
+
+        float width = 50 / Box2DVars.PPM;
+        float height = 50 / Box2DVars.PPM;
+
+        for (MapObject mo : ml.getObjects()) {
+
+            BodyDef cdef = new BodyDef();
+            cdef.fixedRotation = false;
+            cdef.type = BodyDef.BodyType.DynamicBody;
+            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
+            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
+            cdef.position.set(x, y);
+
+            Body body = world.createBody(cdef);
+
+            FixtureDef cfdef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width, height);
+            cfdef.shape = shape;
+            cfdef.filter.categoryBits = Box2DVars.BIT_BOX;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
+
+            body.createFixture(cfdef).setUserData("box");
+            shape.dispose();
+
+            Box b = new Box(body);
+            body.setUserData(b);
         }
     }
 }

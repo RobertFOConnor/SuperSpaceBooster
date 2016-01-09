@@ -64,13 +64,15 @@ public class TileManager {
                 if(property != null) {
                     if (property.equals("spike")) {
                         fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+                    } else {
+                        fdef.filter.categoryBits = Box2DVars.BIT_WALL;
                     }
                 } else {
                     fdef.filter.categoryBits = Box2DVars.BIT_WALL;
                 }
 
 
-                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET;
+                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX;
 
 
                 world.createBody(bdef).createFixture(fdef).setUserData("ground");

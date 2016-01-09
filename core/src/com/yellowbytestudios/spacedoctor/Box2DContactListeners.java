@@ -18,6 +18,9 @@ public class Box2DContactListeners implements ContactListener {
     private Array<Body> bodiesToRemove;
     private int numFootContacts;
 
+    private boolean atDoor = false;
+    private Body door;
+
     public Box2DContactListeners() {
         super();
         bodiesToRemove = new Array<Body>();
@@ -51,6 +54,15 @@ public class Box2DContactListeners implements ContactListener {
         }
         if (fb.getUserData() != null && fb.getUserData().equals("bullet")) {
             bodiesToRemove.add(fb.getBody());
+        }
+
+        if(fa.getUserData() != null && fa.getUserData().equals("door")) {
+            door = fa.getBody();
+            atDoor = true;
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("door")) {
+            door = fb.getBody();
+            atDoor = true;
         }
     }
 
@@ -88,4 +100,12 @@ public class Box2DContactListeners implements ContactListener {
     }
 
     public Array<Body> getBodies() { return bodiesToRemove; }
+
+    public Body getDoor() {
+        return door;
+    }
+
+    public boolean isAtDoor() {
+        return atDoor;
+    }
 }

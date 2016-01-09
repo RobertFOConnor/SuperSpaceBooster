@@ -41,16 +41,17 @@ public class SpacemanPlayer {
         } else {
             controller = new KeyboardController();
         }
+
+        assignVariables();
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
+
+        //Start player facing right.
+        moveRight();
     }
 
 
     public void update() {
-        velX = body.getLinearVelocity().x;
-        velY = body.getLinearVelocity().y;
-
-        posX = body.getPosition().x;
-        posY = body.getPosition().y;
-
+        assignVariables();
 
         if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
             moveLeft();
@@ -151,7 +152,9 @@ public class SpacemanPlayer {
 
         if (!contactListener.playerInAir()) {
             spriter.setAnimation("idle");
-            body.setLinearVelocity(0, velY);
+            if (velX != 0) {
+                body.setLinearVelocity(0, velY);
+            }
         } else {
             spriter.setAnimation("jump");
         }
@@ -181,6 +184,10 @@ public class SpacemanPlayer {
         return body.getPosition();
     }
 
+    public void setPos(Vector2 pos) {
+        body.setTransform(pos, 0);
+    }
+
 
     private void addSmoke() {
         if (!facingLeft()) {
@@ -188,6 +195,14 @@ public class SpacemanPlayer {
         } else {
             GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2));
         }
+    }
+
+    private void assignVariables() {
+        velX = body.getLinearVelocity().x;
+        velY = body.getLinearVelocity().y;
+
+        posX = body.getPosition().x;
+        posY = body.getPosition().y;
     }
 
 

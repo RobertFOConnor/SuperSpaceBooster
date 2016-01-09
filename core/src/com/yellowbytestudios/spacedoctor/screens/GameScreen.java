@@ -14,13 +14,15 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
-import com.yellowbytestudios.spacedoctor.effects.LightManager;
-import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
+import com.yellowbytestudios.spacedoctor.effects.LightManager;
+import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
+import com.yellowbytestudios.spacedoctor.objects.Box;
+import com.yellowbytestudios.spacedoctor.objects.Bullet;
+import com.yellowbytestudios.spacedoctor.objects.Door;
 
 /**
  * Created by BobbyBoy on 15-Oct-15.
@@ -40,6 +42,7 @@ public class GameScreen implements Screen {
     private Box2DContactListeners contactListener;
 
     private Array<Bullet> bullets;
+    private Array<Box> boxes;
     private Texture bg;
 
     public static ParticleManager particleManager;
@@ -48,6 +51,17 @@ public class GameScreen implements Screen {
 
     @Override
     public void create() {
+
+        b2dCam = new BoundedCamera();
+        b2dr = new Box2DDebugRenderer();
+        particleManager = new ParticleManager();
+        //lightManager = new LightManager(world, player, cam);
+
+        setupMap("spaceship1", new Vector2(3, 5));
+    }
+
+    private void setupMap(String mapName, Vector2 playerPos) {
+        System.out.println("Setup begins");
 
         //Setup camera.
         cam = new BoundedCamera();
@@ -58,12 +72,11 @@ public class GameScreen implements Screen {
         contactListener = new Box2DContactListeners();
         world.setContactListener(contactListener);
 
-        b2dr = new Box2DDebugRenderer();
-        b2dCam = new BoundedCamera();
+
         b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
 
         //Set tile map using Tiled map path.
-        tileMap = new TmxMapLoader().load("test.tmx");
+        tileMap = new TmxMapLoader().load(mapName + ".tmx");
 
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
@@ -76,13 +89,20 @@ public class GameScreen implements Screen {
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
         player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
+        player.setPos(playerPos);
 
         bullets = new Array<Bullet>();
-
-        particleManager = new ParticleManager();
-        //lightManager = new LightManager(world, player, cam);
+        boxes = new Array<Box>();
 
         bg = new Texture(Gdx.files.internal("bg.png"));
+
+        BodyFactory.createDoors(world, tileMap);
+        //BodyFactory.createBoxes(world, tileMap);
+    }
+
+    private void changeRoom() {
+        Door d = (Door) contactListener.getDoor().getUserData();
+        setupMap(d.getDestination(), d.getPlayerPos());
     }
 
 
@@ -92,12 +112,12 @@ public class GameScreen implements Screen {
 
         float speed = Bullet.SPEED;
 
-        if(player.facingLeft()) {
+        if (player.facingLeft()) {
             bullet.getBody().setLinearVelocity(-speed, 0f);
-            bullet.getBody().setTransform(player.getPos().x-1.2f, player.getPos().y, 0);
+            bullet.getBody().setTransform(player.getPos().x - 1.2f, player.getPos().y, 0);
         } else {
             bullet.getBody().setLinearVelocity(speed, 0f);
-            bullet.getBody().setTransform(player.getPos().x+1.2f, player.getPos().y, 0);
+            bullet.getBody().setTransform(player.getPos().x + 1.2f, player.getPos().y, 0);
         }
         bullets.add(bullet);
     }
@@ -111,22 +131,26 @@ public class GameScreen implements Screen {
         player.update();
 
         if (contactListener.getBodies().size > 0) {
-            for(Body b : contactListener.getBodies()) {
+            for (Body b : contactListener.getBodies()) {
                 bullets.removeValue((Bullet) b.getUserData(), true);
                 world.destroyBody(b);
             }
         }
 
-        for(Bullet b : bullets) { //DRAW BULLETS.
-            if(Math.abs(b.getBody().getPosition().x-player.getPos().x) > 100) {
+        for (Bullet b : bullets) { //DRAW BULLETS.
+            if (Math.abs(b.getBody().getPosition().x - player.getPos().x) > 100) {
                 world.destroyBody(b.getBody());
                 bullets.removeValue(b, true);
             }
         }
 
-        if(player.isShooting()) {
+        if (player.isShooting()) {
             addBullet();
             player.setShooting(false);
+        }
+
+        if (contactListener.isAtDoor()) {
+            changeRoom();
         }
 
         //lightManager.update();
@@ -164,16 +188,20 @@ public class GameScreen implements Screen {
         sb.begin();
         player.render(sb);
 
-        for(Bullet b : bullets) { //DRAW BULLETS.
+        for (Bullet b : bullets) { //DRAW BULLETS.
             b.render(sb);
         }
+
+        /*for (Box b : boxes) { //DRAW BULLETS.
+            b.render(sb);
+        }*/
 
         particleManager.render(sb);
         sb.end();
 
         //lightManager.render();
         //Render Box2D world.
-        //b2dr.render(world, b2dCam.combined);
+        b2dr.render(world, b2dCam.combined);
     }
 
     @Override

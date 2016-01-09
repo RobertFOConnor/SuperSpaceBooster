@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="20" tilewidth="100" tileheight="100" nextobjectid="4">
+ <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
+  <image source="tileset.png" width="500" height="300"/>
+  <tile id="2">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="45" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztlosKgCAMRaf2EOr/vzeDBrdhyx44BC9cBpp6NhfoiMg1Zk9tyVNnrqHOXEeduY6smQO4VNbMQ/J4xFJZM3sRn66zUMvMpe+MKXkme+YoeDgiazy8JK9ky8wsDng44hzmtI9ZMufuHdmQmXP5+o7l/f9glnXWzuV8ML8SXuyvL8yRzhx4vmSJ4nvsI6xhbq1cH15a7q0xXtU090/k8tfuS5u7y10z9swG3KED1g==
+  </data>
+ </layer>
+ <objectgroup name="exits">
+  <object id="3" name="exit" x="4400" y="1000" width="100" height="200">
+   <properties>
+    <property name="exitX" value="2"/>
+    <property name="exitY" value="6"/>
+    <property name="link" value="spaceship3"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
