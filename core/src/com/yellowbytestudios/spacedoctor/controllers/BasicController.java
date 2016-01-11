@@ -10,4 +10,5 @@ public interface BasicController {
     boolean upPressed();
     boolean downPressed();
     boolean shootPressed();
+    boolean pausePressed();
 }

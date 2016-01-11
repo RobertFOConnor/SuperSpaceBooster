@@ -7,6 +7,7 @@ import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**
  * Created by BobbyBoy on 26-Dec-15.
@@ -23,8 +24,16 @@ public class SpacemanPlayer {
     private com.brashmonkey.spriter.Player spriter;
     private Box2DContactListeners contactListener;
     private boolean shooting = false;
-
     private BasicController controller;
+
+    //Jetpack variables!
+    private final float maxGas = 1000;
+    private float currGas = 0;
+
+    //Health variables!
+    private final int maxHealth = 100;
+    private int health = 100;
+
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
         this.body = body;
@@ -51,6 +60,11 @@ public class SpacemanPlayer {
 
 
     public void update() {
+
+        if(health <= 0) {
+            ScreenManager.setScreen(new GameScreen());
+        }
+
         assignVariables();
 
         if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
@@ -62,7 +76,11 @@ public class SpacemanPlayer {
         }
 
         if (controller.upPressed()) { // UP | DOWN MOVEMENT
-            moveUp();
+
+            if (currGas > 0) {
+                moveUp();
+            }
+
         } else if (controller.downPressed()) {
             moveDown();
         } else {
@@ -72,6 +90,14 @@ public class SpacemanPlayer {
 
         if (controller.shootPressed()) {
             shooting = true;
+        }
+
+        if(controller.pausePressed()) {
+            ScreenManager.setScreen(new GameScreen());
+        }
+
+        if(currGas < maxGas) {
+            currGas += 0.1f;
         }
     }
 
@@ -131,6 +157,8 @@ public class SpacemanPlayer {
             movingUp = true;
             movingDown = false;
         }
+
+        currGas--;
 
         addSmoke();
         spriter.setAnimation("jump");
@@ -213,5 +241,21 @@ public class SpacemanPlayer {
 
     public void setShooting(boolean shooting) {
         this.shooting = shooting;
+    }
+
+    public float getCurrGas() {
+        return currGas;
+    }
+
+    public void setCurrGas(float currGas) {
+        this.currGas = currGas;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 }

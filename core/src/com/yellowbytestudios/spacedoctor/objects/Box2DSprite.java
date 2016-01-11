@@ -25,7 +25,7 @@ public class Box2DSprite {
         }
 
         public void render(SpriteBatch sb) {
-            sb.draw(texture, (int) (body.getPosition().x * Box2DVars.PPM - width / 2) - (width / 2), (int) (body.getPosition().y * Box2DVars.PPM - height / 2) - (height / 2));
+            sb.draw(texture, (int) (body.getPosition().x * Box2DVars.PPM - width / 2), (int) (body.getPosition().y * Box2DVars.PPM - height / 2));
         }
 
         public Body getBody() {

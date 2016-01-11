@@ -14,15 +14,18 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
+import com.yellowbytestudios.spacedoctor.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
+import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.PickUp;
 
 /**
  * Created by BobbyBoy on 15-Oct-15.
@@ -43,10 +46,12 @@ public class GameScreen implements Screen {
 
     private Array<Bullet> bullets;
     private Array<Box> boxes;
+    private Array<PickUp> pickups;
     private Texture bg;
 
     public static ParticleManager particleManager;
     public static LightManager lightManager;
+    private GUIManager gui;
 
 
     @Override
@@ -58,6 +63,8 @@ public class GameScreen implements Screen {
         //lightManager = new LightManager(world, player, cam);
 
         setupMap("spaceship1", new Vector2(3, 5));
+
+        player.setCurrGas(200f);
     }
 
     private void setupMap(String mapName, Vector2 playerPos) {
@@ -88,8 +95,18 @@ public class GameScreen implements Screen {
         b2dCam.setBounds(0, tileManager.getMapWidth() / PPM, 0, tileManager.getMapHeight() / PPM);
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
+
+        //Reserve gas through levels;
+        float currGas = 0f;
+        if(player != null) {
+            currGas = player.getCurrGas();
+        }
+
         player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
         player.setPos(playerPos);
+        player.setCurrGas(currGas);
+
+        contactListener.setPlayer(player);
 
         bullets = new Array<Bullet>();
         boxes = new Array<Box>();
@@ -97,7 +114,10 @@ public class GameScreen implements Screen {
         bg = new Texture(Gdx.files.internal("bg.png"));
 
         BodyFactory.createDoors(world, tileMap);
-        //BodyFactory.createBoxes(world, tileMap);
+        boxes = BodyFactory.createBoxes(world, tileMap);
+        pickups = BodyFactory.createPickups(world, tileMap);
+
+        gui = new GUIManager(player);
     }
 
     private void changeRoom() {
@@ -136,6 +156,14 @@ public class GameScreen implements Screen {
                 world.destroyBody(b);
             }
         }
+
+        if (contactListener.getPickUps().size > 0) {
+            for (Body b : contactListener.getPickUps()) {
+                pickups.removeValue((PickUp) b.getUserData(), true);
+                world.destroyBody(b);
+            }
+        }
+
 
         for (Bullet b : bullets) { //DRAW BULLETS.
             if (Math.abs(b.getBody().getPosition().x - player.getPos().x) > 100) {
@@ -192,16 +220,25 @@ public class GameScreen implements Screen {
             b.render(sb);
         }
 
-        /*for (Box b : boxes) { //DRAW BULLETS.
+        for (Box b : boxes) { //DRAW BULLETS.
             b.render(sb);
-        }*/
+        }
+
+        for (PickUp p : pickups) { //DRAW BULLETS.
+            p.render(sb);
+        }
 
         particleManager.render(sb);
         sb.end();
 
+
+        //DRAW GUI!
+        gui.render(sb);
+
+
         //lightManager.render();
         //Render Box2D world.
-        b2dr.render(world, b2dCam.combined);
+        //b2dr.render(world, b2dCam.combined);
     }
 
     @Override

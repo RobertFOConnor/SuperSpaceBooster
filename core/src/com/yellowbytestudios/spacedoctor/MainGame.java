@@ -32,6 +32,7 @@ public class MainGame extends ApplicationAdapter {
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
         checkForController();
+        Fonts.loadFonts();
         ScreenManager.setScreen(new GameScreen());
     }
 

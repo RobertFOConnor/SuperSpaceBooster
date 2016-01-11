@@ -32,4 +32,9 @@ public class KeyboardController implements BasicController {
     public boolean shootPressed() {
         return Gdx.input.isKeyJustPressed(Input.Keys.SPACE);
     }
+
+    @Override
+    public boolean pausePressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+    }
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.PickUp;
 
 /**
  * Created by BobbyBoy on 08-Jan-16.
@@ -40,7 +41,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.restitution = 0.03f;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP;
             body.createFixture(fdef).setUserData("player");
 
             //PLAYER FOOT
@@ -52,7 +53,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.isSensor = true;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_DOOR;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_DOOR | Box2DVars.BIT_BOX;
 
             // create player foot fixture
             body.createFixture(fdef).setUserData("foot");
@@ -134,19 +135,19 @@ public class BodyFactory {
     }
 
 
-    public static void createBoxes(World world, TiledMap tm) {
+    public static Array<Box> createBoxes(World world, TiledMap tm) {
 
         MapLayer ml = tm.getLayers().get("boxes");
+        Array<Box> boxes = new Array<Box>();
 
-        if (ml == null) return;
+        if (ml == null) return new Array<Box>();
 
-        float width = 50 / Box2DVars.PPM;
-        float height = 50 / Box2DVars.PPM;
+        float width = 48 / Box2DVars.PPM;
+        float height = 48 / Box2DVars.PPM;
 
         for (MapObject mo : ml.getObjects()) {
 
             BodyDef cdef = new BodyDef();
-            cdef.fixedRotation = false;
             cdef.type = BodyDef.BodyType.DynamicBody;
             float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
             float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
@@ -158,6 +159,7 @@ public class BodyFactory {
             PolygonShape shape = new PolygonShape();
             shape.setAsBox(width, height);
             cfdef.shape = shape;
+            cfdef.density = 0.1f;
             cfdef.filter.categoryBits = Box2DVars.BIT_BOX;
             cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
 
@@ -165,7 +167,48 @@ public class BodyFactory {
             shape.dispose();
 
             Box b = new Box(body);
+            boxes.add(b);
             body.setUserData(b);
         }
+        return boxes;
+    }
+
+
+    public static Array<PickUp> createPickups(World world, TiledMap tm) {
+
+        MapLayer ml = tm.getLayers().get("pickups");
+        Array<PickUp> pickups = new Array<PickUp>();
+
+        if (ml == null) return new Array<PickUp>();
+
+        float width = 35 / Box2DVars.PPM;
+        float height = 35 / Box2DVars.PPM;
+
+        for (MapObject mo : ml.getObjects()) {
+
+            BodyDef cdef = new BodyDef();
+            cdef.type = BodyDef.BodyType.StaticBody;
+            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
+            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
+            cdef.position.set(x, y);
+
+            Body body = world.createBody(cdef);
+
+            FixtureDef cfdef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width, height);
+            cfdef.shape = shape;
+            cfdef.isSensor = true;
+            cfdef.filter.categoryBits = Box2DVars.BIT_PICKUP;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+            body.createFixture(cfdef).setUserData("pickup");
+            shape.dispose();
+
+            PickUp p = new PickUp(body);
+            pickups.add(p);
+            body.setUserData(p);
+        }
+        return pickups;
     }
 }

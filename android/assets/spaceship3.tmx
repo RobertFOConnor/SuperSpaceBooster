@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="4">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="33">
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
  </tileset>
  <layer name="Tile Layer 1" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztWdEOgzAI7HxwJtv+/3fnHpqwy0HBaYexlxDTDByHUON1LqXcV7s5belo3pw+9ljt6chbri14c2zB4tHiqv0W4bEX8D+tnDwcWMw/eET7rMW3F4+5fM8ty0f6oL/nuR0Nz9yij+av9eTRPF6N3KN95O1HFvcrvHsn5rB1z2Zxez0ved/a+6xm1bT5YDWwfPeGrDPr/ZpLvUbeg9W3x5xgz+J7tOZSr9PB+WxFJK8p6N8Tg0cuDB65MHjkwuCRC4NHLgweuXBFHlv8e+EKPPBb8Gx9hXqP/BbMyAN1ALlmukZWHlIzWMgadZ6sPCJ61Bl4MGOabmYemm7INN2sPLQ5Rz0w+/NAbVDqf9q+y/rOa1aMNaNYT68+rvnLGKyBpQmzOkX0eqxniztqoaxm1jmO50yI1YTVzjpPWYw47f44K4xji7/HtFprddDiNMMc309lCtA=
+   eJztWEEOAjEIXD2oif7/veqhCU5mKC2t7WEnIdmsrcsApcDtOI77Ry5BefxRojp95fmRF3nfi6iOkf+J2NL7PcNjFKyOTN8IBxY/I3yV4dEaZxH5B27H77llPOwa9Wx9ge9HAH2NNlfnVp1t9WxtUN5Hz2gUaOcR8YP7iw/Qv7V9M/OE4ok+ZX71/Mv2zeahvh+xd9nvrZ2pd4EXL7XzZHlkz0kLb+Zba3+Ml2uHPhlEv9ei17Vx/QicPPy1J492tJzzUTxYjVK7Q3APq5FqNXfZk+XB8jG7Q1BnlpdVTvdqwJ48ijwi9Vnknlf1CvJVNcElySMDdteXdz1YxcPGFPquByvz1cjecXXetTwyWM1jFE4eebAc24tWvWblXXuf92AVDzajmJV3saYocaXmPay28nrblj651lMyHqqmKDyYLZk+qmZi/SarURRHBK7zataH4eHNS5S+tXoqypFxwfpL1azlede8682jmJ125+H1J9ir7MpDxS6b4+7KQ51z1cvtygPzAfYELO9G7oVIrHp5Su1Tub3le7U8682EmZ3U3J2J6o0V91re9u5fNe/wbO/ZTp3bSL3g2cmbU0furZooWys7qH1KUMc3ZA4PzQ==
   </data>
  </layer>
  <objectgroup name="boxes">
   <object id="1" x="1700" y="3500" width="100" height="100"/>
-  <object id="2" x="1800" y="3300" width="100" height="100"/>
+  <object id="2" x="1900" y="3500" width="100" height="100"/>
   <object id="3" x="1800" y="3500" width="100" height="100"/>
+  <object id="4" x="2000" y="3500" width="100" height="100"/>
+  <object id="5" x="2100" y="3500" width="100" height="100"/>
+  <object id="6" x="1800" y="3400" width="100" height="100"/>
+  <object id="7" x="1900" y="3400" width="100" height="100"/>
+  <object id="8" x="2000" y="3400" width="100" height="100"/>
+  <object id="9" x="1900" y="3300" width="100" height="100"/>
+  <object id="14" x="1343.94" y="2104.55" width="100" height="100"/>
+  <object id="15" x="1343.94" y="2304.55" width="100" height="100"/>
+  <object id="16" x="1343.94" y="2204.55" width="100" height="100"/>
+  <object id="17" x="1519.7" y="1971.21" width="100" height="100"/>
+  <object id="18" x="1519.7" y="2171.21" width="100" height="100"/>
+  <object id="19" x="1519.7" y="2071.21" width="100" height="100"/>
+  <object id="20" x="1180.3" y="1962.12" width="100" height="100"/>
+  <object id="21" x="1180.3" y="2162.12" width="100" height="100"/>
+  <object id="22" x="1180.3" y="2062.12" width="100" height="100"/>
+  <object id="23" x="1192.42" y="2386.36" width="100" height="100"/>
+  <object id="24" x="1192.42" y="2586.36" width="100" height="100"/>
+  <object id="25" x="1192.42" y="2486.36" width="100" height="100"/>
+  <object id="26" x="3900" y="700" width="100" height="100"/>
+  <object id="27" x="3900" y="800" width="100" height="100"/>
+  <object id="28" x="4000" y="700" width="100" height="100"/>
+  <object id="29" x="4000" y="800" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="pickups">
+  <object id="10" x="1600" y="500" width="100" height="100"/>
  </objectgroup>
 </map>

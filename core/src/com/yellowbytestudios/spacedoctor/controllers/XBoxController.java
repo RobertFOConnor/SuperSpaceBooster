@@ -49,4 +49,9 @@ public class XBoxController implements BasicController {
             return false;
         }
     }
+
+    @Override
+    public boolean pausePressed() {
+        return controller.getButton(XBox360Pad.BUTTON_START);
+    }
 }

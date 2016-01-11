@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="19">
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
   <tile id="0">
@@ -30,7 +30,7 @@
  </tileset>
  <layer name="Tile Layer 1" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBwAzMRAf8A0au+ovcPIXpjdw8leFiBmxYFZaGgvPnNpGb+j9o5se9mAmJ0Bf10JU0OMWmLqV5AcNxDzYLEDxOaA0jA16Go5kNSQai+6fpjZ2MyE8dHdhh4OHGTYiwsjy6P7G92txNgLAJI4Ah8=
+   eJzjYGBg4BgAzMRAf8A0au+ovcPIXpjdw8leFiBmxYFZaGgvPnNpGb+j9o5se9mAmB2IGfFgmBpi1MIwIXu5gZgHix0gNgeUhqlBV8uBpIZUe9H1w8zGZiaMj+429HAg1J7AZi8ujCyP7m90txJjLwAT3ALx
   </data>
  </layer>
  <objectgroup name="exits">
@@ -43,8 +43,20 @@
   </object>
  </objectgroup>
  <objectgroup name="boxes">
-  <object id="3" x="800" y="1100" width="100" height="100"/>
-  <object id="4" x="1000" y="1200" width="100" height="100"/>
-  <object id="5" x="800" y="1300" width="100" height="100"/>
+  <object id="3" x="2200" y="700" width="100" height="100"/>
+  <object id="4" x="2200" y="800" width="100" height="100"/>
+  <object id="13" x="2200" y="600" width="100" height="100"/>
+  <object id="14" x="2200" y="500" width="100" height="100"/>
+  <object id="15" x="2200" y="400" width="100" height="100"/>
+  <object id="16" x="2200" y="300" width="100" height="100"/>
+  <object id="17" x="2200" y="200" width="100" height="100"/>
+  <object id="18" x="2200" y="100" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="pickups">
+  <object id="6" x="1698" y="1448" width="100" height="100">
+   <properties>
+    <property name="type" value="gas"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

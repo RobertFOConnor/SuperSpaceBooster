@@ -5,14 +5,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
 
 /**
- * Created by BobbyBoy on 09-Jan-16.
+ * Created by BobbyBoy on 10-Jan-16.
  */
-public class Box extends Box2DSprite {
+public class PickUp extends Box2DSprite {
 
-    public Box(Body body) {
+    private String type = "";
+
+
+    public PickUp(Body body) {
         super(body);
-        body.setUserData(this);
-        texture = new Texture(Gdx.files.internal("box.png"));
+        texture = new Texture(Gdx.files.internal("pickup_gas.png"));
         width = texture.getWidth();
         height = texture.getHeight();
     }
