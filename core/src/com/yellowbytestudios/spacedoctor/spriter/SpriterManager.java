@@ -42,4 +42,18 @@ public class SpriterManager {
         player.setAnimation("idle");
         return player;
     }
+
+    public Player initDemon() {
+        Player player = new Player(data.getEntity(1));
+        player.setScale(0.6f);
+        player.setAnimation("walking");
+        return player;
+    }
+
+    public Player initGasPickUp() {
+        Player player = new Player(data.getEntity(2));
+        player.setScale(0.85f);
+        player.setAnimation("default");
+        return player;
+    }
 }

@@ -15,8 +15,8 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
  */
 public class Box2DContactListeners implements ContactListener {
 
-    private Array<Body> bodiesToRemove;
-    private Array<Body> pickUpsToRemove;
+    private Array<Fixture> bodiesToRemove;
+    private Body enemy;
     private int numFootContacts;
 
     private boolean atDoor = false;
@@ -26,8 +26,7 @@ public class Box2DContactListeners implements ContactListener {
 
     public Box2DContactListeners() {
         super();
-        bodiesToRemove = new Array<Body>();
-        pickUpsToRemove = new Array<Body>();
+        bodiesToRemove = new Array<Fixture>();
     }
 
     public void beginContact(Contact contact) {
@@ -44,6 +43,7 @@ public class Box2DContactListeners implements ContactListener {
             if(fb.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
                 player.setHealth(player.getHealth()-5);
             }
+
         }
         if (fb.getUserData() != null && fb.getUserData().equals("foot")) {
             numFootContacts++;
@@ -54,10 +54,18 @@ public class Box2DContactListeners implements ContactListener {
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("bullet")) {
-            bodiesToRemove.add(fa.getBody());
+            bodiesToRemove.add(fa);
+
+            if(fb.getUserData().equals("enemy")) {
+                enemy = fb.getBody();
+            }
         }
         if (fb.getUserData() != null && fb.getUserData().equals("bullet")) {
-            bodiesToRemove.add(fb.getBody());
+            bodiesToRemove.add(fb);
+
+            if(fa.getUserData().equals("enemy")) {
+                enemy = fa.getBody();
+            }
         }
 
         if(fa.getUserData() != null && fa.getUserData().equals("door")) {
@@ -71,11 +79,23 @@ public class Box2DContactListeners implements ContactListener {
 
         if(fa.getUserData() != null && fa.getUserData().equals("pickup")) {
             player.setCurrGas(player.getCurrGas()+250);
-            pickUpsToRemove.add(fa.getBody());
+            bodiesToRemove.add(fa);
         }
         if(fb.getUserData() != null && fb.getUserData().equals("pickup")) {
             player.setCurrGas(player.getCurrGas()+250);
-            pickUpsToRemove.add(fb.getBody());
+            bodiesToRemove.add(fb);
+        }
+
+        if(fa.getUserData() != null && fa.getUserData().equals("enemy")) {
+
+            if(fb.getUserData().equals("player")) {
+                player.setHealth(player.getHealth()-5);
+            }
+        }
+        if(fb.getUserData() != null && fb.getUserData().equals("enemy")) {
+            if(fa.getUserData().equals("player")) {
+                player.setHealth(player.getHealth()-5);
+            }
         }
     }
 
@@ -95,17 +115,17 @@ public class Box2DContactListeners implements ContactListener {
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("bullet")) {
-            bodiesToRemove.removeValue(fa.getBody(), true);
+            bodiesToRemove.removeValue(fa, true);
         }
         if (fb.getUserData() != null && fb.getUserData().equals("bullet")) {
-            bodiesToRemove.removeValue(fb.getBody(), true);
+            bodiesToRemove.removeValue(fb, true);
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("pickup")) {
-            pickUpsToRemove.removeValue(fa.getBody(), true);
+            bodiesToRemove.removeValue(fa, true);
         }
         if (fb.getUserData() != null && fb.getUserData().equals("pickup")) {
-            pickUpsToRemove.removeValue(fb.getBody(), true);
+            bodiesToRemove.removeValue(fb, true);
         }
     }
 
@@ -119,9 +139,15 @@ public class Box2DContactListeners implements ContactListener {
     public void postSolve(Contact c, ContactImpulse ci) {
     }
 
-    public Array<Body> getBodies() { return bodiesToRemove; }
+    public Array<Fixture> getBodies() { return bodiesToRemove; }
 
-    public Array<Body> getPickUps() { return pickUpsToRemove; }
+    public Body getEnemy() {
+        return enemy;
+    }
+
+    public void nullifyEnemy() {
+        enemy = null;
+    }
 
     public Body getDoor() {
         return door;

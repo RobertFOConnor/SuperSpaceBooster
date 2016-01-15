@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 public class Fonts {
 
-	public static BitmapFont GUIFont, SubFont, TitleFont, MenuFont, LevelFont;
+	public static BitmapFont GUIFont;
 	
 	public static void loadFonts() {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/basic_font.ttf"));
@@ -15,17 +15,8 @@ public class Fonts {
         parameter.size = 45;
         GUIFont = generator.generateFont(parameter);
         
-        parameter.size = 55;
-        SubFont = generator.generateFont(parameter);
-        
-        parameter.size = 95;
-        MenuFont = generator.generateFont(parameter);
-        
-        parameter.size = 120;
-        LevelFont = generator.generateFont(parameter);
-        
-        parameter.size = 150;
-        TitleFont = generator.generateFont(parameter);
+        //parameter.size = 55;
+        //SubFont = generator.generateFont(parameter);
 	}
 	
 	//public static float getWidth(BitmapFont f, String s) {

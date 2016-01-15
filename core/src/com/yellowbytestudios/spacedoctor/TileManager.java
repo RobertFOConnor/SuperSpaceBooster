@@ -72,7 +72,7 @@ public class TileManager {
                 }
 
 
-                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX;
+                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
 
                 world.createBody(bdef).createFixture(fdef).setUserData("ground");

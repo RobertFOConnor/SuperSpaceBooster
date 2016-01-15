@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="33">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="36">
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
  </tileset>
  <layer name="Tile Layer 1" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztWEEOAjEIXD2oif7/veqhCU5mKC2t7WEnIdmsrcsApcDtOI77Ry5BefxRojp95fmRF3nfi6iOkf+J2NL7PcNjFKyOTN8IBxY/I3yV4dEaZxH5B27H77llPOwa9Wx9ge9HAH2NNlfnVp1t9WxtUN5Hz2gUaOcR8YP7iw/Qv7V9M/OE4ok+ZX71/Mv2zeahvh+xd9nvrZ2pd4EXL7XzZHlkz0kLb+Zba3+Ml2uHPhlEv9ei17Vx/QicPPy1J492tJzzUTxYjVK7Q3APq5FqNXfZk+XB8jG7Q1BnlpdVTvdqwJ48ijwi9Vnknlf1CvJVNcElySMDdteXdz1YxcPGFPquByvz1cjecXXetTwyWM1jFE4eebAc24tWvWblXXuf92AVDzajmJV3saYocaXmPay28nrblj651lMyHqqmKDyYLZk+qmZi/SarURRHBK7zataH4eHNS5S+tXoqypFxwfpL1azlede8682jmJ125+H1J9ir7MpDxS6b4+7KQ51z1cvtygPzAfYELO9G7oVIrHp5Su1Tub3le7U8682EmZ3U3J2J6o0V91re9u5fNe/wbO/ZTp3bSL3g2cmbU0furZooWys7qH1KUMc3ZA4PzQ==
+   eJztWEGOwzAITHtoK+3+/73bHpDY0QzGxq5zyEhIUWo3DBgMPI7jeL7llpTXFyWr00d+3vJL3o8iq2PmfzK2jH6v8JgFryPTN8OBnZ8Zvqrw6D1nGfkGHsf/uGU8/Br17H2B72cAfY02V3GrYls9exvY+2yMZoF2nnF+cL/5AP3b2rcyTyie6FPm18i/bN9qHur7GXvb/mjtSr0N0XlpxZPnUY2THt7Mt97+eF7uA/pUkP1ej173zvUzcPGI1148+tET57N4sBqldYfgHlYjtWpu21PlwfIxu0NQZ5aXVU6PasCRPIo8MvVZ5p5X9QryVTXBrcijAnbX27sR7OLhzxT6bgQ789XM3nF33vU8KtjNYxYuHnWwHDuKXr1W5V1/n49gFw82o1iVd7GmsHOl5j2stop6254+udVTMh6qpjAezJZMH1UzsX6T1SiKIwLXRTXry/GI5iVK31Y9leXIuGD9pWpWez5r3o3mUcxOZ+cR9SfYq5yVhzq7bI5rPKq10GyoOFe9nI/zM3HBfIA9Acu7mXshc1ajPKX2qdze871Wno1mwsxOau7ORPXGinsrb0f3r5p3RLaPbKfiNlMvRHaK5tSZe6slytbKDmqfEtTxD4u6D9c=
   </data>
  </layer>
  <objectgroup name="boxes">
@@ -37,5 +37,10 @@
  </objectgroup>
  <objectgroup name="pickups">
   <object id="10" x="1600" y="500" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="enemies">
+  <object id="33" x="3600" y="3400" width="100" height="100"/>
+  <object id="34" x="300" y="2500" width="100" height="100"/>
+  <object id="35" x="3600" y="200" width="100" height="100"/>
  </objectgroup>
 </map>

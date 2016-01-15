@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
 
 /**
@@ -41,7 +42,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.restitution = 0.03f;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY;
             body.createFixture(fdef).setUserData("player");
 
             //PLAYER FOOT
@@ -53,7 +54,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.isSensor = true;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_DOOR | Box2DVars.BIT_BOX;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_DOOR | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
             // create player foot fixture
             body.createFixture(fdef).setUserData("foot");
@@ -80,7 +81,7 @@ public class BodyFactory {
             FixtureDef cfdef = new FixtureDef();
             cfdef.shape = shape;
             cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
-            cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
+            cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
             body.createFixture(cfdef).setUserData("bullet");
             body.setGravityScale(0f);
             shape.dispose();
@@ -161,7 +162,7 @@ public class BodyFactory {
             cfdef.shape = shape;
             cfdef.density = 0.1f;
             cfdef.filter.categoryBits = Box2DVars.BIT_BOX;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
             body.createFixture(cfdef).setUserData("box");
             shape.dispose();
@@ -210,5 +211,43 @@ public class BodyFactory {
             body.setUserData(p);
         }
         return pickups;
+    }
+
+
+    public static Array<Enemy> createEnemies(World world, TiledMap tm) {
+
+        MapLayer ml = tm.getLayers().get("enemies");
+        Array<Enemy> enemies = new Array<Enemy>();
+
+        if (ml == null) return new Array<Enemy>();
+
+        float width = 51 / Box2DVars.PPM;
+        float height = 75 / Box2DVars.PPM;
+
+        for (MapObject mo : ml.getObjects()) {
+
+            BodyDef cdef = new BodyDef();
+            cdef.type = BodyDef.BodyType.DynamicBody;
+            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
+            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
+            cdef.position.set(x, y);
+
+            Body body = world.createBody(cdef);
+
+            FixtureDef cfdef = new FixtureDef();
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(width, height);
+            cfdef.shape = shape;
+            cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+
+            body.createFixture(cfdef).setUserData("enemy");
+            shape.dispose();
+
+            Enemy e = new Enemy(body);
+            enemies.add(e);
+            body.setUserData(e);
+        }
+        return enemies;
     }
 }

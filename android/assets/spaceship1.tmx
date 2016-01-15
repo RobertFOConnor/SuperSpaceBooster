@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="19">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="23">
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
   <tile id="0">
@@ -53,10 +53,13 @@
   <object id="18" x="2200" y="100" width="100" height="100"/>
  </objectgroup>
  <objectgroup name="pickups">
-  <object id="6" x="1698" y="1448" width="100" height="100">
+  <object id="6" x="2500" y="300" width="100" height="100">
    <properties>
     <property name="type" value="gas"/>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup name="enemies">
+  <object id="21" x="2000" y="1500" width="100" height="100"/>
  </objectgroup>
 </map>

@@ -3,6 +3,7 @@ package com.yellowbytestudios.spacedoctor.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -10,8 +11,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
@@ -19,13 +22,20 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
+
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by BobbyBoy on 15-Oct-15.
@@ -47,11 +57,18 @@ public class GameScreen implements Screen {
     private Array<Bullet> bullets;
     private Array<Box> boxes;
     private Array<PickUp> pickups;
+    private Array<Enemy> enemies;
     private Texture bg;
 
     public static ParticleManager particleManager;
     public static LightManager lightManager;
     private GUIManager gui;
+
+    //Fade in/out between maps.
+    private TweenManager tweenManager;
+    private long startTime, delta;
+    private Sprite fader;
+    boolean atDoor = false;
 
 
     @Override
@@ -61,6 +78,11 @@ public class GameScreen implements Screen {
         b2dr = new Box2DDebugRenderer();
         particleManager = new ParticleManager();
         //lightManager = new LightManager(world, player, cam);
+
+        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+        tweenManager = new TweenManager();
+        fader = new Sprite(new Texture(Gdx.files.internal("black.png")));
+        fader.setScale(1920, 1080);
 
         setupMap("spaceship1", new Vector2(3, 5));
 
@@ -98,7 +120,7 @@ public class GameScreen implements Screen {
 
         //Reserve gas through levels;
         float currGas = 0f;
-        if(player != null) {
+        if (player != null) {
             currGas = player.getCurrGas();
         }
 
@@ -109,22 +131,23 @@ public class GameScreen implements Screen {
         contactListener.setPlayer(player);
 
         bullets = new Array<Bullet>();
-        boxes = new Array<Box>();
 
         bg = new Texture(Gdx.files.internal("bg.png"));
 
         BodyFactory.createDoors(world, tileMap);
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);
+        enemies = BodyFactory.createEnemies(world, tileMap);
 
         gui = new GUIManager(player);
-    }
 
-    private void changeRoom() {
-        Door d = (Door) contactListener.getDoor().getUserData();
-        setupMap(d.getDestination(), d.getPlayerPos());
-    }
+        fader.setAlpha(1f);
+        Tween.to(fader, SpriteAccessor.OPACITY, 30f)
+                .target(0f).ease(TweenEquations.easeNone)
+                .start(tweenManager);
 
+        atDoor = false;
+    }
 
     public void addBullet() {
 
@@ -146,24 +169,36 @@ public class GameScreen implements Screen {
     public void update(float step) {
         world.step(step, 8, 3);
 
+        delta = (TimeUtils.millis() - startTime + 1000) / 1000;
+        tweenManager.update(delta);
+
         updateCameras();
 
         player.update();
 
         if (contactListener.getBodies().size > 0) {
-            for (Body b : contactListener.getBodies()) {
-                bullets.removeValue((Bullet) b.getUserData(), true);
+            for (Fixture f : contactListener.getBodies()) {
+                Body b = f.getBody();
+                if (f.getUserData().equals("bullet")) {
+                    bullets.removeValue((Bullet) b.getUserData(), true);
+                } else if (f.getUserData().equals("pickup")) {
+                    pickups.removeValue((PickUp) b.getUserData(), true);
+                }
                 world.destroyBody(b);
             }
         }
 
-        if (contactListener.getPickUps().size > 0) {
-            for (Body b : contactListener.getPickUps()) {
-                pickups.removeValue((PickUp) b.getUserData(), true);
-                world.destroyBody(b);
-            }
-        }
+        if (contactListener.getEnemy() != null) {
 
+            Enemy e = (Enemy) contactListener.getEnemy().getUserData();
+            e.setHealth(e.getHealth()-1);
+
+            if(e.getHealth() <= 0) {
+                enemies.removeValue(e, true);
+                world.destroyBody(contactListener.getEnemy());
+            }
+            contactListener.nullifyEnemy();
+        }
 
         for (Bullet b : bullets) { //DRAW BULLETS.
             if (Math.abs(b.getBody().getPosition().x - player.getPos().x) > 100) {
@@ -177,8 +212,18 @@ public class GameScreen implements Screen {
             player.setShooting(false);
         }
 
-        if (contactListener.isAtDoor()) {
-            changeRoom();
+        if (!atDoor) {
+
+            if (contactListener.isAtDoor()) {
+
+                fadeOut();
+
+                atDoor = true;
+            }
+        }
+
+        for (Enemy e : enemies) {
+            e.update(player);
         }
 
         //lightManager.update();
@@ -220,15 +265,20 @@ public class GameScreen implements Screen {
             b.render(sb);
         }
 
-        for (Box b : boxes) { //DRAW BULLETS.
+        for (Box b : boxes) { //DRAW BOXES.
             b.render(sb);
         }
 
-        for (PickUp p : pickups) { //DRAW BULLETS.
+        for (PickUp p : pickups) { //DRAW PICK-UPS.
             p.render(sb);
         }
 
+        for (Enemy e : enemies) { //DRAW ENEMIES.
+            e.render(sb);
+        }
+
         particleManager.render(sb);
+        fader.draw(sb);
         sb.end();
 
 
@@ -239,6 +289,26 @@ public class GameScreen implements Screen {
         //lightManager.render();
         //Render Box2D world.
         //b2dr.render(world, b2dCam.combined);
+    }
+
+    private void fadeOut() {
+        TweenCallback myCallBack = new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                Door d = (Door) contactListener.getDoor().getUserData();
+                setupMap(d.getDestination(), d.getPlayerPos());
+            }
+        };
+
+
+        fader.setAlpha(0f);
+        Tween.to(fader, SpriteAccessor.OPACITY, 30f)
+                .target(1f).ease(TweenEquations.easeNone)
+                .setCallback(myCallBack)
+                .setCallbackTriggers(TweenCallback.END)
+                .start(tweenManager);
+
+        startTime = TimeUtils.millis();
     }
 
     @Override
