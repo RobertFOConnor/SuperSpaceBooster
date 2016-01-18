@@ -14,7 +14,7 @@ public class Enemy extends Box2DSprite {
     private String type = "";
     private int health = 3;
 
-    private float SPEED = 2f;
+    private float SPEED = 4f;
     private float ACCELERATION = 30f;
     private float posX, posY;
     private float velX, velY;
@@ -76,11 +76,21 @@ public class Enemy extends Box2DSprite {
 
         assignVariables();
 
-        if (player.getPos().x < posX) {
-            moveLeft();
-        } else {
-            moveRight();
+        if(Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
+            if (player.getPos().x < posX) {
+                moveLeft();
+            } else {
+                moveRight();
+            }
         }
+
+
+        if(velX > 0.5 || velX < -0.5) {
+            spriter.setAnimation("walking");
+        } else {
+            spriter.setAnimation("idle");
+        }
+
 
         /*if((int) (Math.random() * 20) == 3) {
             moveUp();

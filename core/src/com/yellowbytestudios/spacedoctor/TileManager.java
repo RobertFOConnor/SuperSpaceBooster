@@ -20,6 +20,7 @@ public class TileManager {
 
         tileMapWidth = tileMap.getProperties().get("width", Integer.class);
         tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+
         tileSize = (int) layer.getTileWidth();
 
         float PPM = 100;

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="85">
+ <properties>
+  <property name="startX" value="46"/>
+  <property name="startY" value="5"/>
+  <property name="time" value="60"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
+  <image source="tileset.png" width="500" height="300"/>
+  <tile id="2">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="walls" width="50" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztWQEKwjAMbBFmdeL/n+uCFELISpa6eB09OLDY2VxjrqmWlFK5CPNBvsFIGh5pfDzT1HEGbh1E0UF7erROOVF0EHpqHUmHF2j14cWVdGg10/KFSFjX9XhEVP4otmXj3bAuzT3qC1Gg2NaNr/TVsTRIWlHrQ35X1gZJK7oOy34j+1XVYdlvZB0Ea12i67AiSkdPH4vS7/b2sUjnWsTd1ptHJPTkHMkfPH1JdH9iwfRdLPxbx0jnxx6izpU9/hLVM3p/b0Xxz9qbe4Gio/bmXkTq4HftLMYj5YPftbMYj5SPMzF1YOFKOqjGIu6dXlrOZvII6YfcB4syXsVzRbwuYh5/X3qW5l2Smj9nJTa+nhZD2VlH803++dpcz3/J/NlWrB9nNxCD
+  </data>
+ </layer>
+ <objectgroup name="exits">
+  <object id="83" x="300" y="700" width="100" height="200"/>
+ </objectgroup>
+ <objectgroup name="platforms">
+  <object id="53" x="1900" y="1100" width="400" height="200">
+   <properties>
+    <property name="distance" value="8"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+  <object id="54" x="1500" y="1100" width="400" height="200">
+   <properties>
+    <property name="distance" value="8"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+  <object id="69" x="600" y="1700" width="200" height="400">
+   <properties>
+    <property name="distance" value="5"/>
+    <property name="height" value="4"/>
+    <property name="type" value="horizontal"/>
+    <property name="width" value="2"/>
+   </properties>
+  </object>
+  <object id="70" x="600" y="2900" width="200" height="400">
+   <properties>
+    <property name="distance" value="2"/>
+    <property name="height" value="4"/>
+    <property name="type" value="horizontal"/>
+    <property name="width" value="2"/>
+   </properties>
+  </object>
+  <object id="76" x="1500" y="2900" width="400" height="200">
+   <properties>
+    <property name="distance" value="7"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+  <object id="77" x="1900" y="2900" width="400" height="200">
+   <properties>
+    <property name="distance" value="7"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+  <object id="78" x="600" y="200" width="200" height="400">
+   <properties>
+    <property name="distance" value="5"/>
+    <property name="height" value="4"/>
+    <property name="type" value="horizontal"/>
+    <property name="width" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="pickups">
+  <object id="57" x="3800" y="2300" width="100" height="100">
+   <properties>
+    <property name="type" value="gas"/>
+   </properties>
+  </object>
+  <object id="81" x="300" y="1400" width="100" height="100">
+   <properties>
+    <property name="type" value="gas"/>
+   </properties>
+  </object>
+  <object id="82" x="400" y="2600" width="100" height="100">
+   <properties>
+    <property name="type" value="time"/>
+   </properties>
+  </object>
+  <object id="84" x="3100" y="1300" width="100" height="100">
+   <properties>
+    <property name="type" value="gas"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

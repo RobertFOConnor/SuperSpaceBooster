@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="53">
+ <properties>
+  <property name="startX" value="2"/>
+  <property name="startY" value="37"/>
+  <property name="time" value="60"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
+  <image source="tileset.png" width="500" height="300"/>
+  <tile id="2">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="walls" width="50" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztWAsOwyAIdc0+Ll12/+OuS0ZCCFCqWGnnS0gqKvKqIG1OKeUhYWRKx8eUBo9IOBuPSwOhcVg7/r7Ig/gPOo5HVMyLvATd2c6VBXTfI2EvHvj8c3FRC+ChxZBHXGs6LQdY8wTw0GIoOqAm+bc4l0D3vUce8OJh0bVELQ/p7tz7TvWqSyhK8ttaTrLUJVv8aAHL3TTqkuNg8IgFz/qqp3jXV8D93UC0fOl9rnrVljU8uLPYCzU8ItX1wGOtNtj676N0njQet608on17A4DHk+mjPCLDyiM64IxpPDxxXeRGRNJ5oQUPzp5VV7Pm4CHbLNXVrPm9ly3fk1rOL6nt1uzifu0egnFwL4N+Rn3518Y2OPvUhkXwHI6TxeaMxnE2MA/apvMyeabccL/km+Yz9o++Q24/JB+k9411+Jk7Z9waVsFzNV8/XzIN1w==
+  </data>
+ </layer>
+ <objectgroup name="exits">
+  <object id="36" x="300" y="3200" width="100" height="200"/>
+ </objectgroup>
+ <objectgroup name="platforms">
+  <object id="37" x="1700" y="1800" width="400" height="200">
+   <properties>
+    <property name="distance" value="3"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="enemies">
+  <object id="38" x="2300" y="500" width="100" height="100"/>
+  <object id="39" x="3400" y="500" width="100" height="100"/>
+  <object id="40" x="1400" y="500" width="100" height="100"/>
+  <object id="44" x="3600" y="900" width="100" height="100"/>
+  <object id="45" x="1100" y="800" width="100" height="100"/>
+  <object id="47" x="2400" y="2700" width="100" height="100"/>
+  <object id="48" x="3600" y="2700" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="pickups">
+  <object id="41" x="2800" y="800" width="100" height="100">
+   <properties>
+    <property name="type" value="ammo"/>
+   </properties>
+  </object>
+  <object id="50" x="200" y="1900" width="100" height="100">
+   <properties>
+    <property name="type" value="ammo"/>
+   </properties>
+  </object>
+  <object id="51" x="1400" y="2000" width="100" height="100">
+   <properties>
+    <property name="type" value="time"/>
+   </properties>
+  </object>
+  <object id="52" x="2500" y="3000" width="100" height="100">
+   <properties>
+    <property name="type" value="time"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

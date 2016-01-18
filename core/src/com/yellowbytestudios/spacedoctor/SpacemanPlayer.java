@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -27,12 +28,14 @@ public class SpacemanPlayer {
     private BasicController controller;
 
     //Jetpack variables!
-    private final float maxGas = 1000;
-    private float currGas = 0;
+    private final float maxGas = 500;
+    private float currGas = 500;
 
-    //Health variables!
-    private final int maxHealth = 100;
-    private int health = 100;
+    //Gun variables!
+    private final int maxAmmo = 10;
+    private int currAmmo = 10;
+
+    private boolean canMove = true;
 
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
@@ -61,10 +64,6 @@ public class SpacemanPlayer {
 
     public void update() {
 
-        if(health <= 0) {
-            ScreenManager.setScreen(new GameScreen());
-        }
-
         assignVariables();
 
         if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
@@ -79,25 +78,26 @@ public class SpacemanPlayer {
 
             if (currGas > 0) {
                 moveUp();
+            } else {
+                movingUp = false;
+                SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
             }
 
-        } else if (controller.downPressed()) {
-            moveDown();
         } else {
             movingUp = false;
             movingDown = false;
+            SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
         }
 
-        if (controller.shootPressed()) {
+        if (controller.shootPressed() && currAmmo > 0) {
             shooting = true;
+            SoundManager.play(Assets.manager.get(Assets.GUN_SOUND, Sound.class));
+            currAmmo--;
         }
 
         if(controller.pausePressed()) {
-            ScreenManager.setScreen(new GameScreen());
-        }
-
-        if(currGas < maxGas) {
-            currGas += 0.1f;
+            SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
+            ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
         }
     }
 
@@ -154,6 +154,7 @@ public class SpacemanPlayer {
         }
 
         if (!movingUp) {
+            SoundManager.play(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
             movingUp = true;
             movingDown = false;
         }
@@ -162,16 +163,6 @@ public class SpacemanPlayer {
 
         addSmoke();
         spriter.setAnimation("jump");
-    }
-
-
-    private void moveDown() {
-        body.setLinearVelocity(0, -40);
-
-        if (!movingDown) {
-            movingUp = false;
-            movingDown = true;
-        }
     }
 
     private void idle() {
@@ -249,13 +240,21 @@ public class SpacemanPlayer {
 
     public void setCurrGas(float currGas) {
         this.currGas = currGas;
+
+        if(this.currGas > maxGas) {
+            this.currGas = maxGas;
+        }
     }
 
-    public int getHealth() {
-        return health;
+    public int getMaxAmmo() {
+        return maxAmmo;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public int getCurrAmmo() {
+        return currAmmo;
+    }
+
+    public void setCurrAmmo(int currAmmo) {
+        this.currAmmo = currAmmo;
     }
 }

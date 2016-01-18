@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="23">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="40">
+ <properties>
+  <property name="startX" value="3"/>
+  <property name="startY" value="6"/>
+  <property name="time" value="60"/>
+ </properties>
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
   <tile id="0">
@@ -27,14 +32,29 @@
     <property name="type" value="wall"/>
    </properties>
   </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="Tile Layer 1" width="30" height="20">
+ <layer name="walls" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzjYGBg4BgAzMRAf8A0au+ovcPIXpjdw8leFiBmxYFZaGgvPnNpGb+j9o5se9mAmB2IGfFgmBpi1MIwIXu5gZgHix0gNgeUhqlBV8uBpIZUe9H1w8zGZiaMj+429HAg1J7AZi8ujCyP7m90txJjLwAT3ALx
+   eJztlVELgCAMhFcPJdT//73Vw+A4bq6MrIeEIayb35xLi5mVF2y0/mP8EHe4YDiwhpk24/KZZFz2WaBtrbPnlK3v+bC2lavW6sVlhqpBNO7UOeqr3tyW/WL/cs+qXq6dbxbjdxVzazFnuRHb/V+6r37uc9zs/p92m2E+82awtoBPcVHv/bjstsKc9exAWte5z7lFMKL/SeWm9sZxqFHcyPA775tzVWthzMHcAPa5BL0=
   </data>
  </layer>
  <objectgroup name="exits">
-  <object id="1" name="exit" x="2900" y="700" width="100" height="200">
+  <object id="1" name="exit" x="2100" y="700" width="100" height="200">
    <properties>
     <property name="exitX" value="2"/>
     <property name="exitY" value="5"/>
@@ -43,23 +63,22 @@
   </object>
  </objectgroup>
  <objectgroup name="boxes">
-  <object id="3" x="2200" y="700" width="100" height="100"/>
-  <object id="4" x="2200" y="800" width="100" height="100"/>
-  <object id="13" x="2200" y="600" width="100" height="100"/>
-  <object id="14" x="2200" y="500" width="100" height="100"/>
-  <object id="15" x="2200" y="400" width="100" height="100"/>
-  <object id="16" x="2200" y="300" width="100" height="100"/>
-  <object id="17" x="2200" y="200" width="100" height="100"/>
-  <object id="18" x="2200" y="100" width="100" height="100"/>
+  <object id="33" x="2800" y="1400" width="100" height="100"/>
+  <object id="34" x="2800" y="1500" width="100" height="100"/>
+  <object id="35" x="2700" y="1500" width="100" height="100"/>
+  <object id="37" x="100" y="800" width="100" height="100"/>
+  <object id="38" x="200" y="900" width="100" height="100"/>
+  <object id="39" x="100" y="900" width="100" height="100"/>
  </objectgroup>
  <objectgroup name="pickups">
-  <object id="6" x="2500" y="300" width="100" height="100">
+  <object id="6" x="1000" y="700" width="100" height="100">
    <properties>
-    <property name="type" value="gas"/>
+    <property name="type" value="time"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="21" x="2000" y="1500" width="100" height="100"/>
+  <object id="29" x="900" y="900" width="100" height="100"/>
  </objectgroup>
+ <objectgroup name="platforms"/>
 </map>

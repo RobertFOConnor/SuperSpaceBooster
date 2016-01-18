@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="100" tileheight="100" nextobjectid="45">
+ <properties>
+  <property name="startX" value="2"/>
+  <property name="startY" value="18"/>
+  <property name="time" value="15"/>
+ </properties>
+ <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
+  <image source="tileset.png" width="500" height="300"/>
+  <tile id="0">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="type" value="wall"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="walls" width="30" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzlVtEKgzAMTCu46ob//7lTsHgeSRs3XQce3EMwzSVpGkwikhowynf45Hy8oW4/8yFb3712Rs0/rExwZrGfM1/g57UzrO+ByLpR9nM2Efm8VS/7cRzU9cwz51yqF30ZR3XxnoaC3wi5pYLfP+ji/TKwdx5dq8+abgmtdK/AL3WxB7xPtP5o7x9nTXu/1pywbm2uODba+f2yT0cMFNNTL+8+bRda+1GLrdWi5Vmbz6Ow8uQ7vEL3LFr/M5b/G3IbBjo=
+  </data>
+ </layer>
+ <objectgroup name="exits">
+  <object id="1" name="exit" x="1700" y="200" width="100" height="200">
+   <properties>
+    <property name="exitX" value="2"/>
+    <property name="exitY" value="5"/>
+    <property name="link" value="spaceship2"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="boxes"/>
+ <objectgroup name="pickups">
+  <object id="31" x="200" y="800" width="100" height="100"/>
+  <object id="39" x="2700" y="1000" width="100" height="100">
+   <properties>
+    <property name="type" value="ammo"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="enemies">
+  <object id="33" x="1400" y="1800" width="100" height="100"/>
+  <object id="34" x="1900" y="1800" width="100" height="100"/>
+  <object id="36" x="2300" y="300" width="100" height="100"/>
+  <object id="43" x="1500" y="1300" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="gems" visible="0"/>
+ <objectgroup name="platforms">
+  <object id="28" x="2200" y="1000" width="400" height="200">
+   <properties>
+    <property name="distance" value="3"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+  <object id="29" x="1400" y="800" width="200" height="400">
+   <properties>
+    <property name="distance" value="2"/>
+    <property name="height" value="4"/>
+    <property name="type" value="horizontal"/>
+    <property name="width" value="2"/>
+   </properties>
+  </object>
+  <object id="30" x="400" y="1100" width="400" height="200">
+   <properties>
+    <property name="distance" value="4"/>
+    <property name="height" value="2"/>
+    <property name="type" value="vertical"/>
+    <property name="width" value="4"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

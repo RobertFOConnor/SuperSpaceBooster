@@ -56,4 +56,25 @@ public class SpriterManager {
         player.setAnimation("default");
         return player;
     }
+
+    public Player initAmmoPickUp() {
+        Player player = new Player(data.getEntity(3));
+        player.setScale(0.85f);
+        player.setAnimation("default");
+        return player;
+    }
+
+    public Player initTimePickUp() {
+        Player player = new Player(data.getEntity(4));
+        player.setScale(0.85f);
+        player.setAnimation("default");
+        return player;
+    }
+
+    public Player initExit() {
+        Player player = new Player(data.getEntity(5));
+        player.setScale(0.85f);
+        player.setAnimation("default");
+        return player;
+    }
 }

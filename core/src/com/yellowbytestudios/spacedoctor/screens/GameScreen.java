@@ -15,10 +15,12 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.Platform;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -58,6 +60,8 @@ public class GameScreen implements Screen {
     private Array<Box> boxes;
     private Array<PickUp> pickups;
     private Array<Enemy> enemies;
+    private Array<Platform> platforms;
+    private Door door;
     private Texture bg;
 
     public static ParticleManager particleManager;
@@ -69,7 +73,12 @@ public class GameScreen implements Screen {
     private long startTime, delta;
     private Sprite fader;
     boolean atDoor = false;
+    public static int levelNo = 1;
 
+
+    public GameScreen(int levelNo) {
+        this.levelNo = levelNo;
+    }
 
     @Override
     public void create() {
@@ -84,12 +93,10 @@ public class GameScreen implements Screen {
         fader = new Sprite(new Texture(Gdx.files.internal("black.png")));
         fader.setScale(1920, 1080);
 
-        setupMap("spaceship1", new Vector2(3, 5));
-
-        player.setCurrGas(200f);
+        setupMap("spaceship"+levelNo);
     }
 
-    private void setupMap(String mapName, Vector2 playerPos) {
+    private void setupMap(String mapName) {
         System.out.println("Setup begins");
 
         //Setup camera.
@@ -118,15 +125,11 @@ public class GameScreen implements Screen {
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
 
-        //Reserve gas through levels;
-        float currGas = 0f;
-        if (player != null) {
-            currGas = player.getCurrGas();
-        }
+        int startX = (Integer.parseInt(tileMap.getProperties().get("startX", String.class)));
+        int startY = (Integer.parseInt(tileMap.getProperties().get("startY", String.class)));
 
         player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
-        player.setPos(playerPos);
-        player.setCurrGas(currGas);
+        player.setPos(new Vector2(startX, startY));
 
         contactListener.setPlayer(player);
 
@@ -134,10 +137,11 @@ public class GameScreen implements Screen {
 
         bg = new Texture(Gdx.files.internal("bg.png"));
 
-        BodyFactory.createDoors(world, tileMap);
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);
         enemies = BodyFactory.createEnemies(world, tileMap);
+        platforms = BodyFactory.createPlatforms(world, tileMap);
+        door = BodyFactory.createDoors(world, tileMap);
 
         gui = new GUIManager(player);
 
@@ -175,6 +179,7 @@ public class GameScreen implements Screen {
         updateCameras();
 
         player.update();
+        gui.update();
 
         if (contactListener.getBodies().size > 0) {
             for (Fixture f : contactListener.getBodies()) {
@@ -182,7 +187,9 @@ public class GameScreen implements Screen {
                 if (f.getUserData().equals("bullet")) {
                     bullets.removeValue((Bullet) b.getUserData(), true);
                 } else if (f.getUserData().equals("pickup")) {
-                    pickups.removeValue((PickUp) b.getUserData(), true);
+                    PickUp pickUp = (PickUp) b.getUserData();
+                    pickUp.activate(player);
+                    pickups.removeValue(pickUp, true);
                 }
                 world.destroyBody(b);
             }
@@ -222,6 +229,10 @@ public class GameScreen implements Screen {
             }
         }
 
+        for (Platform p : platforms) {
+            p.update();
+        }
+
         for (Enemy e : enemies) {
             e.update(player);
         }
@@ -259,7 +270,12 @@ public class GameScreen implements Screen {
         tmr.render();
 
         sb.begin();
+        door.render(sb);
         player.render(sb);
+
+        for (Platform p : platforms) {
+            p.render(sb);
+        }
 
         for (Bullet b : bullets) { //DRAW BULLETS.
             b.render(sb);
@@ -296,7 +312,7 @@ public class GameScreen implements Screen {
             @Override
             public void onEvent(int type, BaseTween<?> source) {
                 Door d = (Door) contactListener.getDoor().getUserData();
-                setupMap(d.getDestination(), d.getPlayerPos());
+                setupMap(d.getDestination());
             }
         };
 

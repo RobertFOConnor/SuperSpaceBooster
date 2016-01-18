@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="20" tilewidth="100" tileheight="100" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="45" height="20" tilewidth="100" tileheight="100" nextobjectid="7">
+ <properties>
+  <property name="startX" value="3"/>
+  <property name="startY" value="6"/>
+ </properties>
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
+  <tile id="0">
+   <properties>
+    <property name="startX" value="3"/>
+    <property name="startY" value="6"/>
+   </properties>
+  </tile>
   <tile id="2">
    <properties>
     <property name="type" value="spike"/>
    </properties>
   </tile>
  </tileset>
- <layer name="Tile Layer 1" width="45" height="20">
+ <layer name="walls" width="45" height="20">
+  <properties>
+   <property name="time" value="60"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJztltsKxDAIRG3Si7D9/+9tHipMJWvdbYkEMjD4kNgcjYUwEXFnTtSXEg3mFhrMbTSY2yiaOYO9imaei5czehXNnFT8NS9CPTNPTq/FG8Uzs+KRiKzyNvoU7xTLLCwT8EjENawp+l1Xu3dkQ2apxTtHd/P1BrPus3Wu1IP1eXhxvp4wM1058HzNwmo/zhH2sJar8/Of1t+2GL/1tPZP1Oq37stau6vdMs7MAb8IBRE=
+   eJztlo0KwyAMhFO7H2Fj7/+4s7DALYvRZIFuUOGwqD2/xFRaiaj+mQrltp5f1j4l0Qs9PeMR/4P5YO75bLo0XZU+6ukZj/hvujXdlT7q6RmP+O9ZGyvI478n86np/Oo9/l7mlez8eJiLMddrEWbOTS8/v8hcOs/W2GjtMim+z7KZH4Y0ryp4uEdW/jfi+yyb2dOYZaHPexbnMKbIf10ms3buyIbMHMtsHY3qK4NZ5tnal+PB+GZ4sb6+Ya70zoH7S5Yq1mMdYQ61d+X78s6elfS2GHs51b4JLX7rvKy5UeyWsGaeQ2MGQQ==
   </data>
  </layer>
  <objectgroup name="exits">
-  <object id="3" name="exit" x="4400" y="1000" width="100" height="200">
+  <object id="3" name="exit" x="4100" y="900" width="100" height="200">
    <properties>
     <property name="exitX" value="2"/>
     <property name="exitY" value="7"/>
@@ -23,9 +36,14 @@
   </object>
  </objectgroup>
  <objectgroup name="pickups">
-  <object id="4" x="3200" y="600" width="100" height="100"/>
+  <object id="4" x="200" y="400" width="100" height="100">
+   <properties>
+    <property name="type" value="gas"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="5" x="4300" y="1100" width="100" height="100"/>
+  <object id="5" x="3800" y="1100" width="100" height="100"/>
+  <object id="6" x="400" y="400" width="100" height="100"/>
  </objectgroup>
 </map>

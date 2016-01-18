@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="36">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="39">
+ <properties>
+  <property name="startX" value="4"/>
+  <property name="startY" value="6"/>
+  <property name="time" value="60"/>
+ </properties>
  <tileset firstgid="1" name="tileset" tilewidth="100" tileheight="100" tilecount="15">
   <image source="tileset.png" width="500" height="300"/>
+  <tile id="2">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="type" value="spike"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="Tile Layer 1" width="50" height="40">
+ <layer name="walls" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztWEGOwzAITHtoK+3+/73bHpDY0QzGxq5zyEhIUWo3DBgMPI7jeL7llpTXFyWr00d+3vJL3o8iq2PmfzK2jH6v8JgFryPTN8OBnZ8Zvqrw6D1nGfkGHsf/uGU8/Br17H2B72cAfY02V3GrYls9exvY+2yMZoF2nnF+cL/5AP3b2rcyTyie6FPm18i/bN9qHur7GXvb/mjtSr0N0XlpxZPnUY2THt7Mt97+eF7uA/pUkP1ej173zvUzcPGI1148+tET57N4sBqldYfgHlYjtWpu21PlwfIxu0NQZ5aXVU6PasCRPIo8MvVZ5p5X9QryVTXBrcijAnbX27sR7OLhzxT6bgQ789XM3nF33vU8KtjNYxYuHnWwHDuKXr1W5V1/n49gFw82o1iVd7GmsHOl5j2stop6254+udVTMh6qpjAezJZMH1UzsX6T1SiKIwLXRTXry/GI5iVK31Y9leXIuGD9pWpWez5r3o3mUcxOZ+cR9SfYq5yVhzq7bI5rPKq10GyoOFe9nI/zM3HBfIA9Acu7mXshc1ajPKX2qdze871Wno1mwsxOau7ORPXGinsrb0f3r5p3RLaPbKfiNlMvRHaK5tSZe6slytbKDmqfEtTxD4u6D9c=
+   eJztWF1rwzAM9DLoChv9/z+37YNAO+4k2XEaP+RAEFK70cn6sm6ttZ+XfBXl/kGp6vSW35f8kfejqOpY+Z+KLaPf9/CYBa8j07fCgfnPjLPaw6PXzyryCdza/7hlPPwa9ezPAt/PAJ412lzFrYpt9extYO+rMVoF2nmG/+B+OwM832zfkXlC8cQzZecanS/bdzQP9f2KvW1/tPZIvQ2Rv2Tx5HnsjZOMv/IXz8sE/WUb0GcPqt/r0WvrXD8DF4947cWjHz31bBYP1qNkNQT3sB4p67ltz14eLB+zGoI6s7yscnrUA47kUeTBeiyUSp1X/QryVT3BTL/qBav19m4ETK9Z8RTB+xSe3QjO4vHGg8goVs67Pbh4rIUzeXwTGcUqedfX8xGcxYPNKGbnXQP2FMZDzXtYbxXdbXvuydmdMqof7C64NW5Lpo/qmdh9k/UoiiMC10U9693xiOYlSt+sn6pyZFyw/1I9qz2vmnejeRSz0+o8mLA57so8lO+yOa7xYLF2JlScq7ucj/OVuGA+wDsBy7uVulDx1ShPqX0qt/d8L8uz0UyY2UnN3Zmou7HinuXtqP6qeUdk+8h2Km4r/UJkp2hOXalbmShbKzuofUpQxyeHChAX
   </data>
  </layer>
  <objectgroup name="boxes">
@@ -24,9 +49,6 @@
   <object id="17" x="1519.7" y="1971.21" width="100" height="100"/>
   <object id="18" x="1519.7" y="2171.21" width="100" height="100"/>
   <object id="19" x="1519.7" y="2071.21" width="100" height="100"/>
-  <object id="20" x="1180.3" y="1962.12" width="100" height="100"/>
-  <object id="21" x="1180.3" y="2162.12" width="100" height="100"/>
-  <object id="22" x="1180.3" y="2062.12" width="100" height="100"/>
   <object id="23" x="1192.42" y="2386.36" width="100" height="100"/>
   <object id="24" x="1192.42" y="2586.36" width="100" height="100"/>
   <object id="25" x="1192.42" y="2486.36" width="100" height="100"/>
@@ -36,11 +58,20 @@
   <object id="29" x="4000" y="800" width="100" height="100"/>
  </objectgroup>
  <objectgroup name="pickups">
-  <object id="10" x="1600" y="500" width="100" height="100"/>
+  <object id="10" x="1700" y="500" width="100" height="100"/>
  </objectgroup>
  <objectgroup name="enemies">
   <object id="33" x="3600" y="3400" width="100" height="100"/>
   <object id="34" x="300" y="2500" width="100" height="100"/>
   <object id="35" x="3600" y="200" width="100" height="100"/>
+ </objectgroup>
+ <objectgroup name="exits">
+  <object id="37" x="4000" y="2600" width="100" height="200">
+   <properties>
+    <property name="exitX" value=""/>
+    <property name="exitY" value=""/>
+    <property name="link" value=""/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
