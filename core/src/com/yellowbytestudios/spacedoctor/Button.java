@@ -10,17 +10,23 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Button {
 
-    protected Texture texture;
+    protected Texture texture, texture_pressed;
     protected Vector2 pos;
     private boolean selected, pressed = false;
 
-    public Button(Texture texture, Vector2 pos) {
+    public Button(Texture texture, Texture texture_pressed, Vector2 pos) {
         this.texture = texture;
+        this.texture_pressed = texture_pressed;
         this.pos = pos;
     }
 
     public void render(SpriteBatch sb) {
-        sb.draw(texture, pos.x, pos.y);
+        if(pressed) {
+            sb.draw(texture_pressed, pos.x, pos.y);
+        } else {
+            sb.draw(texture, pos.x, pos.y);
+        }
+
     }
 
     public Rectangle getBounds() {

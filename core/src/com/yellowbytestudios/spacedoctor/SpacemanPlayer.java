@@ -73,9 +73,13 @@ public class SpacemanPlayer {
 
         if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
             moveLeft();
-        } else if (controller.rightPressed()) {
+        }
+
+        if (controller.rightPressed()) {
             moveRight();
-        } else {
+        }
+
+        if(!controller.rightPressed() && !controller.leftPressed()){
             idle();
         }
 

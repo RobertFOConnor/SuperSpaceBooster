@@ -70,12 +70,10 @@ public class Box2DContactListeners implements ContactListener {
         if(fa.getUserData() != null && fa.getUserData().equals("door")) {
             door = fa.getBody();
             atDoor = true;
-            endLevel();
         }
         if(fb.getUserData() != null && fb.getUserData().equals("door")) {
             door = fb.getBody();
             atDoor = true;
-            endLevel();
         }
 
         if(fa.getUserData() != null && fa.getUserData().equals("pickup")) {
@@ -167,17 +165,6 @@ public class Box2DContactListeners implements ContactListener {
             SoundManager.play(Assets.manager.get(Assets.FOOTSTEP2_SOUND, Sound.class));
         } else {
             SoundManager.play(Assets.manager.get(Assets.FOOTSTEP3_SOUND, Sound.class));
-        }
-    }
-
-    private void endLevel() {
-        SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
-
-        if(MainGame.UNLOCKED_LEVEL != 10) {
-            MainGame.UNLOCKED_LEVEL+=1;
-            ScreenManager.setScreen(new LevelSelectScreen());
-        } else {
-            ScreenManager.setScreen(new ResultsScreen());
         }
     }
 

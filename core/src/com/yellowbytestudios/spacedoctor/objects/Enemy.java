@@ -25,6 +25,9 @@ public class Enemy extends Box2DSprite {
     public Enemy(Body body) {
         super(body);
         spriter = MainGame.spriterManager.initDemon();
+
+        assignVariables();
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM) - 75);
     }
 
     public void render(SpriteBatch sb) {

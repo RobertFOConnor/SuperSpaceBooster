@@ -68,7 +68,7 @@ public class LevelSelectScreen implements Screen {
         private Texture border;
 
         public LevelButton(Vector2 pos, int levelNum) {
-            super(new Texture(Gdx.files.internal("levelLocked.png")), pos);
+            super(new Texture(Gdx.files.internal("levelLocked.png")), new Texture(Gdx.files.internal("levelLocked.png")), pos);
             if (MainGame.UNLOCKED_LEVEL > levelNum) {
                 texture = new Texture(Gdx.files.internal("levelComplete.png"));
             } else if (MainGame.UNLOCKED_LEVEL == levelNum) {

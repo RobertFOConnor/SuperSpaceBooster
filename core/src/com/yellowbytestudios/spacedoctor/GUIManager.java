@@ -42,15 +42,7 @@ public class GUIManager {
     }
 
     public void update() {
-
-
         timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
-
-        // Check if time is up.
-        if (timeElapsed < 0 || player.isDead()) {
-            SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-            ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
-        }
     }
 
     public void render(SpriteBatch sb) {
@@ -84,5 +76,9 @@ public class GUIManager {
         Fonts.timerFont.setColor(Color.WHITE);
 
         sb.end();
+    }
+
+    public long getTimeElapsed() {
+        return timeElapsed;
     }
 }

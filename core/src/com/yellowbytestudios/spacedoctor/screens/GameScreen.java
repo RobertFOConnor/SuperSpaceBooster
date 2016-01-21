@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -15,11 +16,13 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.Platform;
+import com.yellowbytestudios.spacedoctor.SoundManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -68,10 +71,6 @@ public class GameScreen implements Screen {
     public static LightManager lightManager;
     private GUIManager gui;
 
-    //Fade in/out between maps.
-    private TweenManager tweenManager;
-    private long startTime, delta;
-    private Sprite fader;
     boolean atDoor = false;
     public static int levelNo = 1;
 
@@ -87,29 +86,33 @@ public class GameScreen implements Screen {
     public void create() {
 
         b2dCam = new BoundedCamera();
+        b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
+
         b2dr = new Box2DDebugRenderer();
         particleManager = new ParticleManager();
         //lightManager = new LightManager(world, player, cam);
 
-        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-        tweenManager = new TweenManager();
-        fader = new Sprite(new Texture(Gdx.files.internal("black.png")));
-        fader.setScale(1920, 1080);
+        cam = new BoundedCamera();
+        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
 
         if (MainGame.DEVICE.equals("ANDROID")) {
             androidController = new AndroidController();
         }
 
+        //Set tile map using Tiled map path.
+        tileMap = new TmxMapLoader().load("spaceship" + levelNo + ".tmx");
 
-        setupMap("spaceship" + levelNo);
+        //Setup map renderer.
+        tmr = new OrthogonalTiledMapRenderer(tileMap);
+
+
+        setupMap();
     }
 
-    private void setupMap(String mapName) {
+    private void setupMap() {
         System.out.println("Setup begins");
 
         //Setup camera.
-        cam = new BoundedCamera();
-        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
         world = new World(new Vector2(0, -9.8f), true);
 
         //Setup contact listeners.
@@ -117,13 +120,6 @@ public class GameScreen implements Screen {
         world.setContactListener(contactListener);
 
 
-        b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
-
-        //Set tile map using Tiled map path.
-        tileMap = new TmxMapLoader().load(mapName + ".tmx");
-
-        //Setup map renderer.
-        tmr = new OrthogonalTiledMapRenderer(tileMap);
 
         tileManager = new TileManager();
         tileManager.createWalls(world, tileMap);
@@ -152,12 +148,6 @@ public class GameScreen implements Screen {
         door = BodyFactory.createDoors(world, tileMap);
 
         gui = new GUIManager(player);
-
-        fader.setAlpha(1f);
-        Tween.to(fader, SpriteAccessor.OPACITY, 30f)
-                .target(0f).ease(TweenEquations.easeNone)
-                .start(tweenManager);
-
         atDoor = false;
     }
 
@@ -181,8 +171,11 @@ public class GameScreen implements Screen {
     public void update(float step) {
         world.step(step, 8, 3);
 
-        delta = (TimeUtils.millis() - startTime + 1000) / 1000;
-        tweenManager.update(delta);
+        if(player.isDead() || gui.getTimeElapsed() < 0) {
+            SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
+            setupMap();
+        }
+
 
         if (MainGame.DEVICE.equals("ANDROID")) {
             androidController.update();
@@ -232,15 +225,18 @@ public class GameScreen implements Screen {
             player.setShooting(false);
         }
 
-        if (!atDoor) {
 
-            if (contactListener.isAtDoor()) {
+        if (contactListener.isAtDoor()) {
+            SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
 
-                fadeOut();
-
-                atDoor = true;
+            if (MainGame.UNLOCKED_LEVEL != 10) {
+                MainGame.UNLOCKED_LEVEL += 1;
+                ScreenManager.setScreen(new LevelSelectScreen());
+            } else {
+                ScreenManager.setScreen(new ResultsScreen());
             }
         }
+
 
         for (Platform p : platforms) {
             p.update();
@@ -249,8 +245,6 @@ public class GameScreen implements Screen {
         for (Enemy e : enemies) {
             e.update(player);
         }
-
-        //lightManager.update();
     }
 
     private void updateCameras() {
@@ -307,7 +301,6 @@ public class GameScreen implements Screen {
         }
 
         particleManager.render(sb);
-        fader.draw(sb);
 
         sb.end();
 
@@ -319,30 +312,8 @@ public class GameScreen implements Screen {
             androidController.render(sb);
         }
 
-
-        //lightManager.render();
         //Render Box2D world.
         //b2dr.render(world, b2dCam.combined);
-    }
-
-    private void fadeOut() {
-        TweenCallback myCallBack = new TweenCallback() {
-            @Override
-            public void onEvent(int type, BaseTween<?> source) {
-                Door d = (Door) contactListener.getDoor().getUserData();
-                setupMap(d.getDestination());
-            }
-        };
-
-
-        fader.setAlpha(0f);
-        Tween.to(fader, SpriteAccessor.OPACITY, 30f)
-                .target(1f).ease(TweenEquations.easeNone)
-                .setCallback(myCallBack)
-                .setCallbackTriggers(TweenCallback.END)
-                .start(tweenManager);
-
-        startTime = TimeUtils.millis();
     }
 
     @Override
