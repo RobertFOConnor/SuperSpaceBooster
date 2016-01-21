@@ -36,6 +36,7 @@ public class SpacemanPlayer {
     private int currAmmo = 10;
 
     private boolean canMove = true;
+    private boolean isDead = false;
 
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
@@ -48,7 +49,11 @@ public class SpacemanPlayer {
 
 
         //Assign type of controls for player. (XBox or Keyboard controls).
-        if (MainGame.hasControllers) {
+        if(MainGame.DEVICE.equals("ANDROID")) {
+
+            controller = GameScreen.androidController;
+
+        } else if (MainGame.hasControllers) {
             controller = new XBoxController();
         } else {
             controller = new KeyboardController();
@@ -256,5 +261,13 @@ public class SpacemanPlayer {
 
     public void setCurrAmmo(int currAmmo) {
         this.currAmmo = currAmmo;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
     }
 }

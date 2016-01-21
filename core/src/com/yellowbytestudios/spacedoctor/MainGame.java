@@ -29,6 +29,13 @@ public class MainGame extends ApplicationAdapter {
     public static int UNLOCKED_LEVEL = 1;
     public static Music GAME_MUSIC;
 
+    public static String DEVICE;
+
+    public MainGame(String device) {
+        this.DEVICE = device;
+    }
+
+
     @Override
     public void create() {
         sb = new SpriteBatch();

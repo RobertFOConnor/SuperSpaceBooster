@@ -47,7 +47,7 @@ public class GUIManager {
         timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
 
         // Check if time is up.
-        if (timeElapsed < 0) {
+        if (timeElapsed < 0 || player.isDead()) {
             SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
             ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
         }

@@ -39,6 +39,9 @@ public class TitleScreen implements Screen {
             }
         } else if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             ScreenManager.setScreen(new LevelSelectScreen());
+
+        } else if(MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
+            ScreenManager.setScreen(new LevelSelectScreen());
         }
     }
 

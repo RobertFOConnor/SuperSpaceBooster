@@ -50,7 +50,7 @@
  </tileset>
  <layer name="walls" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJzFlskOgzAMRM3WRgX1/z+3OTDSdBRiB1IaaQ4Rxs+LbEhmln6gt0ifj3b9DLuiZ+zITUHbV0cuavcPLtd5uomr/fV8HnFRN/h7ZD3prjXVfM9y4Rv+1qzNvufgCvfIZrC22dBY7uKiD+xzEs1Zy67Z4UZnA33g95mzCCfS37NH/Ua5LflGuehHbY60Zz246EeNqz3rwY3k2/qNiXA5X91FJcEmYgt5+SKG0k7UfaW2uk89Lufr7UT2hbvGVtrfXr5e3Mrk2PRe+4/RfD/U5wUh
+   eJzFlskOgzAMRM0etVX//3ObAyNNRwE7ECDSHCKMnxfZkMwsXaCvSJ/3dv50q6Knb8hNQdtXQy5q9wSX6zzcxNX+ej63uKgb/M1ZC921pprvUS58w98762P/c3CGu2XTWd1saCx3cdEH9jmIxqxp1ehwo7OBPvD7zJmEE+nv0aN+o9yafKNc9GNvjrRnLbjoxx5Xe9aCG8m39hsT4XK+uotKgk3EFvLyRQylnaj7Sm11n3pcztfbiewLd42ttL+9fL24lcmx6V3/Y/TO+f4A1ycFOQ==
   </data>
  </layer>
  <objectgroup name="exits">

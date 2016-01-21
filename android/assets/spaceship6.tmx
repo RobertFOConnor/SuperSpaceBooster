@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="53">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="55">
  <properties>
   <property name="startX" value="2"/>
   <property name="startY" value="37"/>
@@ -54,6 +54,7 @@
   <object id="45" x="1100" y="800" width="100" height="100"/>
   <object id="47" x="2400" y="2700" width="100" height="100"/>
   <object id="48" x="3600" y="2700" width="100" height="100"/>
+  <object id="54" x="2500" y="3100" width="100" height="100"/>
  </objectgroup>
  <objectgroup name="pickups">
   <object id="41" x="2800" y="800" width="100" height="100">
@@ -61,17 +62,17 @@
     <property name="type" value="ammo"/>
    </properties>
   </object>
-  <object id="50" x="200" y="1900" width="100" height="100">
+  <object id="50" x="1700" y="2500" width="100" height="100">
    <properties>
     <property name="type" value="ammo"/>
    </properties>
   </object>
-  <object id="51" x="1400" y="2000" width="100" height="100">
+  <object id="51" x="400" y="2100" width="100" height="100">
    <properties>
     <property name="type" value="time"/>
    </properties>
   </object>
-  <object id="52" x="2500" y="3000" width="100" height="100">
+  <object id="53" x="1100" y="1400" width="100" height="100">
    <properties>
     <property name="type" value="time"/>
    </properties>

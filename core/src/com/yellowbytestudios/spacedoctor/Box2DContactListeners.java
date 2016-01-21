@@ -51,30 +51,20 @@ public class Box2DContactListeners implements ContactListener {
 
         if (fa.getUserData() != null && fa.getUserData().equals("player")) {
             if(fb.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
-                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+                killPlayer();
             }
         }
         if (fb.getUserData() != null && fb.getUserData().equals("player")) {
             if(fa.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
-                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+                killPlayer();
             }
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("bullet")) {
-            bodiesToRemove.add(fa);
-
-            if(fb.getUserData().equals("enemy")) {
-                enemy = fb.getBody();
-            }
+            shootEnemy(fb, fa);
         }
         if (fb.getUserData() != null && fb.getUserData().equals("bullet")) {
-            bodiesToRemove.add(fb);
-
-            if(fa.getUserData().equals("enemy")) {
-                enemy = fa.getBody();
-            }
+            shootEnemy(fa, fb);
         }
 
         if(fa.getUserData() != null && fa.getUserData().equals("door")) {
@@ -98,14 +88,12 @@ public class Box2DContactListeners implements ContactListener {
         if(fa.getUserData() != null && fa.getUserData().equals("enemy")) {
 
             if(fb.getUserData().equals("player")) {
-                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+                killPlayer();
             }
         }
         if(fb.getUserData() != null && fb.getUserData().equals("enemy")) {
             if(fa.getUserData().equals("player")) {
-                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+                killPlayer();
             }
         }
     }
@@ -191,5 +179,17 @@ public class Box2DContactListeners implements ContactListener {
         } else {
             ScreenManager.setScreen(new ResultsScreen());
         }
+    }
+
+    private void shootEnemy(Fixture fa, Fixture fb) {
+        bodiesToRemove.add(fb);
+
+        if(fa.getUserData().equals("enemy")) {
+            enemy = fa.getBody();
+        }
+    }
+
+    private void killPlayer() {
+        player.setDead(true);
     }
 }

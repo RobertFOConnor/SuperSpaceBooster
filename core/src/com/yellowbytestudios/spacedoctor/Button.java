@@ -12,7 +12,7 @@ public class Button {
 
     protected Texture texture;
     protected Vector2 pos;
-    private boolean selected = false;
+    private boolean selected, pressed = false;
 
     public Button(Texture texture, Vector2 pos) {
         this.texture = texture;
@@ -34,12 +34,27 @@ public class Button {
         return false;
     }
 
+    public boolean checkTouch(float x, float y) {
+        if(getBounds().contains(x, y)) {
+            return true;
+        }
+        return false;
+    }
+
     public Texture getTexture() {
         return texture;
     }
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public boolean isPressed() {
+        return pressed;
+    }
+
+    public void setPressed(boolean pressed) {
+        this.pressed = pressed;
     }
 
     public void setSelected(boolean selected) {

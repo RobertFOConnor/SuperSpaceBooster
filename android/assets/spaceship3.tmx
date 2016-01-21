@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="39">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="100" tileheight="100" nextobjectid="40">
  <properties>
   <property name="startX" value="4"/>
   <property name="startY" value="6"/>
@@ -30,7 +30,7 @@
  </tileset>
  <layer name="walls" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztWF1rwzAM9DLoChv9/z+37YNAO+4k2XEaP+RAEFK70cn6sm6ttZ+XfBXl/kGp6vSW35f8kfejqOpY+Z+KLaPf9/CYBa8j07fCgfnPjLPaw6PXzyryCdza/7hlPPwa9ezPAt/PAJ412lzFrYpt9extYO+rMVoF2nmG/+B+OwM832zfkXlC8cQzZecanS/bdzQP9f2KvW1/tPZIvQ2Rv2Tx5HnsjZOMv/IXz8sE/WUb0GcPqt/r0WvrXD8DF4947cWjHz31bBYP1qNkNQT3sB4p67ltz14eLB+zGoI6s7yscnrUA47kUeTBeiyUSp1X/QryVT3BTL/qBav19m4ETK9Z8RTB+xSe3QjO4vHGg8goVs67Pbh4rIUzeXwTGcUqedfX8xGcxYPNKGbnXQP2FMZDzXtYbxXdbXvuydmdMqof7C64NW5Lpo/qmdh9k/UoiiMC10U9693xiOYlSt+sn6pyZFyw/1I9qz2vmnejeRSz0+o8mLA57so8lO+yOa7xYLF2JlScq7ucj/OVuGA+wDsBy7uVulDx1ShPqX0qt/d8L8uz0UyY2UnN3Zmou7HinuXtqP6qeUdk+8h2Km4r/UJkp2hOXalbmShbKzuofUpQxyeHChAX
+   eJztWGtrwzAM9DLoChv9/z+37QeBdtzJ8iOxGTsQC52d6CTrYd1KKV8v+UjK/ULJ6vSW75f8kN97kdUx856MLaP/j/CYBa8j0zfDgZ2fGb4a4dF6zjJyBW7ld9wyHn6Neva+wN9nAH2NNldxq2JbPXsb2O/ZGM0C7Tzj/OB+8wH6t7bvzDyheKJPmV8j/7J9Z/NQ38/Y2/ZHa8/U2xCdl1o8eR6jcZL1qfKtX4vn5ejQZwTZ77XodTSun4G/yMPHp/1l6zLvXMVDnXNcl33nlTxa6tksHqxHqeUb3MN6pFrPbXtGebB8zGoI6szyssrpUQ/Yk0eRB+uxUDJ1XvUryDeqH6vig9V6zEEtYHrNiqcI/kyh73qwiscbDyK92DnvtuCfx15YyeOTSC92ybu+nvdgFQ82o5iddw3YUxgPNe9hvVV0t225J9fulFH9YHfBo3BbMn1Uz8Tum6xHURwRuC7qWe+ORzQvUfrW+qksR8YF+y/Vs9rzrnk3mkcxO+3Ogwmb4+7MQ51dNsc1HizWVkLFubrL+TjfiQvmA7wTsLybqQuZsxrlKbVP5faW79XybDQTZnZSc3cm6m6suNfydlR/1bwjsn1kOxW3mX4hslM0p87UrZooWys7qH1KUMcnNRgQjw==
   </data>
  </layer>
  <objectgroup name="boxes">
@@ -59,6 +59,11 @@
  </objectgroup>
  <objectgroup name="pickups">
   <object id="10" x="1700" y="500" width="100" height="100"/>
+  <object id="39" x="2100" y="2300" width="100" height="100">
+   <properties>
+    <property name="type" value="time"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="enemies">
   <object id="33" x="3600" y="3400" width="100" height="100"/>

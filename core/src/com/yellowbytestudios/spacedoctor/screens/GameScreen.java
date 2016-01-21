@@ -15,7 +15,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
@@ -24,6 +23,7 @@ import com.yellowbytestudios.spacedoctor.Platform;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
+import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
@@ -75,6 +75,9 @@ public class GameScreen implements Screen {
     boolean atDoor = false;
     public static int levelNo = 1;
 
+    //ANDROID CONTROLLER
+    public static AndroidController androidController;
+
 
     public GameScreen(int levelNo) {
         this.levelNo = levelNo;
@@ -93,7 +96,12 @@ public class GameScreen implements Screen {
         fader = new Sprite(new Texture(Gdx.files.internal("black.png")));
         fader.setScale(1920, 1080);
 
-        setupMap("spaceship"+levelNo);
+        if (MainGame.DEVICE.equals("ANDROID")) {
+            androidController = new AndroidController();
+        }
+
+
+        setupMap("spaceship" + levelNo);
     }
 
     private void setupMap(String mapName) {
@@ -176,6 +184,11 @@ public class GameScreen implements Screen {
         delta = (TimeUtils.millis() - startTime + 1000) / 1000;
         tweenManager.update(delta);
 
+        if (MainGame.DEVICE.equals("ANDROID")) {
+            androidController.update();
+        }
+
+
         updateCameras();
 
         player.update();
@@ -198,9 +211,9 @@ public class GameScreen implements Screen {
         if (contactListener.getEnemy() != null) {
 
             Enemy e = (Enemy) contactListener.getEnemy().getUserData();
-            e.setHealth(e.getHealth()-1);
+            e.setHealth(e.getHealth() - 1);
 
-            if(e.getHealth() <= 0) {
+            if (e.getHealth() <= 0) {
                 enemies.removeValue(e, true);
                 world.destroyBody(contactListener.getEnemy());
             }
@@ -295,11 +308,16 @@ public class GameScreen implements Screen {
 
         particleManager.render(sb);
         fader.draw(sb);
+
         sb.end();
 
 
         //DRAW GUI!
         gui.render(sb);
+
+        if (MainGame.DEVICE.equals("ANDROID")) {
+            androidController.render(sb);
+        }
 
 
         //lightManager.render();
