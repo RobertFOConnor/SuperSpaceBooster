@@ -19,7 +19,7 @@ public class Assets {
     public static final String PICKUP_SOUND = "sounds/pickup.wav";
     public static final String DEATH_SOUND = "sounds/death.wav";
 
-    public static final String THEME = "sounds/theme.mp3";
+    //public static final String THEME = "sounds/theme.mp3";
 
     
     public static void load() {// Loads Assets
@@ -35,7 +35,7 @@ public class Assets {
         manager.load(PICKUP_SOUND, Sound.class);
         manager.load(DEATH_SOUND, Sound.class);
 
-        manager.load(THEME, Music.class);
+        //manager.load(THEME, Music.class);
     }
 
     public static void dispose() {

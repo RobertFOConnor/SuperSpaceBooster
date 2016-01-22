@@ -181,7 +181,6 @@ public class GameScreen implements Screen {
             androidController.update();
         }
 
-
         updateCameras();
 
         player.update();
@@ -213,18 +212,18 @@ public class GameScreen implements Screen {
             contactListener.nullifyEnemy();
         }
 
-        for (Bullet b : bullets) { //DRAW BULLETS.
-            if (Math.abs(b.getBody().getPosition().x - player.getPos().x) > 100) {
-                world.destroyBody(b.getBody());
-                bullets.removeValue(b, true);
-            }
-        }
-
         if (player.isShooting()) {
             addBullet();
             player.setShooting(false);
         }
 
+        for (Platform p : platforms) {
+            p.update();
+        }
+
+        for (Enemy e : enemies) {
+            e.update(player);
+        }
 
         if (contactListener.isAtDoor()) {
             SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
@@ -235,15 +234,6 @@ public class GameScreen implements Screen {
             } else {
                 ScreenManager.setScreen(new ResultsScreen());
             }
-        }
-
-
-        for (Platform p : platforms) {
-            p.update();
-        }
-
-        for (Enemy e : enemies) {
-            e.update(player);
         }
     }
 

@@ -50,7 +50,7 @@ public class MainGame extends ApplicationAdapter {
     public void render() {
         if (Assets.update() && !LOADED) { // DONE LOADING. SHOW TITLE SCREEN.
             ScreenManager.setScreen(new TitleScreen());
-            SoundManager.setMusic(Assets.THEME);
+            //SoundManager.setMusic(Assets.THEME);
             LOADED = true;
         }
 

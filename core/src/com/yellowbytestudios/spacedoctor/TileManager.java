@@ -26,9 +26,15 @@ public class TileManager {
         float PPM = 100;
 
         Vector2 bot_L = new Vector2((-tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
+        Vector2 bot_R = new Vector2((tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
+
+        //TOP CORNERS
         Vector2 top_L = new Vector2((-tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
         Vector2 top_R = new Vector2((tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
-        Vector2 bot_R = new Vector2((tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
+
+        boolean shouldDrawVector;
+        Vector2 start;
+        Vector2 finish;
 
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
@@ -39,45 +45,106 @@ public class TileManager {
 
                 TiledMapTileLayer.Cell cell = layer.getCell(col, row);
 
-                if (cell == null) continue;
-                if (cell.getTile() == null) continue;
+                TiledMapTileLayer.Cell above_cell = layer.getCell(col, row + 1);
 
-                Object property = cell.getTile().getProperties().get("type");
+                start = top_L;
+                finish = top_R;
 
-                bdef.type = BodyDef.BodyType.StaticBody;
-                bdef.position.set((col + 0.5f), (row + 0.5f));
+                shouldDrawVector = false;
 
-                ChainShape chainShape = new ChainShape();
-
-                Vector2[] v;
-                v = new Vector2[4];
-                v[0] = bot_L;
-                v[1] = top_L;
-                v[2] = top_R;
-                v[3] = bot_R;
-
-
-                chainShape.createChain(v);
-                fdef.density = 1f;
-                fdef.shape = chainShape;
-
-
-                if(property != null) {
-                    if (property.equals("spike")) {
-                        fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
-                    } else {
-                        fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                if (cell != null) {
+                    if (above_cell == null) {
+                        shouldDrawVector = true;
                     }
                 } else {
-                    fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                    if (above_cell != null) {
+                        shouldDrawVector = true;
+                    }
                 }
 
+                if (shouldDrawVector) {
 
-                fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+                    bdef.type = BodyDef.BodyType.StaticBody;
+                    bdef.position.set((col + 0.5f), (row + 0.5f));
+
+                    ChainShape chainShape = new ChainShape();
+
+                    Vector2[] v;
+                    v = new Vector2[2];
+                    v[0] = start;
+                    v[1] = finish;
 
 
-                world.createBody(bdef).createFixture(fdef).setUserData("ground");
-                chainShape.dispose();
+                    chainShape.createChain(v);
+                    fdef.density = 1f;
+                    fdef.shape = chainShape;
+
+
+                    if (cell != null) {
+                        Object property = cell.getTile().getProperties().get("type");
+
+                        if (property != null) {
+                            if (property.equals("spike")) {
+                                fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+                            } else {
+                                fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                            }
+                        } else {
+                            fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                        }
+                    }
+                    fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+
+
+                    world.createBody(bdef).createFixture(fdef).setUserData("ground");
+                    chainShape.dispose();
+                }
+            }
+        }
+
+        for (int row = 0; row < layer.getHeight(); row++) {
+            for (int col = 0; col < layer.getWidth(); col++) {
+
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
+                TiledMapTileLayer.Cell left_cell = layer.getCell(col - 1, row);
+
+                start = top_L;
+                finish = bot_L;
+
+                shouldDrawVector = false;
+
+                if (cell != null) {
+                    if (left_cell == null) {
+                        shouldDrawVector = true;
+                    }
+                } else {
+                    if (left_cell != null) {
+                        shouldDrawVector = true;
+                    }
+                }
+
+                if (shouldDrawVector) {
+
+                    bdef.type = BodyDef.BodyType.StaticBody;
+                    bdef.position.set((col + 0.5f), (row + 0.5f));
+
+                    ChainShape chainShape = new ChainShape();
+
+                    Vector2[] v;
+                    v = new Vector2[2];
+                    v[0] = start;
+                    v[1] = finish;
+
+
+                    chainShape.createChain(v);
+                    fdef.density = 1f;
+                    fdef.shape = chainShape;
+                    fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                    fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+
+                    world.createBody(bdef).createFixture(fdef).setUserData("ground");
+                    chainShape.dispose();
+                }
             }
         }
     }
