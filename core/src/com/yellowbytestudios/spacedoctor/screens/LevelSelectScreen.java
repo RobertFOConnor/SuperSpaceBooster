@@ -111,7 +111,14 @@ public class LevelSelectScreen implements Screen {
             ScreenManager.setScreen(new GameScreen(selLevel));
 
         }  else if(MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
-            ScreenManager.setScreen(new GameScreen(selLevel));
+            Vector2 touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+
+            if(touch.y>MainGame.HEIGHT-200) {
+                ScreenManager.setScreen(new MapEditorScreen());
+            } else {
+                ScreenManager.setScreen(new GameScreen(selLevel));
+            }
         }
     }
 

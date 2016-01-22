@@ -7,6 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.Button;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.MapEditorScreen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**
  * Created by BobbyBoy on 20-Jan-16.
@@ -14,7 +17,7 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 public class AndroidController implements BasicController {
 
     private OrthoCamera camera;
-    private Button left, right, up, shoot;
+    private Button left, right, up, shoot, mapEditor;
     private Vector2 touch1, touch2;
 
     public AndroidController() {
@@ -26,6 +29,8 @@ public class AndroidController implements BasicController {
         right = new Button(new Texture(Gdx.files.internal("right.png")), new Texture(Gdx.files.internal("right_pressed.png")), new Vector2(250, 30));
         up = new Button(new Texture(Gdx.files.internal("up.png")), new Texture(Gdx.files.internal("up_pressed.png")), new Vector2(MainGame.WIDTH - 330, 30));
         shoot = new Button(new Texture(Gdx.files.internal("shoot.png")), new Texture(Gdx.files.internal("shoot_pressed.png")), new Vector2(MainGame.WIDTH - 330 - 280, 30));
+        mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
+
 
         touch1 = new Vector2();
         touch2 = new Vector2();
@@ -56,12 +61,20 @@ public class AndroidController implements BasicController {
         up.render(sb);
         shoot.render(sb);
 
+
+        if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
+            if (mapEditor.checkTouch(touch1) || mapEditor.checkTouch(touch2)) {
+                ScreenManager.setScreen(new MapEditorScreen(GameScreen.customMap));
+            }
+            mapEditor.render(sb);
+        }
+
         sb.end();
     }
 
     @Override
     public boolean leftPressed() {
-        if(Gdx.input.isTouched() && (left.checkTouch(touch1) || left.checkTouch(touch2))) {
+        if (Gdx.input.isTouched() && (left.checkTouch(touch1) || left.checkTouch(touch2))) {
             left.setPressed(true);
             return true;
         } else {
@@ -72,7 +85,7 @@ public class AndroidController implements BasicController {
 
     @Override
     public boolean rightPressed() {
-        if(Gdx.input.isTouched() && (right.checkTouch(touch1) || right.checkTouch(touch2))) {
+        if (Gdx.input.isTouched() && (right.checkTouch(touch1) || right.checkTouch(touch2))) {
             right.setPressed(true);
             return true;
         } else {
@@ -83,7 +96,7 @@ public class AndroidController implements BasicController {
 
     @Override
     public boolean upPressed() {
-        if(Gdx.input.isTouched() && (up.checkTouch(touch1) || up.checkTouch(touch2))) {
+        if (Gdx.input.isTouched() && (up.checkTouch(touch1) || up.checkTouch(touch2))) {
             up.setPressed(true);
             return true;
         } else {
@@ -100,7 +113,7 @@ public class AndroidController implements BasicController {
 
     @Override
     public boolean shootPressed() {
-        if(Gdx.input.justTouched() && (shoot.checkTouch(touch1) || shoot.checkTouch(touch2))) {
+        if (Gdx.input.justTouched() && (shoot.checkTouch(touch1) || shoot.checkTouch(touch2))) {
             shoot.setPressed(true);
             return true;
         } else {

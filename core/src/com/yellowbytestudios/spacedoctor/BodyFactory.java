@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -23,6 +24,8 @@ public class BodyFactory {
     public static Body createBody(World world, String bodyType) {
 
         if (bodyType.equals("PLAYER")) {
+
+            // Create Body Definition object to define settings.
             BodyDef bdef = new BodyDef();
             bdef.type = BodyDef.BodyType.DynamicBody;
 
@@ -30,27 +33,40 @@ public class BodyFactory {
             bdef.linearVelocity.set(0f, 0f);
             bdef.position.set(2, 5);
 
-            // create body from bodydef
+            // Create Body object to hold fixtures.
             Body body = world.createBody(bdef);
 
-            // create box shape for player collision box
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(51 / Box2DVars.PPM, 75 / Box2DVars.PPM);
 
-            // create fixturedef for player collision box
+            // Create circle for players head.
+            CircleShape circleShape = new CircleShape();
+            circleShape.setRadius(51 / Box2DVars.PPM);
+            circleShape.setPosition(new Vector2(0, 22 / Box2DVars.PPM));
+
+            // Create Fixture Definition for head collision.
             FixtureDef fdef = new FixtureDef();
-            fdef.shape = shape;
-            fdef.restitution = 0.03f;
+            fdef.shape = circleShape;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
             fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
             body.createFixture(fdef).setUserData("player");
 
-            //PLAYER FOOT
 
+            // Create box for players torso.
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(32 / Box2DVars.PPM, 40 / Box2DVars.PPM, new Vector2(0, -30 / Box2DVars.PPM), 0);
+
+            // Create Fixture Definition for torso collision box.
+            fdef.shape = shape;
+            fdef.restitution = 0.03f;
+            fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY;
+            body.createFixture(fdef).setUserData("player");
+
+
+            // Create box for players foot.
             shape = new PolygonShape();
-            shape.setAsBox(45 / Box2DVars.PPM, 20 / Box2DVars.PPM, new Vector2(0, -60 / Box2DVars.PPM), 0);
+            shape.setAsBox(30 / Box2DVars.PPM, 20 / Box2DVars.PPM, new Vector2(0, -60 / Box2DVars.PPM), 0);
 
-            // create fixturedef for player foot
+            // Create Fixture Definition for foot collision box.
             fdef.shape = shape;
             fdef.isSensor = true;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
@@ -189,7 +205,7 @@ public class BodyFactory {
             float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
             float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
             String type = mo.getProperties().get("type", String.class);
-            if(type == null) { //Default to gas pickup if no type is specified.
+            if (type == null) { //Default to gas pickup if no type is specified.
                 type = "gas";
             }
             cdef.position.set(x, y);
@@ -219,7 +235,8 @@ public class BodyFactory {
         Array<Platform> platforms = new Array<Platform>();
 
         MapLayer ml = tm.getLayers().get("platforms");
-        if (ml == null) return new Array<Platform>();;
+        if (ml == null) return new Array<Platform>();
+        ;
 
         for (MapObject mo : ml.getObjects()) {
 
@@ -231,12 +248,12 @@ public class BodyFactory {
             cdef.type = BodyDef.BodyType.KinematicBody;
             float x = mo.getProperties().get("x", Float.class) / Box2DVars.PPM;
             float y = mo.getProperties().get("y", Float.class) / Box2DVars.PPM;
-            cdef.position.set(x+(width/2), y+(height/2));
+            cdef.position.set(x + (width / 2), y + (height / 2));
 
             Body body = world.createBody(cdef);
 
             PolygonShape bodyShape = new PolygonShape();
-            bodyShape.setAsBox(width/2, height/2);
+            bodyShape.setAsBox(width / 2, height / 2);
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.density = 1f;
             fixtureDef.shape = bodyShape;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 
 /**
  * Created by BobbyBoy on 26-Dec-15.
@@ -18,13 +19,19 @@ public class TileManager {
     public void createWalls(World world, TiledMap tileMap) {
         TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
 
-        tileMapWidth = tileMap.getProperties().get("width", Integer.class);
-        tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+        if(tileMap.getProperties().get("width", Integer.class) != null) { //Check for Custom Map.
+            tileMapWidth = tileMap.getProperties().get("width", Integer.class);
+            tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+        } else {
+            tileMapWidth = MapManager.customMapWidth;
+            tileMapHeight = MapManager.customMapHeight;
+        }
 
         tileSize = (int) layer.getTileWidth();
 
         float PPM = 100;
 
+        //BOTTOM CORNERS
         Vector2 bot_L = new Vector2((-tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
         Vector2 bot_R = new Vector2((tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
 

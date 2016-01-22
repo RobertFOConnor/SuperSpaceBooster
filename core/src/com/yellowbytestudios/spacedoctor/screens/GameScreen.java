@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
@@ -34,13 +32,6 @@ import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
-import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
-
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenEquations;
-import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by BobbyBoy on 15-Oct-15.
@@ -77,9 +68,19 @@ public class GameScreen implements Screen {
     //ANDROID CONTROLLER
     public static AndroidController androidController;
 
+    //Map Editor
+    public static TiledMap customMap;
+    public static boolean isCustomMap = false;
+
 
     public GameScreen(int levelNo) {
         this.levelNo = levelNo;
+        isCustomMap = false;
+    }
+
+    public GameScreen(TiledMap customMap) {
+        this.customMap = customMap;
+        isCustomMap = true;
     }
 
     @Override
@@ -100,7 +101,12 @@ public class GameScreen implements Screen {
         }
 
         //Set tile map using Tiled map path.
-        tileMap = new TmxMapLoader().load("spaceship" + levelNo + ".tmx");
+
+        if (customMap == null) {
+            tileMap = new TmxMapLoader().load("maps/spaceship" + levelNo + ".tmx");
+        } else {
+            tileMap = customMap;
+        }
 
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
@@ -120,7 +126,6 @@ public class GameScreen implements Screen {
         world.setContactListener(contactListener);
 
 
-
         tileManager = new TileManager();
         tileManager.createWalls(world, tileMap);
 
@@ -129,8 +134,17 @@ public class GameScreen implements Screen {
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
 
-        int startX = (Integer.parseInt(tileMap.getProperties().get("startX", String.class)));
-        int startY = (Integer.parseInt(tileMap.getProperties().get("startY", String.class)));
+        int startX;
+        int startY;
+
+        if (customMap == null) {
+            startX = (Integer.parseInt(tileMap.getProperties().get("startX", String.class)));
+            startY = (Integer.parseInt(tileMap.getProperties().get("startY", String.class)));
+
+        } else { // TEMP - Custom map will specify player spawn point.
+            startX = 2;
+            startY = 5;
+        }
 
         player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
         player.setPos(new Vector2(startX, startY));
@@ -171,7 +185,7 @@ public class GameScreen implements Screen {
     public void update(float step) {
         world.step(step, 8, 3);
 
-        if(player.isDead() || gui.getTimeElapsed() < 0) {
+        if (player.isDead() || gui.getTimeElapsed() < 0) {
             SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
             setupMap();
         }
@@ -267,8 +281,12 @@ public class GameScreen implements Screen {
         tmr.render();
 
         sb.begin();
-        door.render(sb);
-        player.render(sb);
+
+        if (customMap == null) { //TEMP - Custom maps will have exits.
+            door.render(sb);
+        }
+
+        player.render();
 
         for (Platform p : platforms) {
             p.render(sb);

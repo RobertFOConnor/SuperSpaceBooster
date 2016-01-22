@@ -20,7 +20,7 @@ public class SpacemanPlayer {
     private float ACCELERATION = 30f;
     private float posX, posY;
     private float velX, velY;
-    private boolean movingLeft, movingRight, movingUp, movingDown = false;
+    private boolean movingLeft, movingRight, movingUp = false;
     public static float WIDTH, HEIGHT;
     private com.brashmonkey.spriter.Player spriter;
     private Box2DContactListeners contactListener;
@@ -48,11 +48,9 @@ public class SpacemanPlayer {
         HEIGHT = 118;
 
 
-        //Assign type of controls for player. (XBox or Keyboard controls).
+        //Assign type of controls for player. (Android, XBox or Keyboard controls).
         if(MainGame.DEVICE.equals("ANDROID")) {
-
             controller = GameScreen.androidController;
-
         } else if (MainGame.hasControllers) {
             controller = new XBoxController();
         } else {
@@ -94,7 +92,6 @@ public class SpacemanPlayer {
 
         } else {
             movingUp = false;
-            movingDown = false;
             SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
         }
 
@@ -105,13 +102,17 @@ public class SpacemanPlayer {
         }
 
         if(controller.pausePressed()) {
-            SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
-            ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+            if(!GameScreen.isCustomMap) {
+                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
+                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+            } else {
+                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+            }
         }
     }
 
 
-    public void render(SpriteBatch sb) {
+    public void render() {
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
         MainGame.spriterManager.draw(spriter);
     }
@@ -165,7 +166,6 @@ public class SpacemanPlayer {
         if (!movingUp) {
             SoundManager.play(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
             movingUp = true;
-            movingDown = false;
         }
 
         currGas--;
