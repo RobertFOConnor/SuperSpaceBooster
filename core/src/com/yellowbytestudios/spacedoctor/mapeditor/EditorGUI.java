@@ -29,7 +29,7 @@ public class EditorGUI {
     private Texture tileButtonBG;
     private TextureRegion tileset;
     private Array<TileButton> tileButtons;
-    private int tileID;
+    private int tileID = -1;
 
     private boolean buttonSelected = false;
 
@@ -91,7 +91,7 @@ public class EditorGUI {
                     }
                 }
 
-                if(!buttonSelected && !mapManager.getExit().isSelected()) {
+                if(!buttonSelected && !mapManager.getExit().isSelected() && !mapManager.getPlayerSpawn().isSelected()) {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
                     } else if (eraseButton.isPressed()) {

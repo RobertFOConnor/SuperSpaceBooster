@@ -27,8 +27,8 @@ public class MapManager {
     private OrthogonalTiledMapRenderer tmr;
     private Cell darkCell, lightCell, spikeCell_U, spikeCell_D, spikeCell_L, spikeCell_R;
 
-    public static final int customMapWidth = 50;
-    public static final int customMapHeight = 25;
+    public static final int customMapWidth = 30;
+    public static final int customMapHeight = 15;
     private int tileSize = 100;
 
     //Dragging
@@ -37,8 +37,13 @@ public class MapManager {
 
     //EXIT
     private DraggableObject exit;
-    public static float exitX = 6;
-    public static float exitY = 1;
+    public static float exitX = 15;
+    public static float exitY = 4;
+
+    //PLAYER SPAWN
+    private DraggableObject playerSpawn;
+    public static float startX = 3;
+    public static float startY = 4;
 
 
     public MapManager() {
@@ -60,6 +65,7 @@ public class MapManager {
         setupMap();
 
         exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX*Box2DVars.PPM, exitY*Box2DVars.PPM));
+        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX*Box2DVars.PPM, startY*Box2DVars.PPM));
     }
 
     private void initTiles() {
@@ -102,7 +108,7 @@ public class MapManager {
         for (int row = 0; row < layer1.getHeight(); row++) {
             for (int col = 0; col < layer1.getWidth(); col++) {
 
-                if (row == 0 || col == 0 || row == layer1.getHeight() - 1 || col == layer1.getWidth() - 1) { //Borders.
+                if (row < 3 || col == 0 || row == layer1.getHeight() - 1 || col == layer1.getWidth() - 1) { //Borders.
                     layer1.setCell(col, row, darkCell);
                 }
             }
@@ -124,18 +130,26 @@ public class MapManager {
                 dragging = false;
             }
             exit.selected = false;
+            playerSpawn.selected = false;
 
         } else {
             touch = cam.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (exit.checkTouch(touch)) {
+            if (playerSpawn.checkTouch(touch)) {
+                playerSpawn.selected = true;
+            } else if (exit.checkTouch(touch)) {
                 exit.selected = true;
             }
 
-            if (exit.selected) {
-                exitX = touch.x / Box2DVars.PPM;
-                exitY = touch.y / Box2DVars.PPM;
+
+            if (playerSpawn.selected) {
+                startX = (touch.x / Box2DVars.PPM);
+                startY = (touch.y / Box2DVars.PPM);
+                playerSpawn.setPos(touch);
+            } else if (exit.selected) {
+                exitX = (touch.x / Box2DVars.PPM);
+                exitY = (touch.y / Box2DVars.PPM);
                 exit.setPos(touch);
             }
         }
@@ -208,13 +222,14 @@ public class MapManager {
 
     public void render(SpriteBatch sb) {
 
+        tmr.setView(cam);
+        tmr.render();
+
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         exit.render(sb);
+        playerSpawn.render(sb);
         sb.end();
-
-        tmr.setView(cam);
-        tmr.render();
     }
 
     public void zoomIn() {
@@ -249,6 +264,7 @@ public class MapManager {
 
         public DraggableObject(Texture texture, Vector2 pos) {
             super(texture, pos);
+            setPos(pos);
         }
 
         public void setPos(Vector2 pos) {
@@ -262,6 +278,10 @@ public class MapManager {
 
     public DraggableObject getExit() {
         return exit;
+    }
+
+    public DraggableObject getPlayerSpawn() {
+        return playerSpawn;
     }
 }
 

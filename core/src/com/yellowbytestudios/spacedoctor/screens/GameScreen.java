@@ -27,6 +27,7 @@ import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
@@ -134,16 +135,16 @@ public class GameScreen implements Screen {
         cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
 
 
-        int startX;
-        int startY;
+        float startX;
+        float startY;
 
         if (customMap == null) {
-            startX = (Integer.parseInt(tileMap.getProperties().get("startX", String.class)));
-            startY = (Integer.parseInt(tileMap.getProperties().get("startY", String.class)));
+            startX = (Float.parseFloat(tileMap.getProperties().get("startX", String.class)));
+            startY = (Float.parseFloat(tileMap.getProperties().get("startY", String.class)));
 
         } else { // TEMP - Custom map will specify player spawn point.
-            startX = 2;
-            startY = 5;
+            startX = MapManager.startX;
+            startY = MapManager.startY;
         }
 
         player = new SpacemanPlayer(BodyFactory.createBody(world, "PLAYER"), contactListener);
