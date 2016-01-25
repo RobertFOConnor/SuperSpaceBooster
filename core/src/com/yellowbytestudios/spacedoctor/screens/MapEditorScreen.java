@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.Button;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
+import com.yellowbytestudios.spacedoctor.mapeditor.TileIDs;
 
 /**
  * Created by BobbyBoy on 22-Jan-16.
@@ -22,7 +27,7 @@ public class MapEditorScreen implements Screen {
     private MapManager mapManager;
     private TiledMap myMap;
 
-    private Button zoomIn, zoomOut, moveButton, eraseButton, playMap;
+    private EditorGUI gui;
 
     public MapEditorScreen(TiledMap myMap) {
         this.myMap = myMap;
@@ -43,68 +48,14 @@ public class MapEditorScreen implements Screen {
             mapManager.setMap(myMap);
         }
 
-        zoomIn = new Button(new Texture(Gdx.files.internal("mapeditor/zoom_in.png")), new Texture(Gdx.files.internal("mapeditor/zoom_in.png")), new Vector2(MainGame.WIDTH - 280 - 60, 30));
-        zoomOut = new Button(new Texture(Gdx.files.internal("mapeditor/zoom_out.png")), new Texture(Gdx.files.internal("mapeditor/zoom_out.png")), new Vector2(MainGame.WIDTH - 170, 30));
-        moveButton = new Button(new Texture(Gdx.files.internal("mapeditor/move_button.png")), new Texture(Gdx.files.internal("mapeditor/move_button_selected.png")), new Vector2(30, 30));
-        eraseButton = new Button(new Texture(Gdx.files.internal("mapeditor/erase.png")), new Texture(Gdx.files.internal("mapeditor/erase_selected.png")), new Vector2(30 + 140 + 30, 30));
-
-
-        playMap = new Button(new Texture(Gdx.files.internal("mapeditor/play_map.png")), new Texture(Gdx.files.internal("mapeditor/play_map.png")), new Vector2(30, MainGame.HEIGHT - 170));
+        gui = new EditorGUI(mapManager);
     }
 
     @Override
     public void update(float step) {
 
         mapManager.update();
-
-        if (Gdx.input.isTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
-
-            if (zoomIn.checkTouch(touch)) {
-                mapManager.zoomIn();
-            } else if (zoomOut.checkTouch(touch)) {
-                mapManager.zoomOut();
-            } else if (playMap.checkTouch(touch)) {
-                ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
-
-            } else if (moveButton.checkTouch(touch)) {
-
-
-            } else { //CHECK MAP FOR INTERACTION.
-
-                if (moveButton.isPressed()) {
-                    mapManager.dragMap();
-                } else if (eraseButton.isPressed()) {
-                    mapManager.eraseTiles();
-                } else {
-                    mapManager.checkForTilePlacement();
-                }
-            }
-        }
-
-        if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
-
-            if (moveButton.checkTouch(touch)) {
-                if (moveButton.isPressed()) {
-                    moveButton.setPressed(false);
-                } else {
-                    moveButton.setPressed(true);
-                    eraseButton.setPressed(false);
-                }
-            }
-
-            if (eraseButton.checkTouch(touch)) {
-                if (eraseButton.isPressed()) {
-                    eraseButton.setPressed(false);
-                } else {
-                    eraseButton.setPressed(true);
-                    moveButton.setPressed(false);
-                }
-            }
-        }
+        gui.update();
     }
 
 
@@ -115,17 +66,14 @@ public class MapEditorScreen implements Screen {
         Gdx.gl20.glClearColor(1, 1, 1, 0);
 
 
-        mapManager.render();
+        mapManager.render(sb);
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        zoomIn.render(sb);
-        zoomOut.render(sb);
-        moveButton.render(sb);
-        eraseButton.render(sb);
-        playMap.render(sb);
+        gui.render(sb);
         sb.end();
     }
+
 
     @Override
     public void resize(int width, int height) {

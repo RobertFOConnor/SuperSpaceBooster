@@ -40,13 +40,6 @@ public class Button {
         return false;
     }
 
-    public boolean checkTouch(float x, float y) {
-        if(getBounds().contains(x, y)) {
-            return true;
-        }
-        return false;
-    }
-
     public Texture getTexture() {
         return texture;
     }

@@ -110,7 +110,7 @@ public class LevelSelectScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             ScreenManager.setScreen(new GameScreen(selLevel));
 
-        }  else if(MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
+        }  else if(/*MainGame.DEVICE.equals("ANDROID") &&*/ Gdx.input.justTouched()) {
             Vector2 touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 

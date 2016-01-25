@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.yellowbytestudios.spacedoctor.screens.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.TitleScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
@@ -49,7 +50,7 @@ public class MainGame extends ApplicationAdapter {
     @Override
     public void render() {
         if (Assets.update() && !LOADED) { // DONE LOADING. SHOW TITLE SCREEN.
-            ScreenManager.setScreen(new TitleScreen());
+            ScreenManager.setScreen(new MapEditorScreen());
             //SoundManager.setMusic(Assets.THEME);
             LOADED = true;
         }
