@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Entity {
 
-    private Texture texture;
-    private Vector2 pos;
+    protected Texture texture;
+    protected Vector2 pos;
 
     public Entity(Texture texture, Vector2 pos) {
         this.texture = texture;

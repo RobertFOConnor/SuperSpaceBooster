@@ -91,7 +91,7 @@ public class EditorGUI {
                     }
                 }
 
-                if(!buttonSelected) {
+                if(!buttonSelected && !mapManager.getExit().isSelected()) {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
                     } else if (eraseButton.isPressed()) {

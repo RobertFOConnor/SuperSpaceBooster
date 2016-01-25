@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Door;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
@@ -113,38 +114,40 @@ public class BodyFactory {
     public static Door createDoors(World world, TiledMap tm) {
 
         MapLayer ml = tm.getLayers().get("exits");
-
-        if (ml == null) return null;
-
         float width = 50 / Box2DVars.PPM;
         float height = 100 / Box2DVars.PPM;
-
         Door d = null;
 
-        for (MapObject mo : ml.getObjects()) {
-
-            BodyDef cdef = new BodyDef();
-            cdef.type = BodyDef.BodyType.StaticBody;
-            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
-            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
-            cdef.position.set(x, y);
-
-            Body body = world.createBody(cdef);
-
-            FixtureDef cfdef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(width, height);
-            cfdef.shape = shape;
-            cfdef.isSensor = true;
-            cfdef.filter.categoryBits = Box2DVars.BIT_DOOR;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
-
-            body.createFixture(cfdef).setUserData("door");
-            shape.dispose();
-
-            d = new Door(body);
-            body.setUserData(d);
+        if (ml == null) { //CUSTOM MAP - TEMP
+            d = createDoorBody(world, MapManager.exitX, MapManager.exitY, width, height);
+        } else {
+            for (MapObject mo : ml.getObjects()) {
+                d = createDoorBody(world, (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width), (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height), width, height);
+            }
         }
+        return d;
+    }
+
+    private static Door createDoorBody(World world, float x, float y, float width, float height) {
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.StaticBody;
+        cdef.position.set(x, y);
+
+        Body body = world.createBody(cdef);
+
+        FixtureDef cfdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width, height);
+        cfdef.shape = shape;
+        cfdef.isSensor = true;
+        cfdef.filter.categoryBits = Box2DVars.BIT_DOOR;
+        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+        body.createFixture(cfdef).setUserData("door");
+        shape.dispose();
+
+        Door d = new Door(body);
+        body.setUserData(d);
         return d;
     }
 

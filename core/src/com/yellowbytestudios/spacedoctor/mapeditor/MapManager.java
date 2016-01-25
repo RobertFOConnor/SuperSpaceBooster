@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.yellowbytestudios.spacedoctor.Box2DVars;
 import com.yellowbytestudios.spacedoctor.Entity;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -36,6 +37,8 @@ public class MapManager {
 
     //EXIT
     private DraggableObject exit;
+    public static float exitX = 6;
+    public static float exitY = 1;
 
 
     public MapManager() {
@@ -56,7 +59,7 @@ public class MapManager {
         initTiles();
         setupMap();
 
-        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(500,200));
+        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX*Box2DVars.PPM, exitY*Box2DVars.PPM));
     }
 
     private void initTiles() {
@@ -119,6 +122,21 @@ public class MapManager {
                 startTouch = null;
                 endTouch = null;
                 dragging = false;
+            }
+            exit.selected = false;
+
+        } else {
+            touch = cam.unprojectCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+
+            if (exit.checkTouch(touch)) {
+                exit.selected = true;
+            }
+
+            if (exit.selected) {
+                exitX = touch.x / Box2DVars.PPM;
+                exitY = touch.y / Box2DVars.PPM;
+                exit.setPos(touch);
             }
         }
 
@@ -192,7 +210,7 @@ public class MapManager {
 
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
-        //exit.render(sb);
+        exit.render(sb);
         sb.end();
 
         tmr.setView(cam);
@@ -225,13 +243,25 @@ public class MapManager {
     }
 
 
-    private class DraggableObject extends Entity {
+    public class DraggableObject extends Entity {
 
         private boolean selected = false;
 
         public DraggableObject(Texture texture, Vector2 pos) {
             super(texture, pos);
         }
+
+        public void setPos(Vector2 pos) {
+            this.pos = pos.add(-texture.getWidth() / 2, -texture.getHeight() / 2);
+        }
+
+        public boolean isSelected() {
+            return selected;
+        }
+    }
+
+    public DraggableObject getExit() {
+        return exit;
     }
 }
 

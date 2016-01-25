@@ -18,6 +18,8 @@ import com.yellowbytestudios.spacedoctor.SoundManager;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 
+import javax.xml.soap.Text;
+
 public class LevelSelectScreen implements Screen {
 
     private OrthoCamera camera;
@@ -40,7 +42,7 @@ public class LevelSelectScreen implements Screen {
         }
 
 
-        bg = new Texture(Gdx.files.internal("menu_bg.png"));
+        bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
 
         levelButtons = new Array<LevelButton>();
 
@@ -68,15 +70,15 @@ public class LevelSelectScreen implements Screen {
         private Texture border;
 
         public LevelButton(Vector2 pos, int levelNum) {
-            super(new Texture(Gdx.files.internal("levelLocked.png")), new Texture(Gdx.files.internal("levelLocked.png")), pos);
+            super(Assets.manager.get(Assets.LEVEL_LOCKED, Texture.class), Assets.manager.get(Assets.LEVEL_LOCKED, Texture.class), pos);
             if (MainGame.UNLOCKED_LEVEL > levelNum) {
-                texture = new Texture(Gdx.files.internal("levelComplete.png"));
+                texture = Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class);
             } else if (MainGame.UNLOCKED_LEVEL == levelNum) {
-                texture = new Texture(Gdx.files.internal("levelButton.png"));
+                texture = Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class);
             }
 
             this.levelNum = levelNum;
-            border = new Texture(Gdx.files.internal("levelBorder.png"));
+            border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
         }
 
         @Override

@@ -152,7 +152,6 @@ public class TileManager {
         if (main_cell != null) {
 
             int id = main_cell.getTile().getId();
-            System.out.println("ID: " + id);
             if (id == TileIDs.DOWN_SPIKE || id == TileIDs.LEFT_SPIKE || id == TileIDs.RIGHT_SPIKE || id == TileIDs.UP_SPIKE) {
                 fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
             } else {

@@ -240,13 +240,20 @@ public class GameScreen implements Screen {
         }
 
         if (contactListener.isAtDoor()) {
-            SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
 
-            if (MainGame.UNLOCKED_LEVEL != 10) {
-                MainGame.UNLOCKED_LEVEL += 1;
-                ScreenManager.setScreen(new LevelSelectScreen());
+            SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
+            SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+
+            if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
+                ScreenManager.setScreen(new MapEditorScreen(customMap));
             } else {
-                ScreenManager.setScreen(new ResultsScreen());
+
+                if (MainGame.UNLOCKED_LEVEL != 10) {
+                    MainGame.UNLOCKED_LEVEL += 1;
+                    ScreenManager.setScreen(new LevelSelectScreen());
+                } else {
+                    ScreenManager.setScreen(new ResultsScreen());
+                }
             }
         }
     }
@@ -282,10 +289,7 @@ public class GameScreen implements Screen {
 
         sb.begin();
 
-        if (customMap == null) { //TEMP - Custom maps will have exits.
-            door.render(sb);
-        }
-
+        door.render(sb);
         player.render();
 
         for (Platform p : platforms) {

@@ -7,6 +7,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
@@ -24,7 +25,7 @@ public class TitleScreen implements Screen {
     public void create() {
         camera = new OrthoCamera();
         camera.resize();
-        bg = new Texture(Gdx.files.internal("titlescreen.png"));
+        bg = Assets.manager.get(Assets.TITLESCREEN, Texture.class);
 
         if (MainGame.hasControllers) {
             controller = Controllers.getControllers().get(0);
