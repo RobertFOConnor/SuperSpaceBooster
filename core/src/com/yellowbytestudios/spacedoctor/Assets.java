@@ -20,8 +20,31 @@ public class Assets {
     public static final String LEVEL_BUTTON = "levelButton.png";
     public static final String LEVEL_BORDER = "levelBorder.png";
 
+    //Android Controls
+    public static final String LEFT = "android_controls/left.png";
+    public static final String RIGHT = "android_controls/right.png";
+    public static final String UP = "android_controls/up.png";
+    public static final String SHOOT = "android_controls/shoot.png";
+    public static final String LEFT_PRESSED = "android_controls/left_pressed.png";
+    public static final String RIGHT_PRESSED = "android_controls/right_pressed.png";
+    public static final String UP_PRESSED = "android_controls/up_pressed.png";
+    public static final String SHOOT_PRESSED = "android_controls/shoot_pressed.png";
 
-    //Sounds
+    //Game objects.
+    public static final String BG = "game_objects/bg.png";
+    public static final String BOX = "game_objects/box.png";
+    public static final String BULLET = "game_objects/bullet.png";
+    public static final String HOR_PLATFORM = "game_objects/hor_platform_medium.png";
+    public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
+
+    //Game GUI.
+    public static final String GAS_METER = "gui/gas_bar.png";
+    public static final String AMMO_ICON = "gui/round_icon.png";
+
+    public static final String VICTORY = "victory.png";
+
+
+    //Sounds.
     public static final String JETPACK_SOUND = "sounds/jetpack.wav";
     public static final String GUN_SOUND = "sounds/blaster.wav";
     public static final String FOOTSTEP_SOUND = "sounds/footstep.wav";
@@ -44,6 +67,25 @@ public class Assets {
         manager.load(LEVEL_COMPLETE, Texture.class);
         manager.load(LEVEL_BUTTON, Texture.class);
         manager.load(LEVEL_BORDER, Texture.class);
+
+        manager.load(LEFT, Texture.class);
+        manager.load(RIGHT, Texture.class);
+        manager.load(UP, Texture.class);
+        manager.load(SHOOT, Texture.class);
+        manager.load(LEFT_PRESSED, Texture.class);
+        manager.load(RIGHT_PRESSED, Texture.class);
+        manager.load(UP_PRESSED, Texture.class);
+        manager.load(SHOOT_PRESSED, Texture.class);
+
+        manager.load(BG, Texture.class);
+        manager.load(BOX, Texture.class);
+        manager.load(BULLET, Texture.class);
+        manager.load(HOR_PLATFORM, Texture.class);
+        manager.load(VER_PLATFORM, Texture.class);
+
+        manager.load(GAS_METER, Texture.class);
+        manager.load(AMMO_ICON, Texture.class);
+        manager.load(VICTORY, Texture.class);
 
         manager.load(JETPACK_SOUND, Sound.class);
         manager.load(GUN_SOUND, Sound.class);

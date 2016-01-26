@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.TileIDs;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 /**
  * Created by BobbyBoy on 26-Dec-15.
@@ -150,10 +151,15 @@ public class TileManager {
 
     public void setCollisionVariables(TiledMapTileLayer.Cell main_cell) {
         if (main_cell != null) {
-
             int id = main_cell.getTile().getId();
+
+            if (!GameScreen.isCustomMap) {
+                id--; //WHY? I DO NOT KNOW..
+            }
+
             if (id == TileIDs.DOWN_SPIKE || id == TileIDs.LEFT_SPIKE || id == TileIDs.RIGHT_SPIKE || id == TileIDs.UP_SPIKE) {
                 fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+
             } else {
                 fdef.filter.categoryBits = Box2DVars.BIT_WALL;
             }

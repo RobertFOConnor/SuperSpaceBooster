@@ -2,6 +2,7 @@ package com.yellowbytestudios.spacedoctor;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,6 +40,7 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
         checkForController();
@@ -50,7 +52,7 @@ public class MainGame extends ApplicationAdapter {
     @Override
     public void render() {
         if (Assets.update() && !LOADED) { // DONE LOADING. SHOW TITLE SCREEN.
-            ScreenManager.setScreen(new MapEditorScreen());
+            ScreenManager.setScreen(new TitleScreen());
             //SoundManager.setMusic(Assets.THEME);
             LOADED = true;
         }
@@ -64,6 +66,46 @@ public class MainGame extends ApplicationAdapter {
                 ScreenManager.getCurrentScreen().render(sb);
             }
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            ScreenManager.getCurrentScreen().goBack();
+        }
+    }
+
+    @Override
+    public void resize(int w, int h) {
+
+        if(ScreenManager.getCurrentScreen()!=null)
+            ScreenManager.getCurrentScreen().resize(w, h);
+    }
+
+    @Override
+    public void dispose() {
+
+        if(ScreenManager.getCurrentScreen()!=null)
+            ScreenManager.getCurrentScreen().dispose();
+
+        sb.dispose();
+
+        Assets.manager.dispose();
+        Assets.manager = null;
+    }
+
+
+    @Override
+    public void pause() {
+
+        if(ScreenManager.getCurrentScreen()!=null)
+            ScreenManager.getCurrentScreen().pause();
+    }
+
+    @Override
+    public void resume() {
+        Assets.load();
+        while(!Assets.manager.update()){
+        }
+        if(ScreenManager.getCurrentScreen()!=null)
+            ScreenManager.getCurrentScreen().resume();
     }
 
     private void checkForController() {

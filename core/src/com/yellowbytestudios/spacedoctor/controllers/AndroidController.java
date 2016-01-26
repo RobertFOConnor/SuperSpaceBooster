@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.Button;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -25,10 +26,10 @@ public class AndroidController implements BasicController {
         camera.resize();
 
 
-        left = new Button(new Texture(Gdx.files.internal("left.png")), new Texture(Gdx.files.internal("left_pressed.png")), new Vector2(30, 30));
-        right = new Button(new Texture(Gdx.files.internal("right.png")), new Texture(Gdx.files.internal("right_pressed.png")), new Vector2(250, 30));
-        up = new Button(new Texture(Gdx.files.internal("up.png")), new Texture(Gdx.files.internal("up_pressed.png")), new Vector2(MainGame.WIDTH - 330, 30));
-        shoot = new Button(new Texture(Gdx.files.internal("shoot.png")), new Texture(Gdx.files.internal("shoot_pressed.png")), new Vector2(MainGame.WIDTH - 330 - 280, 30));
+        left = new Button(Assets.manager.get(Assets.LEFT, Texture.class), Assets.manager.get(Assets.LEFT_PRESSED, Texture.class), new Vector2(30, 30));
+        right = new Button(Assets.manager.get(Assets.RIGHT, Texture.class), Assets.manager.get(Assets.RIGHT_PRESSED, Texture.class), new Vector2(250, 30));
+        up = new Button(Assets.manager.get(Assets.UP, Texture.class), Assets.manager.get(Assets.UP_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330, 30));
+        shoot = new Button(Assets.manager.get(Assets.SHOOT, Texture.class), Assets.manager.get(Assets.SHOOT_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330 - 280, 30));
         mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
 
 

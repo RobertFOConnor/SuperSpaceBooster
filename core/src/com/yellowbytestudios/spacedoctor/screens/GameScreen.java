@@ -19,7 +19,7 @@ import com.yellowbytestudios.spacedoctor.BodyFactory;
 import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.Platform;
+import com.yellowbytestudios.spacedoctor.objects.Platform;
 import com.yellowbytestudios.spacedoctor.SoundManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
@@ -154,7 +154,7 @@ public class GameScreen implements Screen {
 
         bullets = new Array<Bullet>();
 
-        bg = new Texture(Gdx.files.internal("bg.png"));
+        bg = Assets.manager.get(Assets.BG, Texture.class);
 
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);

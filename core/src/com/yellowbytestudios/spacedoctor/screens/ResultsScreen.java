@@ -25,7 +25,7 @@ public class ResultsScreen implements Screen {
     public void create() {
         camera = new OrthoCamera();
         camera.resize();
-        bg = new Texture(Gdx.files.internal("victory.png"));
+        bg = Assets.manager.get(Assets.VICTORY, Texture.class);
         SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
     }
 
@@ -79,6 +79,6 @@ public class ResultsScreen implements Screen {
 
     @Override
     public void goBack() {
-
+        ScreenManager.setScreen(new MainMenuScreen());
     }
 }

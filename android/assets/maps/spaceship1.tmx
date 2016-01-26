@@ -32,7 +32,7 @@
     <property name="type" value="wall"/>
    </properties>
   </tile>
-  <tile id="8">
+  <tile id="7">
    <properties>
     <property name="type" value="spike"/>
    </properties>

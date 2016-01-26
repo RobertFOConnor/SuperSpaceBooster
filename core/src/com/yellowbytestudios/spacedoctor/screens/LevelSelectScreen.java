@@ -18,8 +18,6 @@ import com.yellowbytestudios.spacedoctor.SoundManager;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 
-import javax.xml.soap.Text;
-
 public class LevelSelectScreen implements Screen {
 
     private OrthoCamera camera;
@@ -28,7 +26,6 @@ public class LevelSelectScreen implements Screen {
     private Texture bg;
     private Array<LevelButton> levelButtons;
     private Controller controller;
-    private boolean keysUp = false;
 
     private int selLevel = 1;
 
@@ -112,11 +109,11 @@ public class LevelSelectScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             ScreenManager.setScreen(new GameScreen(selLevel));
 
-        }  else if(/*MainGame.DEVICE.equals("ANDROID") &&*/ Gdx.input.justTouched()) {
+        } else if (/*MainGame.DEVICE.equals("ANDROID") &&*/ Gdx.input.justTouched()) {
             Vector2 touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if(touch.y>MainGame.HEIGHT-200) {
+            if (touch.y > MainGame.HEIGHT - 200) {
                 ScreenManager.setScreen(new MapEditorScreen());
             } else {
                 ScreenManager.setScreen(new GameScreen(selLevel));
@@ -176,5 +173,6 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void goBack() {
+        ScreenManager.setScreen(new MainMenuScreen());
     }
 }

@@ -12,10 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
-import com.yellowbytestudios.spacedoctor.objects.Box;
-import com.yellowbytestudios.spacedoctor.objects.Door;
-import com.yellowbytestudios.spacedoctor.objects.Enemy;
-import com.yellowbytestudios.spacedoctor.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.objects.*;
 
 /**
  * Created by BobbyBoy on 08-Jan-16.
@@ -53,7 +50,7 @@ public class BodyFactory {
 
             // Create box for players torso.
             PolygonShape shape = new PolygonShape();
-            shape.setAsBox(32 / Box2DVars.PPM, 40 / Box2DVars.PPM, new Vector2(0, -30 / Box2DVars.PPM), 0);
+            shape.setAsBox(32 / Box2DVars.PPM, 44 / Box2DVars.PPM, new Vector2(0, -30 / Box2DVars.PPM), 0);
 
             // Create Fixture Definition for torso collision box.
             fdef.shape = shape;
@@ -233,12 +230,12 @@ public class BodyFactory {
         return pickups;
     }
 
-    public static Array<Platform> createPlatforms(World world, TiledMap tm) {
+    public static Array<com.yellowbytestudios.spacedoctor.objects.Platform> createPlatforms(World world, TiledMap tm) {
 
-        Array<Platform> platforms = new Array<Platform>();
+        Array<com.yellowbytestudios.spacedoctor.objects.Platform> platforms = new Array<com.yellowbytestudios.spacedoctor.objects.Platform>();
 
         MapLayer ml = tm.getLayers().get("platforms");
-        if (ml == null) return new Array<Platform>();
+        if (ml == null) return new Array<com.yellowbytestudios.spacedoctor.objects.Platform>();
         ;
 
         for (MapObject mo : ml.getObjects()) {
@@ -264,7 +261,7 @@ public class BodyFactory {
             fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
 
             body.createFixture(fixtureDef).setUserData("wall");
-            Platform p = new Platform(body, type);
+            com.yellowbytestudios.spacedoctor.objects.Platform p = new com.yellowbytestudios.spacedoctor.objects.Platform(body, type);
             p.setLimit(Float.parseFloat(mo.getProperties().get("distance", String.class)));
             body.setUserData(p);
             platforms.add(p);

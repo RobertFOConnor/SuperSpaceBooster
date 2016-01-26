@@ -1,9 +1,8 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.objects.Box2DSprite;
+import com.yellowbytestudios.spacedoctor.Assets;
 
 public class Platform extends Box2DSprite {
 
@@ -18,16 +17,16 @@ public class Platform extends Box2DSprite {
         body.setUserData(this);
 
 
-        if(type.equals("horizontal")) {
+        if (type.equals("horizontal")) {
             horizontal = true;
             startY = body.getPosition().x;
             body.setLinearVelocity(speed, 0f);
-            texture = new Texture(Gdx.files.internal("ver_platform_medium.png"));
+            texture = Assets.manager.get(Assets.VER_PLATFORM, Texture.class);
         } else {
             horizontal = false;
             startY = body.getPosition().y;
             body.setLinearVelocity(0f, speed);
-            texture = new Texture(Gdx.files.internal("hor_platform_medium.png"));
+            texture = Assets.manager.get(Assets.HOR_PLATFORM, Texture.class);
         }
 
         width = texture.getWidth();
@@ -36,12 +35,12 @@ public class Platform extends Box2DSprite {
 
     public void update() {
 
-        if(horizontal) {
-            if(Math.abs(body.getPosition().x-startY) > limit) {
+        if (horizontal) {
+            if (Math.abs(body.getPosition().x - startY) > limit) {
                 changeDirection();
             }
         } else {
-            if(Math.abs(body.getPosition().y-startY) > limit) {
+            if (Math.abs(body.getPosition().y - startY) > limit) {
                 changeDirection();
             }
         }
@@ -51,14 +50,14 @@ public class Platform extends Box2DSprite {
     private void changeDirection() {
         movingUp = !movingUp;
 
-        if(horizontal) {
-            if(movingUp) {
+        if (horizontal) {
+            if (movingUp) {
                 body.setLinearVelocity(speed, 0f);
             } else {
                 body.setLinearVelocity(-speed, 0f);
             }
         } else {
-            if(movingUp) {
+            if (movingUp) {
                 body.setLinearVelocity(0f, speed);
             } else {
                 body.setLinearVelocity(0f, -speed);

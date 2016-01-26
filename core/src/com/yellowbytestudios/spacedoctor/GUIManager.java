@@ -1,14 +1,10 @@
 package com.yellowbytestudios.spacedoctor;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**
  * Created by BobbyBoy on 10-Jan-16.
@@ -24,7 +20,7 @@ public class GUIManager {
     private long timeElapsed;
 
     private ShapeRenderer shapeRenderer;
-    private Texture gas_bar, round_icon;
+    private Texture gas_bar, ammo_icon;
 
 
     public GUIManager(SpacemanPlayer player) {
@@ -37,8 +33,8 @@ public class GUIManager {
         startTurnTime = System.nanoTime();
 
         shapeRenderer = new ShapeRenderer();
-        gas_bar = new Texture(Gdx.files.internal("gas_bar.png"));
-        round_icon = new Texture(Gdx.files.internal("round_icon.png"));
+        gas_bar = Assets.manager.get(Assets.GAS_METER, Texture.class);
+        ammo_icon = Assets.manager.get(Assets.AMMO_ICON, Texture.class);
     }
 
     public void update() {
@@ -59,7 +55,7 @@ public class GUIManager {
         sb.begin();
 
         sb.draw(gas_bar, 50, MainGame.HEIGHT - 130);
-        sb.draw(round_icon, 60, MainGame.HEIGHT - 250);
+        sb.draw(ammo_icon, 60, MainGame.HEIGHT - 250);
         Fonts.timerFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 190, MainGame.HEIGHT - 200);
 
         Fonts.timerFont.draw(sb, "TIME", MainGame.WIDTH / 2 - 60, MainGame.HEIGHT - 30);

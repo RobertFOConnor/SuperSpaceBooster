@@ -7,42 +7,55 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.Assets;
+import com.yellowbytestudios.spacedoctor.Button;
+import com.yellowbytestudios.spacedoctor.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 
 /**
- * Created by BobbyBoy on 16-Jan-16.
+ * Created by BobbyBoy on 26-Jan-16.
  */
-public class TitleScreen implements Screen {
+public class MainMenuScreen implements Screen {
 
     private OrthoCamera camera;
+    private Vector2 touch;
+    private String title = "MAIN MENU";
     private Texture bg;
     private Controller controller;
+    private Button editorButton, playButton, settingsButton;
 
     @Override
     public void create() {
         camera = new OrthoCamera();
         camera.resize();
-        bg = Assets.manager.get(Assets.TITLESCREEN, Texture.class);
-
+        touch = new Vector2();
         if (MainGame.hasControllers) {
             controller = Controllers.getControllers().get(0);
         }
+
+        bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
     }
+
 
     @Override
     public void update(float step) {
+        camera.update();
+
         if (MainGame.hasControllers) {
-            if (controller.getButton(XBox360Pad.BUTTON_START)) {
-                ScreenManager.setScreen(new LevelSelectScreen());
+            if (controller.getButton(XBox360Pad.BUTTON_A)) {
+                //ScreenManager.setScreen(new GameScreen(selLevel));
             }
-        } else if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             ScreenManager.setScreen(new LevelSelectScreen());
 
-        } else if(MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
-            ScreenManager.setScreen(new LevelSelectScreen());
+        } else if (MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
+            touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+
         }
     }
 
@@ -56,26 +69,19 @@ public class TitleScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
+
+        Fonts.timerFont.draw(sb, title, MainGame.WIDTH / 2 - 250, MainGame.HEIGHT - 80);
+
         sb.end();
     }
 
     @Override
-    public void resize(int w, int h) {
-
+    public void resize(int width, int height) {
+        camera.resize();
     }
 
     @Override
     public void dispose() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
 
     }
 
@@ -90,7 +96,17 @@ public class TitleScreen implements Screen {
     }
 
     @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
     public void goBack() {
-        Gdx.app.exit();
+        ScreenManager.setScreen(new TitleScreen());
     }
 }

@@ -1,9 +1,9 @@
 package com.yellowbytestudios.spacedoctor.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.Box2DVars;
 
 /**
@@ -16,7 +16,7 @@ public class Bullet extends Box2DSprite {
     public Bullet(Body body) {
         super(body);
         body.setUserData(this);
-        texture = new Texture(Gdx.files.internal("bullet.png"));
+        texture = Assets.manager.get(Assets.BULLET, Texture.class);
         width = texture.getWidth();
         height = texture.getHeight();
     }

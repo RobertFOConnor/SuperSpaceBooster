@@ -107,6 +107,6 @@ public class MapEditorScreen implements Screen {
 
     @Override
     public void goBack() {
-
+        ScreenManager.setScreen(new MainMenuScreen());
     }
 }
