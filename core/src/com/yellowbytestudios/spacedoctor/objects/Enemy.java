@@ -2,7 +2,7 @@ package com.yellowbytestudios.spacedoctor.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.Box2DVars;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 
@@ -32,6 +32,7 @@ public class Enemy extends Box2DSprite {
 
     public void render(SpriteBatch sb) {
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM) - 75);
+        spriter.update();
         MainGame.spriterManager.draw(spriter);
     }
 

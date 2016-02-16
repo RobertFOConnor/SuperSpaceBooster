@@ -4,12 +4,14 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.yellowbytestudios.spacedoctor.screens.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
-import com.yellowbytestudios.spacedoctor.screens.TitleScreen;
+import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
+
 
 public class MainGame extends ApplicationAdapter {
 
@@ -26,41 +28,42 @@ public class MainGame extends ApplicationAdapter {
 
     //Controller support variables.
     public static boolean hasControllers = false;
-    private boolean LOADED = false;
+    public static Controller controller;
 
     public static int UNLOCKED_LEVEL = 1;
     public static Music GAME_MUSIC;
 
     public static String DEVICE;
+    private boolean backPressed = false;
+
+    public static final boolean TEST_MODE = false;
+
 
     public MainGame(String device) {
-        this.DEVICE = device;
+        DEVICE = device;
     }
 
 
     @Override
     public void create() {
+        //Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
         checkForController();
-        Assets.load();
-        Fonts.loadFonts();
-
+        ScreenManager.setScreen(new SplashScreen());
     }
 
     @Override
     public void render() {
-        if (Assets.update() && !LOADED) { // DONE LOADING. SHOW TITLE SCREEN.
-            ScreenManager.setScreen(new TitleScreen());
-            //SoundManager.setMusic(Assets.THEME);
-            LOADED = true;
-        }
 
         if (ScreenManager.getCurrentScreen() != null) {
 
             accum += Gdx.graphics.getDeltaTime();
             while (accum >= STEP) {
+                Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+                Gdx.gl20.glClearColor(0, 0, 0, 0);
+
                 accum -= STEP;
                 ScreenManager.getCurrentScreen().update(STEP);
                 ScreenManager.getCurrentScreen().render(sb);
@@ -68,50 +71,58 @@ public class MainGame extends ApplicationAdapter {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            ScreenManager.getCurrentScreen().goBack();
+            if (!backPressed) {
+                ScreenManager.getCurrentScreen().goBack();
+                backPressed = true;
+            }
+        } else {
+            backPressed = false;
         }
     }
 
     @Override
     public void resize(int w, int h) {
 
-        if(ScreenManager.getCurrentScreen()!=null)
+        if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().resize(w, h);
     }
 
     @Override
     public void dispose() {
 
-        if(ScreenManager.getCurrentScreen()!=null)
+        if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().dispose();
 
         sb.dispose();
 
         Assets.manager.dispose();
         Assets.manager = null;
+
+        Fonts.dispose();
     }
 
 
     @Override
     public void pause() {
 
-        if(ScreenManager.getCurrentScreen()!=null)
+        if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().pause();
     }
 
     @Override
     public void resume() {
         Assets.load();
-        while(!Assets.manager.update()){
+        Fonts.load();
+        while (!Assets.manager.update()) {
         }
-        if(ScreenManager.getCurrentScreen()!=null)
+        if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().resume();
     }
 
     private void checkForController() {
         if (Controllers.getControllers().size != 0) {
             hasControllers = true;
-            System.out.println("XBox 360 Controller detected!");
+            controller = Controllers.getControllers().get(0);
         }
     }
 }

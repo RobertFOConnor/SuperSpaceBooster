@@ -1,8 +1,5 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.box2d;
 
-/**
- * Created by BobbyBoy on 26-Dec-15.
- */
 public class Box2DVars {
 
     public static final float PPM = 100;

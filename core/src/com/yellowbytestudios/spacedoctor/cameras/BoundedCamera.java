@@ -1,8 +1,5 @@
 package com.yellowbytestudios.spacedoctor.cameras;
 
-/**
- * Created by BobbyBoy on 23-Sep-15.
- */
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;

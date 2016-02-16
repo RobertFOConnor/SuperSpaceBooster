@@ -9,6 +9,7 @@ import com.yellowbytestudios.spacedoctor.Button;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
@@ -18,7 +19,7 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 public class AndroidController implements BasicController {
 
     private OrthoCamera camera;
-    private Button left, right, up, shoot, mapEditor;
+    private Button left, right, up, shoot, mapEditor, exit;
     private Vector2 touch1, touch2;
 
     public AndroidController() {
@@ -32,6 +33,8 @@ public class AndroidController implements BasicController {
         shoot = new Button(Assets.manager.get(Assets.SHOOT, Texture.class), Assets.manager.get(Assets.SHOOT_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330 - 280, 30));
         mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
 
+        exit = new Button(Assets.manager.get(Assets.EXIT, Texture.class), Assets.manager.get(Assets.EXIT, Texture.class), new Vector2(MainGame.WIDTH-80, MainGame.HEIGHT-80));
+
 
         touch1 = new Vector2();
         touch2 = new Vector2();
@@ -41,6 +44,7 @@ public class AndroidController implements BasicController {
         if (Gdx.input.isTouched(0)) {
             touch1 = camera.unprojectCoordinates(Gdx.input.getX(0),
                     Gdx.input.getY(0));
+
         } else {
             touch1.set(0, 0);
         }
@@ -62,12 +66,16 @@ public class AndroidController implements BasicController {
         up.render(sb);
         shoot.render(sb);
 
-
         if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
             if (mapEditor.checkTouch(touch1) || mapEditor.checkTouch(touch2)) {
                 ScreenManager.setScreen(new MapEditorScreen(GameScreen.customMap));
             }
             mapEditor.render(sb);
+        } else {
+            if(exit.checkTouch(touch1) || exit.checkTouch(touch2)) {
+                ScreenManager.setScreen(new MainMenuScreen());
+            }
+            exit.render(sb);
         }
 
         sb.end();

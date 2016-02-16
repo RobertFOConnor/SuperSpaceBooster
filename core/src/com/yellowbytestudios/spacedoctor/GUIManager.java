@@ -6,9 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 
-/**
- * Created by BobbyBoy on 10-Jan-16.
- */
 public class GUIManager {
 
     private OrthoCamera camera;
@@ -39,6 +36,7 @@ public class GUIManager {
 
     public void update() {
         timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
+
     }
 
     public void render(SpriteBatch sb) {

@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.Button;
-import com.yellowbytestudios.spacedoctor.Entity;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
@@ -34,17 +35,16 @@ public class EditorGUI {
     private boolean buttonSelected = false;
 
 
-
     public EditorGUI(MapManager mapManager) {
         this.mapManager = mapManager;
         camera = new OrthoCamera();
         camera.resize();
 
-        zoomIn = new Button(new Texture(Gdx.files.internal("mapeditor/zoom_in.png")), new Texture(Gdx.files.internal("mapeditor/zoom_in.png")), new Vector2(MainGame.WIDTH - 170, 30));
-        zoomOut = new Button(new Texture(Gdx.files.internal("mapeditor/zoom_out.png")), new Texture(Gdx.files.internal("mapeditor/zoom_out.png")), new Vector2(MainGame.WIDTH - 280 - 60, 30));
-        moveButton = new Button(new Texture(Gdx.files.internal("mapeditor/move_button.png")), new Texture(Gdx.files.internal("mapeditor/move_button_selected.png")), new Vector2(30, 30));
-        eraseButton = new Button(new Texture(Gdx.files.internal("mapeditor/erase.png")), new Texture(Gdx.files.internal("mapeditor/erase_selected.png")), new Vector2(30 + 140 + 30, 30));
-        playMap = new Button(new Texture(Gdx.files.internal("mapeditor/play_map.png")), new Texture(Gdx.files.internal("mapeditor/play_map.png")), new Vector2(30, MainGame.HEIGHT - 170));
+        zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, 30));
+        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 280 - 60, 30));
+        moveButton = new Button(Assets.MOVE_BUTTON, new Vector2(30, 30));
+        eraseButton = new Button(Assets.ERASE, new Vector2(30 + 140 + 30, 30));
+        playMap = new Button(Assets.PLAY_MAP, new Vector2(30, MainGame.HEIGHT - 170));
 
 
         //Tile buttons
@@ -52,30 +52,36 @@ public class EditorGUI {
         tileset = new TextureRegion(new Texture(Gdx.files.internal("maps/tileset.png")));
         tileButtons = new Array<TileButton>();
 
-        float listX = 320;
-        tileButtons.add(new TileButton(new TextureRegion(tileset, 0, 0, 100, 100), new Vector2(listX, MainGame.HEIGHT - 120), 0));
-        tileButtons.add(new TileButton(new TextureRegion(tileset, 200, 0, 100, 100), new Vector2(listX + 120, MainGame.HEIGHT - 120), TileIDs.DOWN_SPIKE));
-        tileButtons.add(new TileButton(new TextureRegion(tileset, 300, 200, 100, 100), new Vector2(listX + (120 * 2), MainGame.HEIGHT - 120), TileIDs.UP_SPIKE));
-        tileButtons.add(new TileButton(new TextureRegion(tileset, 300, 100, 100, 100), new Vector2(listX + (120 * 3), MainGame.HEIGHT - 120), TileIDs.RIGHT_SPIKE));
-        tileButtons.add(new TileButton(new TextureRegion(tileset, 400, 100, 100, 100), new Vector2(listX + (120 * 4), MainGame.HEIGHT - 120), TileIDs.LEFT_SPIKE));
+
+        addTileButton(0, 0, 0);
+        addTileButton(200, 100, 7);
+        addTileButton(200, 0, TileIDs.DOWN_SPIKE);
+        addTileButton(300, 200, TileIDs.UP_SPIKE);
+        addTileButton(300, 100, TileIDs.RIGHT_SPIKE);
+        addTileButton(400, 100, TileIDs.LEFT_SPIKE);
     }
 
-    public void update() {
+    private void addTileButton(int sheetX, int sheetY, int tileID) {
+        int PPM = (int) Box2DVars.PPM;
+        float listX = 320;
+
+        tileButtons.add(new TileButton(new TextureRegion(tileset, sheetX, sheetY, PPM, PPM), new Vector2(listX + (120 * tileButtons.size), MainGame.HEIGHT - 120), tileID));
+    }
+
+    public void update(float step) {
         if (Gdx.input.isTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
             if (zoomIn.checkTouch(touch)) {
-                mapManager.zoomIn();
+                mapManager.zoomIn(step);
             } else if (zoomOut.checkTouch(touch)) {
-                mapManager.zoomOut();
+                mapManager.zoomOut(step);
             } else if (playMap.checkTouch(touch)) {
                 ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
 
-            } else if (moveButton.checkTouch(touch)) {
-
-
-            } else { //CHECK MAP FOR INTERACTION.
+            } else if (!moveButton.checkTouch(touch)) {
+                //CHECK MAP FOR INTERACTION.
 
                 buttonSelected = false;
                 for (TileButton tb : tileButtons) {
@@ -91,7 +97,7 @@ public class EditorGUI {
                     }
                 }
 
-                if(!buttonSelected && !mapManager.getExit().isSelected() && !mapManager.getPlayerSpawn().isSelected()) {
+                if (!buttonSelected && !mapManager.getExit().isSelected() && !mapManager.getPlayerSpawn().isSelected()) {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
                     } else if (eraseButton.isPressed()) {
@@ -166,10 +172,7 @@ public class EditorGUI {
         }
 
         public boolean checkTouch(Vector2 touch) {
-            if (getBounds().contains(touch)) {
-                return true;
-            }
-            return false;
+            return getBounds().contains(touch);
         }
     }
 }

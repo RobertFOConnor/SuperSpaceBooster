@@ -1,22 +1,24 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.effects;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.yellowbytestudios.spacedoctor.Assets;
+import com.yellowbytestudios.spacedoctor.MainGame;
 
 public class SoundManager {
 
     public static boolean soundFXEnabled = true;
     public static boolean musicEnabled = false;
 
-    public static void play(Sound s) {
+    public static void play(String s) {
         if (soundFXEnabled) {
-            s.play();
+            Assets.manager.get(s, Sound.class).play();
         }
     }
 
-    public static void stop(Sound s) {
+    public static void stop(String s) {
         if (soundFXEnabled) {
-            s.stop();
+            Assets.manager.get(s, Sound.class).stop();
         }
     }
 

@@ -2,10 +2,6 @@ package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +10,7 @@ import com.yellowbytestudios.spacedoctor.Assets;
 import com.yellowbytestudios.spacedoctor.Button;
 import com.yellowbytestudios.spacedoctor.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.SoundManager;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 
@@ -25,7 +21,7 @@ public class LevelSelectScreen implements Screen {
     private String title = "SELECT A LEVEL";
     private Texture bg;
     private Array<LevelButton> levelButtons;
-    private Controller controller;
+    private LevelButton selectedLevel = null;
 
     private int selLevel = 1;
 
@@ -34,10 +30,6 @@ public class LevelSelectScreen implements Screen {
         camera = new OrthoCamera();
         camera.resize();
         touch = new Vector2();
-        if (MainGame.hasControllers) {
-            controller = Controllers.getControllers().get(0);
-        }
-
 
         bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
 
@@ -50,13 +42,19 @@ public class LevelSelectScreen implements Screen {
             for (int j = 0; j < 5; j++) {
                 levelButtons.add(new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY), levelCount));
                 levelCount++;
+
+                if(levelCount == MainGame.UNLOCKED_LEVEL) {
+                    selectedLevel = levelButtons.get(levelButtons.size-1);
+                }
             }
             levelY -= 300;
         }
 
+        selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL-1);
+
         selLevel = MainGame.UNLOCKED_LEVEL;
         levelButtons.get(selLevel - 1).setSelected(true);
-        SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+        SoundManager.stop(Assets.JETPACK_SOUND);
     }
 
     private class LevelButton extends Button {
@@ -67,11 +65,13 @@ public class LevelSelectScreen implements Screen {
         private Texture border;
 
         public LevelButton(Vector2 pos, int levelNum) {
-            super(Assets.manager.get(Assets.LEVEL_LOCKED, Texture.class), Assets.manager.get(Assets.LEVEL_LOCKED, Texture.class), pos);
+            super(Assets.LEVEL_LOCKED, pos);
             if (MainGame.UNLOCKED_LEVEL > levelNum) {
                 texture = Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class);
+                unlocked = true;
             } else if (MainGame.UNLOCKED_LEVEL == levelNum) {
                 texture = Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class);
+                unlocked = true;
             }
 
             this.levelNum = levelNum;
@@ -87,11 +87,6 @@ public class LevelSelectScreen implements Screen {
         }
 
         @Override
-        public boolean isSelected() {
-            return selected;
-        }
-
-        @Override
         public void setSelected(boolean selected) {
             this.selected = selected;
         }
@@ -102,31 +97,29 @@ public class LevelSelectScreen implements Screen {
         camera.update();
 
         if (MainGame.hasControllers) {
-            if (controller.getButton(XBox360Pad.BUTTON_A)) {
-                ScreenManager.setScreen(new GameScreen(selLevel));
+            if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
+                advanceScreen();
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            ScreenManager.setScreen(new GameScreen(selLevel));
+            advanceScreen();
 
-        } else if (/*MainGame.DEVICE.equals("ANDROID") &&*/ Gdx.input.justTouched()) {
-            Vector2 touch = camera.unprojectCoordinates(Gdx.input.getX(),
+        } else if (MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
+            touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (touch.y > MainGame.HEIGHT - 200) {
-                ScreenManager.setScreen(new MapEditorScreen());
-            } else {
-                ScreenManager.setScreen(new GameScreen(selLevel));
+            if(selectedLevel.checkTouch(touch)) {
+                advanceScreen();
             }
         }
     }
 
+    private void advanceScreen() {
+        ScreenManager.setScreen(new GameScreen(selLevel));
+    }
+
     @Override
     public void render(SpriteBatch sb) {
-        // Clear screen.
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl20.glClearColor(0, 0, 0, 0);
-
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();

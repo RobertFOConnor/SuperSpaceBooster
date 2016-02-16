@@ -12,7 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.yellowbytestudios.spacedoctor.Box2DVars;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.Entity;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -64,8 +64,8 @@ public class MapManager {
         initTiles();
         setupMap();
 
-        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX*Box2DVars.PPM, exitY*Box2DVars.PPM));
-        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX*Box2DVars.PPM, startY*Box2DVars.PPM));
+        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
+        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
     }
 
     private void initTiles() {
@@ -120,7 +120,7 @@ public class MapManager {
     }
 
 
-    public void update() {
+    public void update(float step) {
 
         if (!Gdx.input.isTouched()) {
 
@@ -169,6 +169,8 @@ public class MapManager {
 
                         if (tileID == 0) {
                             layer1.setCell(col, row, lightCell);
+                        } else if (tileID == 7) {
+                            layer1.setCell(col, row, darkCell);
                         } else if (tileID == TileIDs.DOWN_SPIKE) {
                             layer1.setCell(col, row, spikeCell_D);
                         } else if (tileID == TileIDs.UP_SPIKE) {
@@ -192,9 +194,7 @@ public class MapManager {
             for (int row = 0; row < layer1.getHeight(); row++) {
                 for (int col = 0; col < layer1.getWidth(); col++) {
 
-                    if (row == 0 || col == 0 || row == layer1.getHeight() - 1 || col == layer1.getWidth() - 1) { //Borders.
-
-                    } else {
+                    if (row != 0 || col != 0 || row != layer1.getHeight() - 1 || col != layer1.getWidth() - 1) { //Borders.
                         if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
                             layer1.setCell(col, row, null);
                         }
@@ -232,14 +232,14 @@ public class MapManager {
         sb.end();
     }
 
-    public void zoomIn() {
+    public void zoomIn(float step) {
 
         if (cam.zoom > 0.5f) {
             cam.zoom -= 0.03f;
         }
     }
 
-    public void zoomOut() {
+    public void zoomOut(float step) {
 
         if (cam.zoom < 3f) {
             cam.zoom += 0.03f;
@@ -282,6 +282,14 @@ public class MapManager {
 
     public DraggableObject getPlayerSpawn() {
         return playerSpawn;
+    }
+
+    public static void reset() {
+        exitX = 15;
+        exitY = 4;
+
+        startX = 3;
+        startY = 4;
     }
 }
 

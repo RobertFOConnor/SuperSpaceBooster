@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.box2d;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
@@ -12,11 +12,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
-import com.yellowbytestudios.spacedoctor.objects.*;
+import com.yellowbytestudios.spacedoctor.objects.Box;
+import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.objects.Platform;
 
-/**
- * Created by BobbyBoy on 08-Jan-16.
- */
 public class BodyFactory {
 
     public static Body createBody(World world, String bodyType) {
@@ -230,13 +231,13 @@ public class BodyFactory {
         return pickups;
     }
 
-    public static Array<com.yellowbytestudios.spacedoctor.objects.Platform> createPlatforms(World world, TiledMap tm) {
+    public static Array<Platform> createPlatforms(World world, TiledMap tm) {
 
-        Array<com.yellowbytestudios.spacedoctor.objects.Platform> platforms = new Array<com.yellowbytestudios.spacedoctor.objects.Platform>();
+        Array<Platform> platforms = new Array<Platform>();
 
         MapLayer ml = tm.getLayers().get("platforms");
-        if (ml == null) return new Array<com.yellowbytestudios.spacedoctor.objects.Platform>();
-        ;
+        if (ml == null) return new Array<Platform>();
+
 
         for (MapObject mo : ml.getObjects()) {
 
@@ -261,7 +262,7 @@ public class BodyFactory {
             fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
 
             body.createFixture(fixtureDef).setUserData("wall");
-            com.yellowbytestudios.spacedoctor.objects.Platform p = new com.yellowbytestudios.spacedoctor.objects.Platform(body, type);
+            Platform p = new Platform(body, type);
             p.setLimit(Float.parseFloat(mo.getProperties().get("distance", String.class)));
             body.setUserData(p);
             platforms.add(p);

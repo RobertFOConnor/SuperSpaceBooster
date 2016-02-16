@@ -3,7 +3,7 @@ package com.yellowbytestudios.spacedoctor.objects;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.Box2DVars;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 
 /**
  * Created by BobbyBoy on 08-Jan-16.

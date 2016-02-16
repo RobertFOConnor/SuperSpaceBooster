@@ -158,13 +158,13 @@ public class TileManager {
             }
 
             if (id == TileIDs.DOWN_SPIKE || id == TileIDs.LEFT_SPIKE || id == TileIDs.RIGHT_SPIKE || id == TileIDs.UP_SPIKE) {
-                fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+                fdef.filter.categoryBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_SPIKE;
 
             } else {
-                fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+                fdef.filter.categoryBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_WALL;
             }
         }
-        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+        fdef.filter.maskBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_PLAYER | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_BULLET | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_BOX | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_ENEMY;
     }
 
     public int getMapWidth() {

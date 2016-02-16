@@ -1,42 +1,47 @@
 package com.yellowbytestudios.spacedoctor;
 
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.brashmonkey.spriter.Player;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
-/**
- * Created by BobbyBoy on 26-Dec-15.
- */
+
 public class SpacemanPlayer {
 
+    private Box2DContactListeners contactListener;
+    private BasicController controller;
+    private Player spriter;
     private Body body;
-    private float SPEED = 7f;
+
+    //Physics variables.
     private float ACCELERATION = 30f;
+    private float SPEED = 7f;
     private float posX, posY;
     private float velX, velY;
     private boolean movingLeft, movingRight, movingUp = false;
+    private boolean isDead = false;
     public static float WIDTH, HEIGHT;
-    private com.brashmonkey.spriter.Player spriter;
-    private Box2DContactListeners contactListener;
-    private boolean shooting = false;
-    private BasicController controller;
+
 
     //Jetpack variables!
-    private final float maxGas = 500;
     private float currGas = 500;
 
     //Gun variables!
-    private final int maxAmmo = 10;
+    private boolean shooting = false;
     private int currAmmo = 10;
 
-    private boolean canMove = true;
-    private boolean isDead = false;
+    //Spriter variables.
+    private int headType = 1;
+    int angle = 0;
 
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
@@ -49,7 +54,7 @@ public class SpacemanPlayer {
 
 
         //Assign type of controls for player. (Android, XBox or Keyboard controls).
-        if(MainGame.DEVICE.equals("ANDROID")) {
+        if (MainGame.DEVICE.equals("ANDROID")) {
             controller = GameScreen.androidController;
         } else if (MainGame.hasControllers) {
             controller = new XBoxController();
@@ -67,17 +72,23 @@ public class SpacemanPlayer {
 
     public void update() {
 
+        updateMovement();
+
+        updateGun();
+
+        updatePaused();
+
+        updateSpriterImages();
+    }
+
+    private void updateMovement() {
         assignVariables();
 
         if (controller.leftPressed()) { // LEFT | RIGHT MOVEMENT
             moveLeft();
-        }
-
-        if (controller.rightPressed()) {
+        } else if (controller.rightPressed()) {
             moveRight();
-        }
-
-        if(!controller.rightPressed() && !controller.leftPressed()){
+        } else {
             idle();
         }
 
@@ -87,23 +98,27 @@ public class SpacemanPlayer {
                 moveUp();
             } else {
                 movingUp = false;
-                SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+                SoundManager.stop(Assets.JETPACK_SOUND);
             }
 
         } else {
             movingUp = false;
-            SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+            SoundManager.stop(Assets.JETPACK_SOUND);
         }
+    }
 
+    private void updateGun() {
         if (controller.shootPressed() && currAmmo > 0) {
             shooting = true;
-            SoundManager.play(Assets.manager.get(Assets.GUN_SOUND, Sound.class));
+            SoundManager.play(Assets.GUN_SOUND);
             currAmmo--;
         }
+    }
 
-        if(controller.pausePressed()) {
-            if(!GameScreen.isCustomMap) {
-                SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
+    private void updatePaused() {
+        if (controller.pausePressed()) {
+            if (!GameScreen.isCustomMap) {
+                SoundManager.play(Assets.DEATH_SOUND);
                 ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
             } else {
                 ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
@@ -111,9 +126,24 @@ public class SpacemanPlayer {
         }
     }
 
+    private void updateSpriterImages() {
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
+        spriter.update();
+        spriter.setObject("head", 1f, 4, headType);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            if(angle < 40) {
+                angle += 3;
+            }
+        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if(angle > -40) {
+                angle -= 3;
+            }
+        }
+    }
+
 
     public void render() {
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
         MainGame.spriterManager.draw(spriter);
     }
 
@@ -164,7 +194,7 @@ public class SpacemanPlayer {
         }
 
         if (!movingUp) {
-            SoundManager.play(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+            SoundManager.play(Assets.JETPACK_SOUND);
             movingUp = true;
         }
 
@@ -207,6 +237,9 @@ public class SpacemanPlayer {
         }
     }
 
+    public int getAngle() {
+        return angle;
+    }
 
     public Vector2 getPos() {
         return body.getPosition();
@@ -250,13 +283,14 @@ public class SpacemanPlayer {
     public void setCurrGas(float currGas) {
         this.currGas = currGas;
 
-        if(this.currGas > maxGas) {
+        float maxGas = 500;
+        if (this.currGas > maxGas) {
             this.currGas = maxGas;
         }
     }
 
     public int getMaxAmmo() {
-        return maxAmmo;
+        return 10;
     }
 
     public int getCurrAmmo() {

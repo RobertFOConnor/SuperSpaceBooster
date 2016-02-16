@@ -1,19 +1,12 @@
 package com.yellowbytestudios.spacedoctor.effects;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.Box2DVars;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 
-import box2dLight.ConeLight;
-import box2dLight.Light;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 

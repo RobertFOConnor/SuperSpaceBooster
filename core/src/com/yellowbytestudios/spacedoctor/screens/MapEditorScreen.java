@@ -34,6 +34,7 @@ public class MapEditorScreen implements Screen {
     }
 
     public MapEditorScreen() {
+        MapManager.reset();
     }
 
 
@@ -54,8 +55,8 @@ public class MapEditorScreen implements Screen {
     @Override
     public void update(float step) {
 
-        mapManager.update();
-        gui.update();
+        mapManager.update(step);
+        gui.update(step);
     }
 
 

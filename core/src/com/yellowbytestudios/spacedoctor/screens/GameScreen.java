@@ -1,8 +1,5 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -15,37 +12,32 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.Assets;
-import com.yellowbytestudios.spacedoctor.BodyFactory;
-import com.yellowbytestudios.spacedoctor.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.objects.Platform;
-import com.yellowbytestudios.spacedoctor.SoundManager;
 import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.TileManager;
+import com.yellowbytestudios.spacedoctor.box2d.BodyFactory;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
-import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.objects.Platform;
 
-/**
- * Created by BobbyBoy on 15-Oct-15.
- */
 public class GameScreen implements Screen {
 
     private BoundedCamera cam, b2dCam;
     private World world;
     private TiledMap tileMap;
-    private Box2DDebugRenderer b2dr;
+    private Box2DDebugRenderer b2dr; //DEBUG
     private OrthogonalTiledMapRenderer tmr;
 
-    private TileManager tileManager;
     private SpacemanPlayer player;
     private float PPM = 100;
 
@@ -60,7 +52,6 @@ public class GameScreen implements Screen {
     private Texture bg;
 
     public static ParticleManager particleManager;
-    public static LightManager lightManager;
     private GUIManager gui;
 
     boolean atDoor = false;
@@ -75,12 +66,12 @@ public class GameScreen implements Screen {
 
 
     public GameScreen(int levelNo) {
-        this.levelNo = levelNo;
+        GameScreen.levelNo = levelNo;
         isCustomMap = false;
     }
 
     public GameScreen(TiledMap customMap) {
-        this.customMap = customMap;
+        GameScreen.customMap = customMap;
         isCustomMap = true;
     }
 
@@ -92,7 +83,6 @@ public class GameScreen implements Screen {
 
         b2dr = new Box2DDebugRenderer();
         particleManager = new ParticleManager();
-        //lightManager = new LightManager(world, player, cam);
 
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
@@ -102,7 +92,6 @@ public class GameScreen implements Screen {
         }
 
         //Set tile map using Tiled map path.
-
         if (customMap == null) {
             tileMap = new TmxMapLoader().load("maps/spaceship" + levelNo + ".tmx");
         } else {
@@ -112,12 +101,10 @@ public class GameScreen implements Screen {
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
 
-
         setupMap();
     }
 
     private void setupMap() {
-        System.out.println("Setup begins");
 
         //Setup camera.
         world = new World(new Vector2(0, -9.8f), true);
@@ -126,7 +113,7 @@ public class GameScreen implements Screen {
         contactListener = new Box2DContactListeners();
         world.setContactListener(contactListener);
 
-
+        TileManager tileManager;
         tileManager = new TileManager();
         tileManager.createWalls(world, tileMap);
 
@@ -187,7 +174,7 @@ public class GameScreen implements Screen {
         world.step(step, 8, 3);
 
         if (player.isDead() || gui.getTimeElapsed() < 0) {
-            SoundManager.play(Assets.manager.get(Assets.DEATH_SOUND, Sound.class));
+            SoundManager.play(Assets.DEATH_SOUND);
             setupMap();
         }
 
@@ -242,8 +229,8 @@ public class GameScreen implements Screen {
 
         if (contactListener.isAtDoor()) {
 
-            SoundManager.play(Assets.manager.get(Assets.FINISHED_SOUND, Sound.class));
-            SoundManager.stop(Assets.manager.get(Assets.JETPACK_SOUND, Sound.class));
+            SoundManager.play(Assets.FINISHED_SOUND);
+            SoundManager.stop(Assets.JETPACK_SOUND);
 
             if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
                 ScreenManager.setScreen(new MapEditorScreen(customMap));
@@ -256,6 +243,7 @@ public class GameScreen implements Screen {
                     ScreenManager.setScreen(new ResultsScreen());
                 }
             }
+            customMap = null;
         }
     }
 
@@ -273,10 +261,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(SpriteBatch sb) {
-        // Clear screen.
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl20.glClearColor(0, 0, 0, 0);
-
 
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
@@ -326,7 +310,9 @@ public class GameScreen implements Screen {
         }
 
         //Render Box2D world.
-        //b2dr.render(world, b2dCam.combined);
+        if (MainGame.TEST_MODE) {
+            b2dr.render(world, b2dCam.combined);
+        }
     }
 
     @Override
@@ -362,5 +348,11 @@ public class GameScreen implements Screen {
     @Override
     public void goBack() {
 
+        if (customMap == null) {
+            ScreenManager.setScreen(new LevelSelectScreen());
+        } else {
+            ScreenManager.setScreen(new MapEditorScreen(customMap));
+        }
+        customMap = null;
     }
 }

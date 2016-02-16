@@ -1,6 +1,5 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.box2d;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -8,14 +7,10 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.LevelSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.ResultsScreen;
-import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.Assets;
+import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 
-/**
- * Created by BobbyBoy on 27-Dec-15.
- */
 public class Box2DContactListeners implements ContactListener {
 
     private Array<Fixture> bodiesToRemove;
@@ -50,12 +45,12 @@ public class Box2DContactListeners implements ContactListener {
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("player")) {
-            if(fb.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
+            if (fb.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
                 killPlayer();
             }
         }
         if (fb.getUserData() != null && fb.getUserData().equals("player")) {
-            if(fa.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
+            if (fa.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
                 killPlayer();
             }
         }
@@ -67,30 +62,30 @@ public class Box2DContactListeners implements ContactListener {
             shootEnemy(fa, fb);
         }
 
-        if(fa.getUserData() != null && fa.getUserData().equals("door")) {
+        if (fa.getUserData() != null && fa.getUserData().equals("door")) {
             door = fa.getBody();
             atDoor = true;
         }
-        if(fb.getUserData() != null && fb.getUserData().equals("door")) {
+        if (fb.getUserData() != null && fb.getUserData().equals("door")) {
             door = fb.getBody();
             atDoor = true;
         }
 
-        if(fa.getUserData() != null && fa.getUserData().equals("pickup")) {
+        if (fa.getUserData() != null && fa.getUserData().equals("pickup")) {
             bodiesToRemove.add(fa);
         }
-        if(fb.getUserData() != null && fb.getUserData().equals("pickup")) {
+        if (fb.getUserData() != null && fb.getUserData().equals("pickup")) {
             bodiesToRemove.add(fb);
         }
 
-        if(fa.getUserData() != null && fa.getUserData().equals("enemy")) {
+        if (fa.getUserData() != null && fa.getUserData().equals("enemy")) {
 
-            if(fb.getUserData().equals("player")) {
+            if (fb.getUserData().equals("player")) {
                 killPlayer();
             }
         }
-        if(fb.getUserData() != null && fb.getUserData().equals("enemy")) {
-            if(fa.getUserData().equals("player")) {
+        if (fb.getUserData() != null && fb.getUserData().equals("enemy")) {
+            if (fa.getUserData().equals("player")) {
                 killPlayer();
             }
         }
@@ -136,7 +131,9 @@ public class Box2DContactListeners implements ContactListener {
     public void postSolve(Contact c, ContactImpulse ci) {
     }
 
-    public Array<Fixture> getBodies() { return bodiesToRemove; }
+    public Array<Fixture> getBodies() {
+        return bodiesToRemove;
+    }
 
     public Body getEnemy() {
         return enemy;
@@ -159,19 +156,19 @@ public class Box2DContactListeners implements ContactListener {
     }
 
     private void playFootstep() {
-        if((int)(Math.random()*3) == 2) {
-            SoundManager.play(Assets.manager.get(Assets.FOOTSTEP_SOUND, Sound.class));
-        } else if((int)(Math.random()*3) == 1) {
-            SoundManager.play(Assets.manager.get(Assets.FOOTSTEP2_SOUND, Sound.class));
+        if ((int) (Math.random() * 3) == 2) {
+            SoundManager.play(Assets.FOOTSTEP_SOUND);
+        } else if ((int) (Math.random() * 3) == 1) {
+            SoundManager.play(Assets.FOOTSTEP2_SOUND);
         } else {
-            SoundManager.play(Assets.manager.get(Assets.FOOTSTEP3_SOUND, Sound.class));
+            SoundManager.play(Assets.FOOTSTEP3_SOUND);
         }
     }
 
     private void shootEnemy(Fixture fa, Fixture fb) {
         bodiesToRemove.add(fb);
 
-        if(fa.getUserData().equals("enemy")) {
+        if (fa.getUserData().equals("enemy")) {
             enemy = fa.getBody();
         }
     }

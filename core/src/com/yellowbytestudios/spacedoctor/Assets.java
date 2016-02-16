@@ -30,6 +30,22 @@ public class Assets {
     public static final String UP_PRESSED = "android_controls/up_pressed.png";
     public static final String SHOOT_PRESSED = "android_controls/shoot_pressed.png";
 
+    //Menu screen.
+    public static final String START_GAME = "menu/start_game.png";
+    public static final String LEVEL_BUILDER = "menu/level_builder.png";
+    public static final String SWITCH_ON = "menu/switch_on.png";
+    public static final String SWITCH_OFF = "menu/switch_off.png";
+    public static final String GO_BACK = "menu/go_back.png";
+    public static final String EXIT = "menu/exit.png";
+
+
+    //Map Editor
+    public static final String ZOOM_IN = "mapeditor/zoom_in.png";
+    public static final String ZOOM_OUT = "mapeditor/zoom_out.png";
+    public static final String MOVE_BUTTON = "mapeditor/move_button.png";
+    public static final String ERASE = "mapeditor/erase.png";
+    public static final String PLAY_MAP = "mapeditor/play_map.png";
+
     //Game objects.
     public static final String BG = "game_objects/bg.png";
     public static final String BOX = "game_objects/box.png";
@@ -67,6 +83,19 @@ public class Assets {
         manager.load(LEVEL_COMPLETE, Texture.class);
         manager.load(LEVEL_BUTTON, Texture.class);
         manager.load(LEVEL_BORDER, Texture.class);
+
+        manager.load(START_GAME, Texture.class);
+        manager.load(LEVEL_BUILDER, Texture.class);
+        manager.load(SWITCH_ON, Texture.class);
+        manager.load(SWITCH_OFF, Texture.class);
+        manager.load(GO_BACK, Texture.class);
+        manager.load(EXIT, Texture.class);
+
+        manager.load(ZOOM_IN, Texture.class);
+        manager.load(ZOOM_OUT, Texture.class);
+        manager.load(MOVE_BUTTON, Texture.class);
+        manager.load(ERASE, Texture.class);
+        manager.load(PLAY_MAP, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);
