@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.objects.Button;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
@@ -44,7 +44,7 @@ public class EditorGUI {
         zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 280 - 60, 30));
         moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
         eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
-        playMap = new Button(Assets.PLAY_MAP, new Vector2(30, MainGame.HEIGHT - 170));
+        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
 
 
         //Tile buttons

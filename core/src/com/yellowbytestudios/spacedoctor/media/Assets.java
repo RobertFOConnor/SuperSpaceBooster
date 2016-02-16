@@ -8,10 +8,6 @@ public class Assets {
 
     public static AssetManager manager = new AssetManager();
 
-    //Images
-    public static final String TITLESCREEN = "titlescreen.png";
-
-
     public static final String MENU_BG = "menu_bg.png";
     public static final String LEVEL_LOCKED = "levelLocked.png";
     public static final String LEVEL_COMPLETE = "levelComplete.png";
@@ -35,6 +31,11 @@ public class Assets {
     public static final String SWITCH_OFF = "menu/switch_off.png";
     public static final String GO_BACK = "menu/go_back.png";
     public static final String EXIT = "menu/exit.png";
+    public static final String SETTINGS = "menu/settings.png";
+    public static final String STATS = "menu/statistics.png";
+
+    public static final String CHARACTER = "title/character.png";
+    public static final String TITLE = "title/title.png";
 
 
     //Map Editor
@@ -78,7 +79,6 @@ public class Assets {
 
         manager = new AssetManager();
 
-        manager.load(TITLESCREEN, Texture.class);
         manager.load(MENU_BG, Texture.class);
         manager.load(LEVEL_LOCKED, Texture.class);
         manager.load(LEVEL_COMPLETE, Texture.class);
@@ -91,6 +91,8 @@ public class Assets {
         manager.load(SWITCH_OFF, Texture.class);
         manager.load(GO_BACK, Texture.class);
         manager.load(EXIT, Texture.class);
+        manager.load(SETTINGS, Texture.class);
+        manager.load(STATS, Texture.class);
 
         manager.load(ZOOM_IN, Texture.class);
         manager.load(ZOOM_OUT, Texture.class);
@@ -114,6 +116,9 @@ public class Assets {
         manager.load(BULLET, Texture.class);
         manager.load(HOR_PLATFORM, Texture.class);
         manager.load(VER_PLATFORM, Texture.class);
+
+        manager.load(CHARACTER, Texture.class);
+        manager.load(TITLE, Texture.class);
 
         manager.load(GAS_METER, Texture.class);
         manager.load(AMMO_ICON, Texture.class);

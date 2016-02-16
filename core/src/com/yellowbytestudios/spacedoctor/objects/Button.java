@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class Button {
 
@@ -12,7 +13,7 @@ public class Button {
     private boolean selected, pressed = false;
 
     public Button(String imgRef, Vector2 pos) {
-        this.texture = com.yellowbytestudios.spacedoctor.media.Assets.manager.get(imgRef, Texture.class);
+        this.texture = Assets.manager.get(imgRef, Texture.class);
         this.texture_pressed = texture;
         this.pos = pos;
     }

@@ -22,6 +22,7 @@ public class LevelSelectScreen implements Screen {
     private Texture bg;
     private Array<LevelButton> levelButtons;
     private LevelButton selectedLevel = null;
+    private Button backButton;
 
     private int selLevel = 1;
 
@@ -55,6 +56,8 @@ public class LevelSelectScreen implements Screen {
         selLevel = MainGame.UNLOCKED_LEVEL;
         levelButtons.get(selLevel - 1).setSelected(true);
         SoundManager.stop(Assets.JETPACK_SOUND);
+
+        backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
     }
 
     private class LevelButton extends Button {
@@ -104,12 +107,14 @@ public class LevelSelectScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             advanceScreen();
 
-        } else if (MainGame.DEVICE.equals("ANDROID") && Gdx.input.justTouched()) {
+        } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
             if(selectedLevel.checkTouch(touch)) {
                 advanceScreen();
+            }  else if(backButton.checkTouch(touch)) {
+                goBack();
             }
         }
     }
@@ -124,6 +129,7 @@ public class LevelSelectScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
+        backButton.render(sb);
 
         Fonts.timerFont.draw(sb, title, MainGame.WIDTH / 2 - 250, MainGame.HEIGHT - 80);
 

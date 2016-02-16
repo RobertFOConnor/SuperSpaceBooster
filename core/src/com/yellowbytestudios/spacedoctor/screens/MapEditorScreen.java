@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.objects.Button;
 
 /**
  * Created by BobbyBoy on 22-Jan-16.
@@ -19,6 +21,7 @@ public class MapEditorScreen implements Screen {
 
     private MapManager mapManager;
     private TiledMap myMap;
+    private Button backButton;
 
     private EditorGUI gui;
 
@@ -43,6 +46,7 @@ public class MapEditorScreen implements Screen {
         }
 
         gui = new EditorGUI(mapManager);
+        backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
     }
 
     @Override
@@ -50,6 +54,15 @@ public class MapEditorScreen implements Screen {
 
         mapManager.update(step);
         gui.update(step);
+
+        if (Gdx.input.justTouched()) {
+            touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+
+            if (backButton.checkTouch(touch)) {
+                goBack();
+            }
+        }
     }
 
 
@@ -64,6 +77,7 @@ public class MapEditorScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
+        backButton.render(sb);
         gui.render(sb);
         sb.end();
     }

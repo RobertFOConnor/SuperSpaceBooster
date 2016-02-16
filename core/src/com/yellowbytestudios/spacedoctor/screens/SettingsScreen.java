@@ -76,7 +76,7 @@ public class SettingsScreen implements Screen {
                 SoundManager.soundFXEnabled = soundFXButton.switched_on;
 
             } else if(backButton.checkTouch(touch)) {
-                ScreenManager.setScreen(new MainMenuScreen());
+                goBack();
             }
 
         }
@@ -165,6 +165,6 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new TitleScreen());
+        ScreenManager.setScreen(new MainMenuScreen());
     }
 }

@@ -3,13 +3,22 @@ package com.yellowbytestudios.spacedoctor.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
+import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
+
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
 
 /**
  * Created by BobbyBoy on 26-Jan-16.
@@ -19,7 +28,11 @@ public class MainMenuScreen implements Screen {
     private OrthoCamera camera;
     private Vector2 touch;
     private Texture bg;
-    private Button editorButton, playButton;
+    private SpriteButton editorButton, playButton, statButton, settings;
+
+    //Animations
+    private TweenManager tweenManager;
+    private long startTime, delta;
 
     @Override
     public void create() {
@@ -28,8 +41,28 @@ public class MainMenuScreen implements Screen {
         touch = new Vector2();
 
         bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
-        playButton = new Button(Assets.START_GAME, new Vector2(310, 550));
-        editorButton = new Button(Assets.LEVEL_BUILDER, new Vector2(310, 100));
+        playButton = new SpriteButton(Assets.START_GAME, new Vector2(660, MainGame.HEIGHT));
+        editorButton = new SpriteButton(Assets.LEVEL_BUILDER, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 850));
+        statButton = new SpriteButton(Assets.STATS, new Vector2(-600, MainGame.HEIGHT - 850));
+
+        settings = new SpriteButton(Assets.SETTINGS, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 130));
+
+
+        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+        tweenManager = new TweenManager();
+
+        applyButtonAnimation(playButton, 660, MainGame.HEIGHT - 650);
+        applyButtonAnimation(editorButton, 1160, MainGame.HEIGHT - 850);
+        applyButtonAnimation(statButton, 160, MainGame.HEIGHT - 850);
+        applyButtonAnimation(settings, MainGame.WIDTH - 130, MainGame.HEIGHT - 130);
+
+        startTime = TimeUtils.millis();
+    }
+
+    private void applyButtonAnimation(SpriteButton b, float x, float y) {
+        Tween.to(b, SpriteAccessor.POS_XY, 30f)
+                .target(x, y).ease(TweenEquations.easeOutBack)
+                .start(tweenManager);
     }
 
 
@@ -39,23 +72,48 @@ public class MainMenuScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                ScreenManager.setScreen(new LevelSelectScreen());
+                advanceScreen(new LevelSelectScreen());
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            ScreenManager.setScreen(new SettingsScreen());
+            advanceScreen(new SettingsScreen());
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
             if (playButton.checkTouch(touch)) {
-                ScreenManager.setScreen(new LevelSelectScreen());
+                advanceScreen(new LevelSelectScreen());
             } else if (editorButton.checkTouch(touch)) {
-                ScreenManager.setScreen(new MapEditorScreen());
+                advanceScreen(new MapEditorScreen());
+            } else if (settings.checkTouch(touch)) {
+                advanceScreen(new SettingsScreen());
             }
-
         }
+        delta = (TimeUtils.millis() - startTime + 1000) / 1000;
+        tweenManager.update(delta);
+    }
+
+
+    private void advanceScreen(final Screen s) {
+
+        applyButtonAnimation(playButton, 660, MainGame.HEIGHT);
+        applyButtonAnimation(editorButton, MainGame.WIDTH, MainGame.HEIGHT - 850);
+        applyButtonAnimation(statButton, -600, MainGame.HEIGHT - 850);
+
+
+        TweenCallback myCallBack = new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                ScreenManager.setScreen(s);
+            }
+        };
+
+        Tween.to(settings, SpriteAccessor.POS_XY, 30f)
+                .target(MainGame.WIDTH, MainGame.HEIGHT - 130).ease(TweenEquations.easeOutBack).setCallback(myCallBack)
+                .setCallbackTriggers(TweenCallback.END).start(tweenManager);
+
+        startTime = TimeUtils.millis();
     }
 
     @Override
@@ -64,8 +122,10 @@ public class MainMenuScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
-        playButton.render(sb);
-        editorButton.render(sb);
+        playButton.draw(sb);
+        editorButton.draw(sb);
+        statButton.draw(sb);
+        settings.draw(sb);
         sb.end();
     }
 
@@ -101,6 +161,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new TitleScreen());
+        advanceScreen(new TitleScreen());
     }
 }
