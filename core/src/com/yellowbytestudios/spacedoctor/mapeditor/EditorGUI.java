@@ -42,8 +42,8 @@ public class EditorGUI {
 
         zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, 30));
         zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 280 - 60, 30));
-        moveButton = new Button(Assets.MOVE_BUTTON, new Vector2(30, 30));
-        eraseButton = new Button(Assets.ERASE, new Vector2(30 + 140 + 30, 30));
+        moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
+        eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
         playMap = new Button(Assets.PLAY_MAP, new Vector2(30, MainGame.HEIGHT - 170));
 
 

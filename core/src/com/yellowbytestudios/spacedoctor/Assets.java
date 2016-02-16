@@ -1,13 +1,11 @@
 package com.yellowbytestudios.spacedoctor;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Array;
 
 public class Assets {
-	
+
     public static AssetManager manager = new AssetManager();
 
     //Images
@@ -42,9 +40,12 @@ public class Assets {
     //Map Editor
     public static final String ZOOM_IN = "mapeditor/zoom_in.png";
     public static final String ZOOM_OUT = "mapeditor/zoom_out.png";
-    public static final String MOVE_BUTTON = "mapeditor/move_button.png";
-    public static final String ERASE = "mapeditor/erase.png";
     public static final String PLAY_MAP = "mapeditor/play_map.png";
+
+    public static final String MOVE_BUTTON = "mapeditor/move_button.png";
+    public static final String MOVE_BUTTON_SEL = "mapeditor/move_button_selected.png";
+    public static final String ERASE = "mapeditor/erase.png";
+    public static final String ERASE_SEL = "mapeditor/erase_selected.png";
 
     //Game objects.
     public static final String BG = "game_objects/bg.png";
@@ -72,10 +73,10 @@ public class Assets {
 
     //public static final String THEME = "sounds/theme.mp3";
 
-    
+
     public static void load() {// Loads Assets
 
-    	manager = new AssetManager();
+        manager = new AssetManager();
 
         manager.load(TITLESCREEN, Texture.class);
         manager.load(MENU_BG, Texture.class);
@@ -94,7 +95,9 @@ public class Assets {
         manager.load(ZOOM_IN, Texture.class);
         manager.load(ZOOM_OUT, Texture.class);
         manager.load(MOVE_BUTTON, Texture.class);
+        manager.load(MOVE_BUTTON_SEL, Texture.class);
         manager.load(ERASE, Texture.class);
+        manager.load(ERASE_SEL, Texture.class);
         manager.load(PLAY_MAP, Texture.class);
 
         manager.load(LEFT, Texture.class);
@@ -129,7 +132,7 @@ public class Assets {
     }
 
     public static void dispose() {
-    	manager.dispose();
+        manager.dispose();
     }
 
     public static boolean update() {
