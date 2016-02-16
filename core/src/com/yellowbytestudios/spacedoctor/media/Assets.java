@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.media;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;

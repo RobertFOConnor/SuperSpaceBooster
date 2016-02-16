@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.Assets;
-import com.yellowbytestudios.spacedoctor.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 
 public class Box2DContactListeners implements ContactListener {

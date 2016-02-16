@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.media;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

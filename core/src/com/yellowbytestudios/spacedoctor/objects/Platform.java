@@ -2,7 +2,7 @@ package com.yellowbytestudios.spacedoctor.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.Assets;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class Platform extends Box2DSprite {
 

@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor;
+package com.yellowbytestudios.spacedoctor.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +12,7 @@ public class Button {
     private boolean selected, pressed = false;
 
     public Button(String imgRef, Vector2 pos) {
-        this.texture = Assets.manager.get(imgRef, Texture.class);
+        this.texture = com.yellowbytestudios.spacedoctor.media.Assets.manager.get(imgRef, Texture.class);
         this.texture_pressed = texture;
         this.pos = pos;
     }

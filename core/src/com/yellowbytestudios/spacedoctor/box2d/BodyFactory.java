@@ -300,7 +300,7 @@ public class BodyFactory {
             cfdef.shape = shape;
             cfdef.density = 5f;
             cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
             body.createFixture(cfdef).setUserData("enemy");
             shape.dispose();

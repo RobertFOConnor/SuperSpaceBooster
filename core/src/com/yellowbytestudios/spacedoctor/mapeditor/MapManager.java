@@ -13,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
-import com.yellowbytestudios.spacedoctor.Entity;
+import com.yellowbytestudios.spacedoctor.objects.Entity;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
@@ -95,10 +96,10 @@ public class MainGame extends ApplicationAdapter {
 
         sb.dispose();
 
-        Assets.manager.dispose();
-        Assets.manager = null;
+        com.yellowbytestudios.spacedoctor.media.Assets.manager.dispose();
+        com.yellowbytestudios.spacedoctor.media.Assets.manager = null;
 
-        Fonts.dispose();
+        com.yellowbytestudios.spacedoctor.media.Fonts.dispose();
     }
 
 
@@ -111,9 +112,9 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void resume() {
-        Assets.load();
+        com.yellowbytestudios.spacedoctor.media.Assets.load();
         Fonts.load();
-        while (!Assets.manager.update()) {
+        while (!com.yellowbytestudios.spacedoctor.media.Assets.manager.update()) {
         }
         if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().resume();
