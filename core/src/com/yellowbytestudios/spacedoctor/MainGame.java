@@ -8,10 +8,12 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
+import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
 
 public class MainGame extends ApplicationAdapter {
@@ -26,6 +28,8 @@ public class MainGame extends ApplicationAdapter {
 
     //Spriter manager. (Smooth Animations)
     public static SpriterManager spriterManager;
+    public static AnimationManager animationManager;
+
 
     //Controller support variables.
     public static boolean hasControllers = false;
@@ -51,6 +55,8 @@ public class MainGame extends ApplicationAdapter {
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
+        animationManager = new AnimationManager();
+
         checkForController();
         ScreenManager.setScreen(new SplashScreen());
     }
@@ -59,6 +65,7 @@ public class MainGame extends ApplicationAdapter {
     public void render() {
 
         if (ScreenManager.getCurrentScreen() != null) {
+            animationManager.update();
 
             accum += Gdx.graphics.getDeltaTime();
             while (accum >= STEP) {
@@ -96,10 +103,10 @@ public class MainGame extends ApplicationAdapter {
 
         sb.dispose();
 
-        com.yellowbytestudios.spacedoctor.media.Assets.manager.dispose();
-        com.yellowbytestudios.spacedoctor.media.Assets.manager = null;
+        Assets.manager.dispose();
+        Assets.manager = null;
 
-        com.yellowbytestudios.spacedoctor.media.Fonts.dispose();
+        Fonts.dispose();
     }
 
 
@@ -112,9 +119,9 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void resume() {
-        com.yellowbytestudios.spacedoctor.media.Assets.load();
         Fonts.load();
-        while (!com.yellowbytestudios.spacedoctor.media.Assets.manager.update()) {
+        Assets.load();
+        while (!Assets.manager.update()) {
         }
         if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().resume();

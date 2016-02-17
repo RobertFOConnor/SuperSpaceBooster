@@ -6,19 +6,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
-import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
 public class LevelSelectScreen implements Screen {
 
     private OrthoCamera camera;
     private Vector2 touch;
-    private String title = "SELECT A LEVEL";
+    private SpriteText title;
     private Texture bg;
     private Array<LevelButton> levelButtons;
     private LevelButton selectedLevel = null;
@@ -34,6 +35,10 @@ public class LevelSelectScreen implements Screen {
 
         bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
 
+        title = new SpriteText("SELECT A LEVEL", Fonts.timerFont);
+        title.centerText();
+
+
         levelButtons = new Array<LevelButton>();
 
         float levelY = MainGame.HEIGHT / 2 + 50;
@@ -44,14 +49,14 @@ public class LevelSelectScreen implements Screen {
                 levelButtons.add(new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY), levelCount));
                 levelCount++;
 
-                if(levelCount == MainGame.UNLOCKED_LEVEL) {
-                    selectedLevel = levelButtons.get(levelButtons.size-1);
+                if (levelCount == MainGame.UNLOCKED_LEVEL) {
+                    selectedLevel = levelButtons.get(levelButtons.size - 1);
                 }
             }
             levelY -= 300;
         }
 
-        selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL-1);
+        selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL - 1);
 
         selLevel = MainGame.UNLOCKED_LEVEL;
         levelButtons.get(selLevel - 1).setSelected(true);
@@ -111,9 +116,9 @@ public class LevelSelectScreen implements Screen {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if(selectedLevel.checkTouch(touch)) {
+            if (selectedLevel.checkTouch(touch)) {
                 advanceScreen();
-            }  else if(backButton.checkTouch(touch)) {
+            } else if (backButton.checkTouch(touch)) {
                 goBack();
             }
         }
@@ -131,7 +136,7 @@ public class LevelSelectScreen implements Screen {
         sb.draw(bg, 0, 0);
         backButton.render(sb);
 
-        Fonts.timerFont.draw(sb, title, MainGame.WIDTH / 2 - 250, MainGame.HEIGHT - 80);
+        title.draw(sb);
 
         for (LevelButton lb : levelButtons) {
             lb.render(sb);

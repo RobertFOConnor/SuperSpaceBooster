@@ -3,22 +3,16 @@ package com.yellowbytestudios.spacedoctor.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
-
-import aurelienribon.tweenengine.BaseTween;
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenCallback;
-import aurelienribon.tweenengine.TweenEquations;
-import aurelienribon.tweenengine.TweenManager;
+import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
 /**
  * Created by BobbyBoy on 26-Jan-16.
@@ -28,11 +22,8 @@ public class MainMenuScreen implements Screen {
     private OrthoCamera camera;
     private Vector2 touch;
     private Texture bg;
+    private SpriteText title;
     private SpriteButton editorButton, playButton, statButton, settings;
-
-    //Animations
-    private TweenManager tweenManager;
-    private long startTime, delta;
 
     @Override
     public void create() {
@@ -44,25 +35,16 @@ public class MainMenuScreen implements Screen {
         playButton = new SpriteButton(Assets.START_GAME, new Vector2(660, MainGame.HEIGHT));
         editorButton = new SpriteButton(Assets.LEVEL_BUILDER, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 850));
         statButton = new SpriteButton(Assets.STATS, new Vector2(-600, MainGame.HEIGHT - 850));
-
         settings = new SpriteButton(Assets.SETTINGS, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 130));
+        title = new SpriteText("MAIN MENU", Fonts.timerFont);
+        title.centerText();
 
-
-        Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-        tweenManager = new TweenManager();
-
-        applyButtonAnimation(playButton, 660, MainGame.HEIGHT - 650);
-        applyButtonAnimation(editorButton, 1160, MainGame.HEIGHT - 850);
-        applyButtonAnimation(statButton, 160, MainGame.HEIGHT - 850);
-        applyButtonAnimation(settings, MainGame.WIDTH - 130, MainGame.HEIGHT - 130);
-
-        startTime = TimeUtils.millis();
-    }
-
-    private void applyButtonAnimation(SpriteButton b, float x, float y) {
-        Tween.to(b, SpriteAccessor.POS_XY, 30f)
-                .target(x, y).ease(TweenEquations.easeOutBack)
-                .start(tweenManager);
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(playButton, 660, MainGame.HEIGHT - 650);
+        AnimationManager.applyAnimation(editorButton, 1160, MainGame.HEIGHT - 850);
+        AnimationManager.applyAnimation(statButton, 160, MainGame.HEIGHT - 850);
+        AnimationManager.applyAnimation(settings, MainGame.WIDTH - 130, MainGame.HEIGHT - 130);
+        AnimationManager.startAnimation();
     }
 
 
@@ -90,30 +72,18 @@ public class MainMenuScreen implements Screen {
                 advanceScreen(new SettingsScreen());
             }
         }
-        delta = (TimeUtils.millis() - startTime + 1000) / 1000;
-        tweenManager.update(delta);
     }
 
 
     private void advanceScreen(final Screen s) {
 
-        applyButtonAnimation(playButton, 660, MainGame.HEIGHT);
-        applyButtonAnimation(editorButton, MainGame.WIDTH, MainGame.HEIGHT - 850);
-        applyButtonAnimation(statButton, -600, MainGame.HEIGHT - 850);
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(playButton, 660, MainGame.HEIGHT);
+        AnimationManager.applyAnimation(editorButton, MainGame.WIDTH, MainGame.HEIGHT - 850);
+        AnimationManager.applyAnimation(statButton, -600, MainGame.HEIGHT - 850);
+        AnimationManager.applyExitAnimation(settings, MainGame.WIDTH, MainGame.HEIGHT - 130, s);
 
-
-        TweenCallback myCallBack = new TweenCallback() {
-            @Override
-            public void onEvent(int type, BaseTween<?> source) {
-                ScreenManager.setScreen(s);
-            }
-        };
-
-        Tween.to(settings, SpriteAccessor.POS_XY, 30f)
-                .target(MainGame.WIDTH, MainGame.HEIGHT - 130).ease(TweenEquations.easeOutBack).setCallback(myCallBack)
-                .setCallbackTriggers(TweenCallback.END).start(tweenManager);
-
-        startTime = TimeUtils.millis();
+        AnimationManager.startAnimation();
     }
 
     @Override
@@ -122,6 +92,7 @@ public class MainMenuScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
+        title.draw(sb);
         playButton.draw(sb);
         editorButton.draw(sb);
         statButton.draw(sb);

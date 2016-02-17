@@ -8,13 +8,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
-import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
 
 public class SettingsScreen implements Screen {
@@ -23,7 +24,7 @@ public class SettingsScreen implements Screen {
     private Vector2 touch;
     private Texture bg;
     private Controller controller;
-
+    private SpriteText title;
     private String music = "MUSIC";
     private String soundFX = "SOUND FX";
     private SwitchButton musicButton, soundFXButton;
@@ -38,15 +39,18 @@ public class SettingsScreen implements Screen {
             controller = Controllers.getControllers().get(0);
         }
 
+        title = new SpriteText("SETTINGS", Fonts.timerFont);
+        title.centerText();
+
         bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
         musicButton = new SwitchButton(new Vector2(1200, 650));
         soundFXButton = new SwitchButton(new Vector2(1200, 250));
 
-        if(SoundManager.musicEnabled) {
+        if (SoundManager.musicEnabled) {
             musicButton.switched_on = true;
         }
 
-        if(SoundManager.soundFXEnabled) {
+        if (SoundManager.soundFXEnabled) {
             soundFXButton.switched_on = true;
         }
 
@@ -75,7 +79,7 @@ public class SettingsScreen implements Screen {
                 soundFXButton.toggle();
                 SoundManager.soundFXEnabled = soundFXButton.switched_on;
 
-            } else if(backButton.checkTouch(touch)) {
+            } else if (backButton.checkTouch(touch)) {
                 goBack();
             }
 
@@ -92,6 +96,7 @@ public class SettingsScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
+        title.draw(sb);
         Fonts.GUIFont.draw(sb, music, 450, 720);
         Fonts.GUIFont.draw(sb, soundFX, 450, 320);
         musicButton.render(sb);
