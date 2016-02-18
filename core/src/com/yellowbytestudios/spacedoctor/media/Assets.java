@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.media;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -72,7 +73,9 @@ public class Assets {
     public static final String PICKUP_SOUND = "sounds/pickup.wav";
     public static final String DEATH_SOUND = "sounds/death.wav";
 
-    //public static final String THEME = "sounds/theme.mp3";
+
+    public static final String MAIN_THEME = "music/main_theme.mp3";
+    public static final String LEVEL_THEME = "music/level_theme.mp3";
 
 
     public static void load() {// Loads Assets
@@ -133,7 +136,8 @@ public class Assets {
         manager.load(PICKUP_SOUND, Sound.class);
         manager.load(DEATH_SOUND, Sound.class);
 
-        //manager.load(THEME, Music.class);
+        manager.load(MAIN_THEME, Music.class);
+        manager.load(LEVEL_THEME, Music.class);
     }
 
     public static void dispose() {

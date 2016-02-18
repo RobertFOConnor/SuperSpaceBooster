@@ -8,7 +8,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 public class SoundManager {
 
     public static boolean soundFXEnabled = true;
-    public static boolean musicEnabled = false;
+    public static boolean musicEnabled = true;
 
     public static void play(String s) {
         if (soundFXEnabled) {

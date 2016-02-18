@@ -24,7 +24,6 @@ public class MainGame extends ApplicationAdapter {
 
     //Frame-rate variables.
     public static final float STEP = 1 / 60f;
-    private float accum;
 
     //Spriter manager. (Smooth Animations)
     public static SpriterManager spriterManager;
@@ -67,15 +66,11 @@ public class MainGame extends ApplicationAdapter {
         if (ScreenManager.getCurrentScreen() != null) {
             animationManager.update();
 
-            accum += Gdx.graphics.getDeltaTime();
-            while (accum >= STEP) {
-                Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-                Gdx.gl20.glClearColor(0, 0, 0, 0);
+            Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            Gdx.gl20.glClearColor(0, 0, 0, 0);
 
-                accum -= STEP;
-                ScreenManager.getCurrentScreen().update(STEP);
-                ScreenManager.getCurrentScreen().render(sb);
-            }
+            ScreenManager.getCurrentScreen().update(STEP);
+            ScreenManager.getCurrentScreen().render(sb);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
@@ -122,6 +117,8 @@ public class MainGame extends ApplicationAdapter {
         Fonts.load();
         Assets.load();
         while (!Assets.manager.update()) {
+            Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            Gdx.gl20.glClearColor((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255), 0);
         }
         if (ScreenManager.getCurrentScreen() != null)
             ScreenManager.getCurrentScreen().resume();

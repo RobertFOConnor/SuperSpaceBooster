@@ -1,10 +1,11 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
 
 public class SplashScreen implements Screen {
 
@@ -39,6 +40,8 @@ public class SplashScreen implements Screen {
         sb.end();
 
         if (Assets.update()) { // DONE LOADING. SHOW TITLE SCREEN.
+
+            SoundManager.setMusic(Assets.MAIN_THEME);
 
             if (MainGame.TEST_MODE) {
                 ScreenManager.setScreen(new GameScreen(5));

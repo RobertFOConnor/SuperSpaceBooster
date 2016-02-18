@@ -77,13 +77,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void create() {
-
+        SoundManager.setMusic(Assets.LEVEL_THEME);
         b2dCam = new BoundedCamera();
         b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
-
         b2dr = new Box2DDebugRenderer();
         particleManager = new ParticleManager();
-
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
 
@@ -100,7 +98,6 @@ public class GameScreen implements Screen {
 
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
-
         setupMap();
     }
 
@@ -231,10 +228,13 @@ public class GameScreen implements Screen {
 
             SoundManager.play(Assets.FINISHED_SOUND);
             SoundManager.stop(Assets.JETPACK_SOUND);
+            SoundManager.setMusic(Assets.MAIN_THEME);
 
             if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
                 ScreenManager.setScreen(new MapEditorScreen(customMap));
             } else {
+
+                world.dispose();
 
                 if (MainGame.UNLOCKED_LEVEL != 10) {
                     MainGame.UNLOCKED_LEVEL += 1;
@@ -347,6 +347,9 @@ public class GameScreen implements Screen {
 
     @Override
     public void goBack() {
+
+        SoundManager.setMusic(Assets.MAIN_THEME);
+        world.dispose();
 
         if (customMap == null) {
             ScreenManager.setScreen(new LevelSelectScreen());
