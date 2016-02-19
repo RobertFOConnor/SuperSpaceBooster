@@ -20,7 +20,7 @@ public class GUIManager {
     private long timeElapsed;
 
     private ShapeRenderer shapeRenderer;
-    private Texture gas_bar, ammo_icon;
+    private Texture gui_display, ammo_icon;
 
 
     public GUIManager(SpacemanPlayer player) {
@@ -33,7 +33,7 @@ public class GUIManager {
         startTurnTime = System.nanoTime();
 
         shapeRenderer = new ShapeRenderer();
-        gas_bar = Assets.manager.get(Assets.GAS_METER, Texture.class);
+        gui_display = Assets.manager.get(Assets.GUI_DISPLAY, Texture.class);
         ammo_icon = Assets.manager.get(Assets.AMMO_ICON, Texture.class);
     }
 
@@ -49,15 +49,15 @@ public class GUIManager {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(50, MainGame.HEIGHT - 130, (player.getCurrGas() / 5) * 3, 100);
+        shapeRenderer.rect(215, MainGame.HEIGHT - 105, (player.getCurrGas() / 5) * 1.2f, 40);
         shapeRenderer.end();
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
 
-        sb.draw(gas_bar, 50, MainGame.HEIGHT - 130);
-        sb.draw(ammo_icon, 60, MainGame.HEIGHT - 250);
-        Fonts.timerFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 190, MainGame.HEIGHT - 200);
+        sb.draw(gui_display, 100, MainGame.HEIGHT - 200);
+        //sb.draw(ammo_icon, 60, MainGame.HEIGHT - 250);
+        Fonts.GUIFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 225, MainGame.HEIGHT - 127);
 
         Fonts.timerFont.draw(sb, "TIME", MainGame.WIDTH / 2 - 60, MainGame.HEIGHT - 30);
 

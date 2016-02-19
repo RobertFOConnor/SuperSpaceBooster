@@ -60,6 +60,7 @@ public class Assets {
     public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
 
     //Game GUI.
+    public static final String GUI_DISPLAY = "gui/gui_display.png";
     public static final String GAS_METER = "gui/gas_bar.png";
     public static final String AMMO_ICON = "gui/round_icon.png";
 
@@ -135,6 +136,7 @@ public class Assets {
         manager.load(STARS1, Texture.class);
         manager.load(STARS2, Texture.class);
 
+        manager.load(GUI_DISPLAY, Texture.class);
         manager.load(GAS_METER, Texture.class);
         manager.load(AMMO_ICON, Texture.class);
         manager.load(VICTORY, Texture.class);

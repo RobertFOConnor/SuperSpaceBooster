@@ -66,7 +66,7 @@ public class MainGame extends ApplicationAdapter {
             animationManager.update();
 
             Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            Gdx.gl20.glClearColor(0, 0, 0, 0);
+            Gdx.gl20.glClearColor(1, 1, 1, 0);
 
             ScreenManager.getCurrentScreen().update(STEP);
             ScreenManager.getCurrentScreen().render(sb);

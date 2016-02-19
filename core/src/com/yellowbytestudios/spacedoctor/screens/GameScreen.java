@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
         }
 
         //Set tile map using Tiled map path.
-        if (customMap == null) {
+        if (!isCustomMap) {
             tileMap = new TmxMapLoader().load("maps/spaceship" + levelNo + ".tmx");
         } else {
             tileMap = customMap;
@@ -122,7 +122,7 @@ public class GameScreen implements Screen {
         float startX;
         float startY;
 
-        if (customMap == null) {
+        if (!isCustomMap) {
             startX = (Float.parseFloat(tileMap.getProperties().get("startX", String.class)));
             startY = (Float.parseFloat(tileMap.getProperties().get("startY", String.class)));
 
@@ -351,7 +351,7 @@ public class GameScreen implements Screen {
         SoundManager.switchMusic(Assets.MAIN_THEME);
         world.dispose();
 
-        if (customMap == null) {
+        if (!isCustomMap) {
             ScreenManager.setScreen(new LevelSelectScreen());
         } else {
             ScreenManager.setScreen(new MapEditorScreen(customMap));

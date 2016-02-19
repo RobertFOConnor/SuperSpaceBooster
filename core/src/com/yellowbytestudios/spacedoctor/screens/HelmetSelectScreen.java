@@ -46,8 +46,6 @@ public class HelmetSelectScreen implements Screen {
         int helmetCount = 0;
 
         UNLOCKED_HEADS.add(0);
-        UNLOCKED_HEADS.add(1);
-        UNLOCKED_HEADS.add(2);
 
         helmetButtons = new Array<HelmetButton>();
         for (int i = 0; i < 2; i++) {
@@ -58,7 +56,7 @@ public class HelmetSelectScreen implements Screen {
 
                 AnimationManager.applyAnimation(lb, lb.getX(), helmetY);
             }
-            helmetY -= 300;
+            helmetY -= 350;
         }
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
@@ -70,6 +68,7 @@ public class HelmetSelectScreen implements Screen {
 
         private int headNum;
         private String headName;
+        private float labelX;
         private boolean unlocked = false;
         private boolean selected = false;
         private Texture border;
@@ -78,18 +77,21 @@ public class HelmetSelectScreen implements Screen {
             super(Assets.HEAD_1, pos);
 
             this.headNum = headNum;
-            headName = "HEAD "+headNum;
+            headName = "BOOSTER";
 
             if(!UNLOCKED_HEADS.contains(headNum, true)) {
                 unlocked = false;
+                headName = "LOCKED";
                 setTexture(Assets.manager.get(Assets.LOCKED_HEAD, Texture.class));
             }
+
+            labelX = getX()+Fonts.getWidth(Fonts.GUIFont, headName)/2;
         }
 
         @Override
         public void draw(Batch sb) {
             sb.draw(getTexture(), getX(), getY());
-            Fonts.GUIFont.draw(sb, headName, getX()+Fonts.getWidth(Fonts.GUIFont, headName)/2-20, getY()-50);
+            Fonts.GUIFont.draw(sb, headName, labelX, getY()-50);
         }
     }
 
@@ -110,7 +112,7 @@ public class HelmetSelectScreen implements Screen {
 
             for (HelmetButton lb : helmetButtons) {
                 if (lb.checkTouch(touch) && lb.unlocked) {
-
+                    //select head.
                 }
             }
 

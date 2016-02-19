@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -36,7 +37,9 @@ public class SplashScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
+        Fonts.GUIFont.setColor(Color.BLACK);
         Fonts.GUIFont.draw(sb, percentage, MainGame.WIDTH / 2 - 30, MainGame.HEIGHT / 2);
+        Fonts.GUIFont.setColor(Color.WHITE);
         sb.end();
 
         if (Assets.update()) { // DONE LOADING. SHOW TITLE SCREEN.
