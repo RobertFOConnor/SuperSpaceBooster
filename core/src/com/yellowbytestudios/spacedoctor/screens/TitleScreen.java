@@ -2,7 +2,6 @@ package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
@@ -20,7 +19,7 @@ import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 public class TitleScreen implements Screen {
 
     private OrthoCamera camera;
-    private Texture bg;
+    private BackgroundManager bg;
     private SpriteButton character, title;
     private SpriteText continueMessage;
 
@@ -28,9 +27,11 @@ public class TitleScreen implements Screen {
 
     @Override
     public void create() {
+
+        bg = new BackgroundManager();
+
         camera = new OrthoCamera();
         camera.resize();
-        bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
 
         character = new SpriteButton(Assets.CHARACTER, charStartPos);
         title = new SpriteButton(Assets.TITLE, new Vector2(-1100, 350));
@@ -45,6 +46,9 @@ public class TitleScreen implements Screen {
 
     @Override
     public void update(float step) {
+
+        bg.update();
+
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_START)) {
                 advanceScreen();
@@ -69,7 +73,7 @@ public class TitleScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(bg, 0, 0);
+        bg.render(sb);
         character.draw(sb);
         title.draw(sb);
         continueMessage.draw(sb);

@@ -40,11 +40,11 @@ public class EditorGUI {
         camera = new OrthoCamera();
         camera.resize();
 
-        zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, 30));
-        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 280 - 60, 30));
+        zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
+        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT -360));
         moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
         eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
-        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
+        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, 30));
 
 
         //Tile buttons

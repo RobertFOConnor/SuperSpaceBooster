@@ -2,7 +2,6 @@ package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
@@ -21,7 +20,7 @@ public class MainMenuScreen implements Screen {
 
     private OrthoCamera camera;
     private Vector2 touch;
-    private Texture bg;
+    private BackgroundManager bg;
     private SpriteText title;
     private SpriteButton editorButton, playButton, statButton, settings;
 
@@ -31,7 +30,7 @@ public class MainMenuScreen implements Screen {
         camera.resize();
         touch = new Vector2();
 
-        bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
+        bg = new BackgroundManager();
         playButton = new SpriteButton(Assets.START_GAME, new Vector2(660, MainGame.HEIGHT));
         editorButton = new SpriteButton(Assets.LEVEL_BUILDER, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 850));
         statButton = new SpriteButton(Assets.STATS, new Vector2(-600, MainGame.HEIGHT - 850));
@@ -51,6 +50,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void update(float step) {
         camera.update();
+        bg.update();
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
@@ -68,6 +68,8 @@ public class MainMenuScreen implements Screen {
                 advanceScreen(new LevelSelectScreen());
             } else if (editorButton.checkTouch(touch)) {
                 advanceScreen(new MapEditorScreen());
+            } else if (statButton.checkTouch(touch)) {
+                advanceScreen(new HelmetSelectScreen());
             } else if (settings.checkTouch(touch)) {
                 advanceScreen(new SettingsScreen());
             }
@@ -91,7 +93,7 @@ public class MainMenuScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(bg, 0, 0);
+        bg.render(sb);
         title.draw(sb);
         editorButton.draw(sb);
         statButton.draw(sb);

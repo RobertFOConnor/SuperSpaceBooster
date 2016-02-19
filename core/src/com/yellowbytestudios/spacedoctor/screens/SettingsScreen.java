@@ -23,7 +23,7 @@ public class SettingsScreen implements Screen {
 
     private OrthoCamera camera;
     private Vector2 touch;
-    private Texture bg;
+    private BackgroundManager bg;
     private Controller controller;
     private SpriteText title;
     private SpriteText music;
@@ -43,7 +43,7 @@ public class SettingsScreen implements Screen {
         title = new SpriteText("SETTINGS", Fonts.timerFont);
         title.centerText();
 
-        bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
+        bg = new BackgroundManager();
         musicButton = new SwitchButton(new Vector2(1920, 650));
         soundFXButton = new SwitchButton(new Vector2(1920, 250));
 
@@ -70,6 +70,7 @@ public class SettingsScreen implements Screen {
     @Override
     public void update(float step) {
         camera.update();
+        bg.update();
 
         if (MainGame.hasControllers) {
             if (controller.getButton(XBox360Pad.BUTTON_A)) {
@@ -104,7 +105,7 @@ public class SettingsScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(bg, 0, 0);
+        bg.render(sb);
         title.draw(sb);
         music.draw(sb);
         soundFX.draw(sb);

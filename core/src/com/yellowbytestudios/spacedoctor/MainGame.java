@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
@@ -28,7 +29,6 @@ public class MainGame extends ApplicationAdapter {
     //Spriter manager. (Smooth Animations)
     public static SpriterManager spriterManager;
     public static AnimationManager animationManager;
-
 
     //Controller support variables.
     public static boolean hasControllers = false;

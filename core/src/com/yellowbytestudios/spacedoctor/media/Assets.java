@@ -38,6 +38,9 @@ public class Assets {
     public static final String CHARACTER = "title/character.png";
     public static final String TITLE = "title/title.png";
 
+    public static final String STARS1 = "title/stars1.png";
+    public static final String STARS2 = "title/stars2.png";
+
 
     //Map Editor
     public static final String ZOOM_IN = "mapeditor/zoom_in.png";
@@ -61,6 +64,9 @@ public class Assets {
     public static final String AMMO_ICON = "gui/round_icon.png";
 
     public static final String VICTORY = "victory.png";
+
+    public static final String HEAD_1 = "spaceman/heads/head.png";
+    public static final String LOCKED_HEAD = "menu/locked_head.png";
 
 
     //Sounds.
@@ -120,8 +126,14 @@ public class Assets {
         manager.load(HOR_PLATFORM, Texture.class);
         manager.load(VER_PLATFORM, Texture.class);
 
+        manager.load(HEAD_1, Texture.class);
+        manager.load(LOCKED_HEAD, Texture.class);
+
         manager.load(CHARACTER, Texture.class);
         manager.load(TITLE, Texture.class);
+
+        manager.load(STARS1, Texture.class);
+        manager.load(STARS2, Texture.class);
 
         manager.load(GAS_METER, Texture.class);
         manager.load(AMMO_ICON, Texture.class);

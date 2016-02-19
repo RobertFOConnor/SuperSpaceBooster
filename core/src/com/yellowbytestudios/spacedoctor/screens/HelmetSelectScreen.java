@@ -3,31 +3,32 @@ package com.yellowbytestudios.spacedoctor.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
-import com.yellowbytestudios.spacedoctor.objects.Button;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
-public class LevelSelectScreen implements Screen {
+/**
+ * Created by BobbyBoy on 19-Feb-16.
+ */
+public class HelmetSelectScreen implements Screen {
 
+    public static int HELMET_NUM = 0;
+    public static Array<Integer> UNLOCKED_HEADS = new Array<Integer>();
     private OrthoCamera camera;
     private Vector2 touch;
     private SpriteText title;
     private BackgroundManager bg;
-    private Array<LevelButton> levelButtons;
-    private LevelButton selectedLevel = null;
+    private Array<HelmetButton> helmetButtons;
     private SpriteButton backButton;
-
-    private int selLevel = 1;
 
     @Override
     public void create() {
@@ -37,58 +38,58 @@ public class LevelSelectScreen implements Screen {
 
         bg = new BackgroundManager();
 
-        title = new SpriteText("SELECT A LEVEL", Fonts.timerFont);
+        title = new SpriteText("SELECT A HELMET", Fonts.timerFont);
         title.centerText();
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
 
-        float levelY = MainGame.HEIGHT / 2 + 50;
-        int levelCount = 1;
+        float helmetY = MainGame.HEIGHT / 2 + 50;
+        int helmetCount = 0;
 
-        levelButtons = new Array<LevelButton>();
+        UNLOCKED_HEADS.add(0);
+        UNLOCKED_HEADS.add(1);
+        UNLOCKED_HEADS.add(2);
+
+        helmetButtons = new Array<HelmetButton>();
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 5; j++) {
-                LevelButton lb = new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY-600), levelCount);
-                levelButtons.add(lb);
-                levelCount++;
+            for (int j = 0; j < 4; j++) {
+                HelmetButton lb = new HelmetButton(new Vector2(294+((j*183)+(j*200)), helmetY - 600), helmetCount);
+                helmetButtons.add(lb);
+                helmetCount++;
 
-                if (levelCount == MainGame.UNLOCKED_LEVEL) {
-                    selectedLevel = levelButtons.get(levelButtons.size - 1);
-                }
-                AnimationManager.applyAnimation(lb, lb.getX(), levelY);
+                AnimationManager.applyAnimation(lb, lb.getX(), helmetY);
             }
-            levelY -= 300;
+            helmetY -= 300;
         }
-
-        selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL - 1);
-
-        selLevel = MainGame.UNLOCKED_LEVEL;
-        //levelButtons.get(selLevel - 1).setSelected(true);
-        SoundManager.stop(Assets.JETPACK_SOUND);
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
     }
 
-    private class LevelButton extends SpriteButton {
+    private class HelmetButton extends SpriteButton {
 
-        private int levelNum;
+        private int headNum;
+        private String headName;
         private boolean unlocked = false;
         private boolean selected = false;
         private Texture border;
 
-        public LevelButton(Vector2 pos, int levelNum) {
-            super(Assets.LEVEL_LOCKED, pos);
-            if (MainGame.UNLOCKED_LEVEL > levelNum) {
-                setTexture(Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class));
-                unlocked = true;
-            } else if (MainGame.UNLOCKED_LEVEL == levelNum) {
-                setTexture(Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class));
-                unlocked = true;
-            }
+        public HelmetButton(Vector2 pos, int headNum) {
+            super(Assets.HEAD_1, pos);
 
-            this.levelNum = levelNum;
-            border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
+            this.headNum = headNum;
+            headName = "HEAD "+headNum;
+
+            if(!UNLOCKED_HEADS.contains(headNum, true)) {
+                unlocked = false;
+                setTexture(Assets.manager.get(Assets.LOCKED_HEAD, Texture.class));
+            }
+        }
+
+        @Override
+        public void draw(Batch sb) {
+            sb.draw(getTexture(), getX(), getY());
+            Fonts.GUIFont.draw(sb, headName, getX()+Fonts.getWidth(Fonts.GUIFont, headName)/2-20, getY()-50);
         }
     }
 
@@ -99,19 +100,17 @@ public class LevelSelectScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(selLevel);
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(selLevel);
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            for(LevelButton lb : levelButtons) {
-                if(lb.checkTouch(touch) && lb.unlocked) {
-                    advanceScreen(lb.levelNum);
+            for (HelmetButton lb : helmetButtons) {
+                if (lb.checkTouch(touch) && lb.unlocked) {
+
                 }
             }
 
@@ -134,7 +133,7 @@ public class LevelSelectScreen implements Screen {
         backButton.draw(sb);
         title.draw(sb);
 
-        for (LevelButton lb : levelButtons) {
+        for (HelmetButton lb : helmetButtons) {
             lb.draw(sb);
         }
 
@@ -173,7 +172,7 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void goBack() {
-        for(LevelButton lb : levelButtons) {
+        for (HelmetButton lb : helmetButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
         }
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
