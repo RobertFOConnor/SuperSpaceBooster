@@ -5,8 +5,8 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -14,7 +14,8 @@ import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
-import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
+import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
 
@@ -25,10 +26,10 @@ public class SettingsScreen implements Screen {
     private Texture bg;
     private Controller controller;
     private SpriteText title;
-    private String music = "MUSIC";
-    private String soundFX = "SOUND FX";
+    private SpriteText music;
+    private SpriteText soundFX;
     private SwitchButton musicButton, soundFXButton;
-    private Button backButton;
+    private SpriteButton backButton;
 
     @Override
     public void create() {
@@ -43,18 +44,26 @@ public class SettingsScreen implements Screen {
         title.centerText();
 
         bg = Assets.manager.get(Assets.MENU_BG, Texture.class);
-        musicButton = new SwitchButton(new Vector2(1200, 650));
-        soundFXButton = new SwitchButton(new Vector2(1200, 250));
+        musicButton = new SwitchButton(new Vector2(1920, 650));
+        soundFXButton = new SwitchButton(new Vector2(1920, 250));
 
-        if (SoundManager.musicEnabled) {
-            musicButton.switched_on = true;
-        }
+        music = new SpriteText("MUSIC", Fonts.GUIFont);
+        music.setPosition(-200, 720);
+        soundFX = new SpriteText("SOUND FX", Fonts.GUIFont);
+        soundFX.setPosition(-200, 320);
 
-        if (SoundManager.soundFXEnabled) {
-            soundFXButton.switched_on = true;
-        }
+        musicButton.switched_on = SoundManager.musicEnabled;
+        soundFXButton.switched_on = SoundManager.soundFXEnabled;
 
-        backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
+        backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
+
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(backButton, 50, backButton.getY());
+        AnimationManager.applyAnimation(musicButton, 1200, musicButton.getY());
+        AnimationManager.applyAnimation(soundFXButton, 1200, soundFXButton.getY());
+        AnimationManager.applyAnimation(soundFX, 450, soundFX.getY());
+        AnimationManager.applyAnimation(music, 450, music.getY());
+        AnimationManager.startAnimation();
     }
 
 
@@ -64,7 +73,7 @@ public class SettingsScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (controller.getButton(XBox360Pad.BUTTON_A)) {
-                //ScreenManager.setScreen(new LevelSelectScreen());
+                //change setting for xbox
             }
 
         } else if (Gdx.input.justTouched()) {
@@ -73,7 +82,7 @@ public class SettingsScreen implements Screen {
 
             if (musicButton.checkTouch(touch)) {
                 musicButton.toggle();
-                SoundManager.musicEnabled = musicButton.switched_on;
+                SoundManager.toggleMusic();
 
             } else if (soundFXButton.checkTouch(touch)) {
                 soundFXButton.toggle();
@@ -97,44 +106,35 @@ public class SettingsScreen implements Screen {
         sb.begin();
         sb.draw(bg, 0, 0);
         title.draw(sb);
-        Fonts.GUIFont.draw(sb, music, 450, 720);
-        Fonts.GUIFont.draw(sb, soundFX, 450, 320);
-        musicButton.render(sb);
-        soundFXButton.render(sb);
-        backButton.render(sb);
+        music.draw(sb);
+        soundFX.draw(sb);
+        musicButton.draw(sb);
+        soundFXButton.draw(sb);
+        backButton.draw(sb);
         sb.end();
     }
 
-    private class SwitchButton {
+    private class SwitchButton extends SpriteButton {
 
         private boolean switched_on = false;
         private Texture onImg = Assets.manager.get(Assets.SWITCH_ON, Texture.class);
         private Texture offImg = Assets.manager.get(Assets.SWITCH_OFF, Texture.class);
-        private Vector2 pos;
 
         public SwitchButton(Vector2 pos) {
-            this.pos = pos;
+            super(Assets.SWITCH_ON, pos);
         }
 
         public void toggle() {
             switched_on = !switched_on;
         }
 
-        public boolean checkTouch(Vector2 touch) {
-            return getBounds().contains(touch);
-        }
-
-        public void render(SpriteBatch sb) {
+        @Override
+        public void draw(Batch sb) {
             if (switched_on) {
-                sb.draw(onImg, pos.x, pos.y);
+                sb.draw(onImg, getX(), getY());
             } else {
-                sb.draw(offImg, pos.x, pos.y);
+                sb.draw(offImg, getX(), getY());
             }
-        }
-
-
-        public Rectangle getBounds() {
-            return new Rectangle(pos.x, pos.y, onImg.getWidth(), onImg.getHeight());
         }
     }
 
@@ -170,6 +170,12 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new MainMenuScreen());
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(backButton, -150, backButton.getY());
+        AnimationManager.applyAnimation(musicButton, 1920, musicButton.getY());
+        AnimationManager.applyAnimation(soundFXButton, 1920, soundFXButton.getY());
+        AnimationManager.applyAnimation(soundFX, -200, soundFX.getY());
+        AnimationManager.applyExitAnimation(music, -200, music.getY(), new MainMenuScreen());
+        AnimationManager.startAnimation();
     }
 }

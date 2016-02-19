@@ -93,9 +93,9 @@ public class MainMenuScreen implements Screen {
         sb.begin();
         sb.draw(bg, 0, 0);
         title.draw(sb);
-        playButton.draw(sb);
         editorButton.draw(sb);
         statButton.draw(sb);
+        playButton.draw(sb);
         settings.draw(sb);
         sb.end();
     }

@@ -35,7 +35,6 @@ public class MainGame extends ApplicationAdapter {
     public static Controller controller;
 
     public static int UNLOCKED_LEVEL = 1;
-    public static Music GAME_MUSIC;
 
     public static String DEVICE;
     private boolean backPressed = false;

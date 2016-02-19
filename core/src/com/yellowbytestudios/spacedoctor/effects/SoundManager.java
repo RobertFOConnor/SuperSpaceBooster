@@ -2,13 +2,14 @@ package com.yellowbytestudios.spacedoctor.effects;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class SoundManager {
 
     public static boolean soundFXEnabled = true;
     public static boolean musicEnabled = true;
+    public static Music GAME_MUSIC;
 
     public static void play(String s) {
         if (soundFXEnabled) {
@@ -28,20 +29,30 @@ public class SoundManager {
         }
     }
 
-	public static void switchMusic(String music) {
-		if (musicEnabled) {
-			if(MainGame.GAME_MUSIC.isPlaying()) {
-				MainGame.GAME_MUSIC.stop();
-			}
-			setMusic(music);
-		}
-	}
+    public static void switchMusic(String music) {
+        if (musicEnabled) {
+            if (GAME_MUSIC.isPlaying()) {
+                GAME_MUSIC.stop();
+            }
+            setMusic(music);
+        }
+    }
 
-	public static void setMusic(String music) {
-		if (musicEnabled) {
-			MainGame.GAME_MUSIC = Assets.manager.get(music, Music.class);
-			MainGame.GAME_MUSIC.setLooping(true);
-			MainGame.GAME_MUSIC.play();
-		}
-	}
+    public static void setMusic(String music) {
+        if (musicEnabled) {
+            GAME_MUSIC = Assets.manager.get(music, Music.class);
+            GAME_MUSIC.setLooping(true);
+            GAME_MUSIC.play();
+        }
+    }
+
+    public static void toggleMusic() {
+        musicEnabled = !musicEnabled;
+        if (musicEnabled) {
+            GAME_MUSIC.setLooping(true);
+            GAME_MUSIC.play();
+        } else {
+            GAME_MUSIC.stop();
+        }
+    }
 }

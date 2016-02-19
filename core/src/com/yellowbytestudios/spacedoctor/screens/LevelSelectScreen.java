@@ -13,6 +13,8 @@ import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
+import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
 public class LevelSelectScreen implements Screen {
@@ -23,7 +25,7 @@ public class LevelSelectScreen implements Screen {
     private Texture bg;
     private Array<LevelButton> levelButtons;
     private LevelButton selectedLevel = null;
-    private Button backButton;
+    private SpriteButton backButton;
 
     private int selLevel = 1;
 
@@ -37,21 +39,22 @@ public class LevelSelectScreen implements Screen {
 
         title = new SpriteText("SELECT A LEVEL", Fonts.timerFont);
         title.centerText();
-
-
-        levelButtons = new Array<LevelButton>();
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
 
         float levelY = MainGame.HEIGHT / 2 + 50;
         int levelCount = 1;
 
+        levelButtons = new Array<LevelButton>();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
-                levelButtons.add(new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY), levelCount));
+                LevelButton lb = new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY-600), levelCount);
+                levelButtons.add(lb);
                 levelCount++;
 
                 if (levelCount == MainGame.UNLOCKED_LEVEL) {
                     selectedLevel = levelButtons.get(levelButtons.size - 1);
                 }
+                AnimationManager.applyAnimation(lb, lb.getX(), levelY);
             }
             levelY -= 300;
         }
@@ -59,13 +62,15 @@ public class LevelSelectScreen implements Screen {
         selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL - 1);
 
         selLevel = MainGame.UNLOCKED_LEVEL;
-        levelButtons.get(selLevel - 1).setSelected(true);
+        //levelButtons.get(selLevel - 1).setSelected(true);
         SoundManager.stop(Assets.JETPACK_SOUND);
 
-        backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
+        backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
+        AnimationManager.applyAnimation(backButton, 50, backButton.getY());
+        AnimationManager.startAnimation();
     }
 
-    private class LevelButton extends Button {
+    private class LevelButton extends SpriteButton {
 
         private int levelNum;
         private boolean unlocked = false;
@@ -75,28 +80,15 @@ public class LevelSelectScreen implements Screen {
         public LevelButton(Vector2 pos, int levelNum) {
             super(Assets.LEVEL_LOCKED, pos);
             if (MainGame.UNLOCKED_LEVEL > levelNum) {
-                texture = Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class);
+                setTexture(Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class));
                 unlocked = true;
             } else if (MainGame.UNLOCKED_LEVEL == levelNum) {
-                texture = Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class);
+                setTexture(Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class));
                 unlocked = true;
             }
 
             this.levelNum = levelNum;
             border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
-        }
-
-        @Override
-        public void render(SpriteBatch sb) {
-            sb.draw(texture, pos.x, pos.y);
-            if (selected) {
-                sb.draw(border, pos.x, pos.y);
-            }
-        }
-
-        @Override
-        public void setSelected(boolean selected) {
-            this.selected = selected;
         }
     }
 
@@ -106,26 +98,30 @@ public class LevelSelectScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen();
+                advanceScreen(selLevel);
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen();
+            advanceScreen(selLevel);
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (selectedLevel.checkTouch(touch)) {
-                advanceScreen();
-            } else if (backButton.checkTouch(touch)) {
+            for(LevelButton lb : levelButtons) {
+                if(lb.checkTouch(touch) && lb.unlocked) {
+                    advanceScreen(lb.levelNum);
+                }
+            }
+
+            if (backButton.checkTouch(touch)) {
                 goBack();
             }
         }
     }
 
-    private void advanceScreen() {
-        ScreenManager.setScreen(new GameScreen(selLevel));
+    private void advanceScreen(int levelNum) {
+        ScreenManager.setScreen(new GameScreen(levelNum));
     }
 
     @Override
@@ -134,12 +130,11 @@ public class LevelSelectScreen implements Screen {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(bg, 0, 0);
-        backButton.render(sb);
-
+        backButton.draw(sb);
         title.draw(sb);
 
         for (LevelButton lb : levelButtons) {
-            lb.render(sb);
+            lb.draw(sb);
         }
 
         sb.end();
@@ -177,6 +172,11 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new MainMenuScreen());
+        for(LevelButton lb : levelButtons) {
+            AnimationManager.applyAnimation(lb, lb.getX(), -300);
+        }
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
+        AnimationManager.startAnimation();
     }
 }
