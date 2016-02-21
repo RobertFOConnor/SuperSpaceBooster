@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
@@ -16,19 +17,19 @@ import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
-/**
- * Created by BobbyBoy on 19-Feb-16.
- */
 public class HelmetSelectScreen implements Screen {
 
-    public static int HELMET_NUM = 0;
-    public static Array<Integer> UNLOCKED_HEADS = new Array<Integer>();
+    private static final String[] HELMET_NAMES = {"S-BOOSTER", "LOU-LOU", "G1-BTH", "T-DOGG", "SMITH", "FROGG-E", "NINJA", "ROBO-GOB"};
+    public static final float[][] CHAR_COLORS = {{0.7f, 0.9f, 0.9f}, {1f, 0.1f, 0.6f}, {0.97f, 0.89f, 0.13f}, {0.23f, 0.9f, 0.9f}, {0.72f, 0.5f, 0.22f}, {0.3f, 0.78f, 0.17f}, {0.4f, 0.4f, 0.4f}, {0.49f, 0.28f, 0.53f}};
+
     private OrthoCamera camera;
     private Vector2 touch;
     private SpriteText title;
     private BackgroundManager bg;
     private Array<HelmetButton> helmetButtons;
     private SpriteButton backButton;
+
+    private Player spriter;
 
     @Override
     public void create() {
@@ -45,12 +46,16 @@ public class HelmetSelectScreen implements Screen {
         float helmetY = MainGame.HEIGHT / 2 + 50;
         int helmetCount = 0;
 
-        UNLOCKED_HEADS.add(0);
+
+        //Unlock all heads.
+        for (int i = 0; i < 8; i++) {
+            MainGame.saveData.unlockHead(i);
+        }
 
         helmetButtons = new Array<HelmetButton>();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
-                HelmetButton lb = new HelmetButton(new Vector2(294+((j*183)+(j*200)), helmetY - 600), helmetCount);
+                HelmetButton lb = new HelmetButton(new Vector2(294 + ((j * 183) + (j * 200)), helmetY - 600), helmetCount);
                 helmetButtons.add(lb);
                 helmetCount++;
 
@@ -62,6 +67,8 @@ public class HelmetSelectScreen implements Screen {
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
+
+        spriter = MainGame.spriterManager.initSelector();
     }
 
     private class HelmetButton extends SpriteButton {
@@ -70,28 +77,25 @@ public class HelmetSelectScreen implements Screen {
         private String headName;
         private float labelX;
         private boolean unlocked = false;
-        private boolean selected = false;
-        private Texture border;
 
         public HelmetButton(Vector2 pos, int headNum) {
-            super(Assets.HEAD_1, pos);
+            super(Assets.LOCKED_HEAD, pos);
 
             this.headNum = headNum;
-            headName = "BOOSTER";
+            headName = "LOCKED";
 
-            if(!UNLOCKED_HEADS.contains(headNum, true)) {
-                unlocked = false;
-                headName = "LOCKED";
-                setTexture(Assets.manager.get(Assets.LOCKED_HEAD, Texture.class));
+            if (MainGame.saveData.isUnlocked(headNum)) {
+                unlocked = true;
+                headName = HELMET_NAMES[headNum];
+                setTexture(new Texture(Gdx.files.internal("spaceman/heads/head_" + headNum + ".png")));
             }
-
-            labelX = getX()+Fonts.getWidth(Fonts.GUIFont, headName)/2;
+            labelX = Fonts.getWidth(Fonts.GUIFont, headName) - 90;
         }
 
         @Override
         public void draw(Batch sb) {
             sb.draw(getTexture(), getX(), getY());
-            Fonts.GUIFont.draw(sb, headName, labelX, getY()-50);
+            Fonts.GUIFont.draw(sb, headName, getX() - labelX, getY() - 50);
         }
     }
 
@@ -100,11 +104,18 @@ public class HelmetSelectScreen implements Screen {
         camera.update();
         bg.update();
 
+        HelmetButton hb = helmetButtons.get(MainGame.saveData.getHead());
+        spriter.setPosition(hb.getX() + 90, hb.getY() + 90);
+        spriter.update();
+
+
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
+                goBack();
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            goBack();
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
@@ -112,7 +123,8 @@ public class HelmetSelectScreen implements Screen {
 
             for (HelmetButton lb : helmetButtons) {
                 if (lb.checkTouch(touch) && lb.unlocked) {
-                    //select head.
+                    MainGame.saveData.setHead(lb.headNum);
+                    MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
                 }
             }
 
@@ -122,9 +134,6 @@ public class HelmetSelectScreen implements Screen {
         }
     }
 
-    private void advanceScreen(int levelNum) {
-        ScreenManager.setScreen(new GameScreen(levelNum));
-    }
 
     @Override
     public void render(SpriteBatch sb) {
@@ -134,7 +143,7 @@ public class HelmetSelectScreen implements Screen {
         bg.render(sb);
         backButton.draw(sb);
         title.draw(sb);
-
+        MainGame.spriterManager.draw(spriter);
         for (HelmetButton lb : helmetButtons) {
             lb.draw(sb);
         }

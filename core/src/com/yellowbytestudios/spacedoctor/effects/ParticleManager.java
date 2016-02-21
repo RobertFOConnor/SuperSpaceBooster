@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.screens.HelmetSelectScreen;
 
 public class ParticleManager {
 
@@ -24,6 +26,7 @@ public class ParticleManager {
 		effect = bubblePool.obtain();
 
 		effect.setPosition(x, y);
+        effect.getEmitters().get(0).getTint().setColors(HelmetSelectScreen.CHAR_COLORS[MainGame.saveData.getHead()]);
 		effects.add(effect);
 	}
 	

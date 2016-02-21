@@ -46,6 +46,7 @@ public class Assets {
     public static final String ZOOM_IN = "mapeditor/zoom_in.png";
     public static final String ZOOM_OUT = "mapeditor/zoom_out.png";
     public static final String PLAY_MAP = "mapeditor/play_map.png";
+    public static final String SAVE_MAP = "mapeditor/save_map.png";
 
     public static final String MOVE_BUTTON = "mapeditor/move_button.png";
     public static final String MOVE_BUTTON_SEL = "mapeditor/move_button_selected.png";
@@ -61,12 +62,9 @@ public class Assets {
 
     //Game GUI.
     public static final String GUI_DISPLAY = "gui/gui_display.png";
-    public static final String GAS_METER = "gui/gas_bar.png";
-    public static final String AMMO_ICON = "gui/round_icon.png";
 
     public static final String VICTORY = "victory.png";
 
-    public static final String HEAD_1 = "spaceman/heads/head.png";
     public static final String LOCKED_HEAD = "menu/locked_head.png";
 
 
@@ -111,6 +109,7 @@ public class Assets {
         manager.load(ERASE, Texture.class);
         manager.load(ERASE_SEL, Texture.class);
         manager.load(PLAY_MAP, Texture.class);
+        manager.load(SAVE_MAP, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);
@@ -127,7 +126,6 @@ public class Assets {
         manager.load(HOR_PLATFORM, Texture.class);
         manager.load(VER_PLATFORM, Texture.class);
 
-        manager.load(HEAD_1, Texture.class);
         manager.load(LOCKED_HEAD, Texture.class);
 
         manager.load(CHARACTER, Texture.class);
@@ -137,8 +135,6 @@ public class Assets {
         manager.load(STARS2, Texture.class);
 
         manager.load(GUI_DISPLAY, Texture.class);
-        manager.load(GAS_METER, Texture.class);
-        manager.load(AMMO_ICON, Texture.class);
         manager.load(VICTORY, Texture.class);
 
         manager.load(JETPACK_SOUND, Sound.class);

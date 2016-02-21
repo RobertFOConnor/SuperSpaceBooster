@@ -13,6 +13,7 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.objects.Button;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**
@@ -23,7 +24,7 @@ public class EditorGUI {
     private OrthoCamera camera;
     private Vector2 touch;
     private MapManager mapManager;
-    private Button zoomIn, zoomOut, moveButton, eraseButton, playMap;
+    private Button zoomIn, zoomOut, moveButton, eraseButton, playMap, saveMap;
 
     //TILE TYPE BUTTONS
     private Texture tileButtonSelector = new Texture(Gdx.files.internal("mapeditor/tile_buttons_selector.png"));
@@ -45,7 +46,7 @@ public class EditorGUI {
         moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
         eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
         playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, 30));
-
+        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 170-170, 30));
 
         //Tile buttons
         tileButtonBG = new Texture(Gdx.files.internal("mapeditor/tile_buttons_bg.png"));
@@ -79,6 +80,8 @@ public class EditorGUI {
                 mapManager.zoomOut(step);
             } else if (playMap.checkTouch(touch)) {
                 ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
+            } else if (saveMap.checkTouch(touch)) {
+                ScreenManager.setScreen(new MainMenuScreen());
 
             } else if (!moveButton.checkTouch(touch)) {
                 //CHECK MAP FOR INTERACTION.
@@ -140,6 +143,7 @@ public class EditorGUI {
         moveButton.render(sb);
         eraseButton.render(sb);
         playMap.render(sb);
+        saveMap.render(sb);
 
         sb.draw(tileButtonBG, 300, MainGame.HEIGHT - 140);
         for (TileButton tb : tileButtons) {

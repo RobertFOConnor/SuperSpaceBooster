@@ -71,4 +71,11 @@ public class SpriterManager {
         player.setAnimation("default");
         return player;
     }
+
+    public Player initSelector() {
+        Player player = new Player(data.getEntity(6));
+        player.setScale(1.6f);
+        player.setAnimation("default");
+        return player;
+    }
 }

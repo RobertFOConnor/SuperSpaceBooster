@@ -20,7 +20,7 @@ public class GUIManager {
     private long timeElapsed;
 
     private ShapeRenderer shapeRenderer;
-    private Texture gui_display, ammo_icon;
+    private Texture gui_display;
 
 
     public GUIManager(SpacemanPlayer player) {
@@ -34,7 +34,6 @@ public class GUIManager {
 
         shapeRenderer = new ShapeRenderer();
         gui_display = Assets.manager.get(Assets.GUI_DISPLAY, Texture.class);
-        ammo_icon = Assets.manager.get(Assets.AMMO_ICON, Texture.class);
     }
 
     public void update() {
@@ -56,7 +55,6 @@ public class GUIManager {
         sb.begin();
 
         sb.draw(gui_display, 100, MainGame.HEIGHT - 200);
-        //sb.draw(ammo_icon, 60, MainGame.HEIGHT - 250);
         Fonts.GUIFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 225, MainGame.HEIGHT - 127);
 
         Fonts.timerFont.draw(sb, "TIME", MainGame.WIDTH / 2 - 60, MainGame.HEIGHT - 30);

@@ -1,5 +1,7 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -24,7 +26,9 @@ public class ResultsScreen implements Screen {
 
     @Override
     public void update(float step) {
-
+        if(Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            goBack();
+        }
     }
 
     @Override

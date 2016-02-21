@@ -11,18 +11,21 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.game.GUIManager;
+import com.brashmonkey.spriter.Animation;
+import com.brashmonkey.spriter.Mainline;
+import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
-import com.yellowbytestudios.spacedoctor.game.TileManager;
 import com.yellowbytestudios.spacedoctor.box2d.BodyFactory;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.game.GUIManager;
+import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.game.TileManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.objects.Door;
@@ -63,6 +66,7 @@ public class GameScreen implements Screen {
     //Map Editor
     public static TiledMap customMap;
     public static boolean isCustomMap = false;
+    private boolean dieing = false;
 
 
     public GameScreen(int levelNo) {
@@ -171,8 +175,40 @@ public class GameScreen implements Screen {
         world.step(step, 8, 3);
 
         if (player.isDead() || gui.getTimeElapsed() < 0) {
-            SoundManager.play(Assets.DEATH_SOUND);
-            setupMap();
+
+            if(!dieing) {
+                SoundManager.play(Assets.DEATH_SOUND);
+
+                Player.PlayerListener myListener = new Player.PlayerListener() {
+                    @Override
+                    public void animationFinished(Animation animation) {
+                        setupMap();
+                        dieing = false;
+                    }
+
+                    @Override
+                    public void animationChanged(Animation oldAnim, Animation newAnim) {
+
+                    }
+
+                    @Override
+                    public void preProcess(Player player) {
+
+                    }
+
+                    @Override
+                    public void postProcess(Player player) {
+
+                    }
+
+                    @Override
+                    public void mainlineKeyChanged(Mainline.Key prevKey, Mainline.Key newKey) {
+
+                    }
+                };
+                player.startDeath(myListener);
+                dieing = true;
+            }
         }
 
 
@@ -236,8 +272,10 @@ public class GameScreen implements Screen {
 
                 world.dispose();
 
-                if (MainGame.UNLOCKED_LEVEL != 10) {
-                    MainGame.UNLOCKED_LEVEL += 1;
+                if (levelNo != 10) {
+                    MainGame.saveData.unlockHead(levelNo);
+                    MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
+                    MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
                     ScreenManager.setScreen(new LevelSelectScreen());
                 } else {
                     ScreenManager.setScreen(new ResultsScreen());

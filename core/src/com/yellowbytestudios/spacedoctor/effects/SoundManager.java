@@ -2,7 +2,6 @@ package com.yellowbytestudios.spacedoctor.effects;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class SoundManager {
@@ -39,8 +38,8 @@ public class SoundManager {
     }
 
     public static void setMusic(String music) {
-        if (musicEnabled) {
             GAME_MUSIC = Assets.manager.get(music, Music.class);
+        if (musicEnabled) {
             GAME_MUSIC.setLooping(true);
             GAME_MUSIC.play();
         }

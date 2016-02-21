@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.brashmonkey.spriter.Player;
-import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
@@ -13,6 +12,7 @@ import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
@@ -42,7 +42,7 @@ public class SpacemanPlayer {
     private int currAmmo = 10;
 
     //Spriter variables.
-    private int headType = 1;
+    private int headType = MainGame.saveData.getHead();
     int angle = 0;
 
 
@@ -74,11 +74,16 @@ public class SpacemanPlayer {
 
     public void update() {
 
-        updateMovement();
+        if(!isDead) {
 
-        updateGun();
+            updateMovement();
 
-        updatePaused();
+            updateGun();
+
+            updatePaused();
+        } else {
+            body.setLinearVelocity(0, 0);
+        }
 
         updateSpriterImages();
     }
@@ -133,12 +138,12 @@ public class SpacemanPlayer {
         spriter.update();
         spriter.setObject("head", 1f, 4, headType);
 
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            if(angle < 40) {
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            if (angle < 40) {
                 angle += 3;
             }
-        } else if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if(angle > -40) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            if (angle > -40) {
                 angle -= 3;
             }
         }
@@ -309,5 +314,11 @@ public class SpacemanPlayer {
 
     public void setDead(boolean isDead) {
         this.isDead = isDead;
+    }
+
+    public void startDeath(Player.PlayerListener listener) {
+        spriter.setAnimation("death");
+        spriter.addListener(listener);
+        isDead = true;
     }
 }

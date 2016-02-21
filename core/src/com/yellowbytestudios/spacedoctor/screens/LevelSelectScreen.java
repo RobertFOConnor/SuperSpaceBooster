@@ -27,6 +27,7 @@ public class LevelSelectScreen implements Screen {
     private LevelButton selectedLevel = null;
     private SpriteButton backButton;
 
+    private int currLevel = MainGame.saveData.getCurrLevel();
     private int selLevel = 1;
 
     @Override
@@ -51,7 +52,7 @@ public class LevelSelectScreen implements Screen {
                 levelButtons.add(lb);
                 levelCount++;
 
-                if (levelCount == MainGame.UNLOCKED_LEVEL) {
+                if (levelCount == currLevel) {
                     selectedLevel = levelButtons.get(levelButtons.size - 1);
                 }
                 AnimationManager.applyAnimation(lb, lb.getX(), levelY);
@@ -59,9 +60,9 @@ public class LevelSelectScreen implements Screen {
             levelY -= 300;
         }
 
-        selectedLevel = levelButtons.get(MainGame.UNLOCKED_LEVEL - 1);
+        selectedLevel = levelButtons.get(currLevel - 1);
 
-        selLevel = MainGame.UNLOCKED_LEVEL;
+        selLevel = currLevel;
         //levelButtons.get(selLevel - 1).setSelected(true);
         SoundManager.stop(Assets.JETPACK_SOUND);
 
@@ -79,10 +80,10 @@ public class LevelSelectScreen implements Screen {
 
         public LevelButton(Vector2 pos, int levelNum) {
             super(Assets.LEVEL_LOCKED, pos);
-            if (MainGame.UNLOCKED_LEVEL > levelNum) {
+            if (currLevel > levelNum) {
                 setTexture(Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class));
                 unlocked = true;
-            } else if (MainGame.UNLOCKED_LEVEL == levelNum) {
+            } else if (currLevel == levelNum) {
                 setTexture(Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class));
                 unlocked = true;
             }

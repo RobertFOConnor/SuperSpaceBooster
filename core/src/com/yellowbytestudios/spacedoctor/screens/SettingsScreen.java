@@ -18,6 +18,8 @@ import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
+import sun.applet.Main;
+
 
 public class SettingsScreen implements Screen {
 
@@ -84,10 +86,14 @@ public class SettingsScreen implements Screen {
             if (musicButton.checkTouch(touch)) {
                 musicButton.toggle();
                 SoundManager.toggleMusic();
+                MainGame.saveData.setMusicEnabled(SoundManager.musicEnabled);
+                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
             } else if (soundFXButton.checkTouch(touch)) {
                 soundFXButton.toggle();
                 SoundManager.soundFXEnabled = soundFXButton.switched_on;
+                MainGame.saveData.setSoundFXEnabled(SoundManager.soundFXEnabled);
+                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
             } else if (backButton.checkTouch(touch)) {
                 goBack();
