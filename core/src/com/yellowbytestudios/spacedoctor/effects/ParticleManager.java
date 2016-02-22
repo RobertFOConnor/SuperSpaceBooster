@@ -14,11 +14,13 @@ public class ParticleManager {
 	//Particle Objects
 	private ParticleEffectPool bubblePool;
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
+	private float[] color;
 	
 	public ParticleManager() {
 		ParticleEffect particleEffect = new ParticleEffect();
 		particleEffect.load(Gdx.files.internal("effects/jetpack.p"), Gdx.files.internal("effects"));
 		bubblePool = new ParticleEffectPool(particleEffect, 1, 2);
+		color = HelmetSelectScreen.CHAR_COLORS[MainGame.saveData.getHead()];
 	}
 	
 	public void addEffect(float x, float y) {
@@ -26,7 +28,7 @@ public class ParticleManager {
 		effect = bubblePool.obtain();
 
 		effect.setPosition(x, y);
-        effect.getEmitters().get(0).getTint().setColors(HelmetSelectScreen.CHAR_COLORS[MainGame.saveData.getHead()]);
+        effect.getEmitters().get(0).getTint().setColors(color);
 		effects.add(effect);
 	}
 	
