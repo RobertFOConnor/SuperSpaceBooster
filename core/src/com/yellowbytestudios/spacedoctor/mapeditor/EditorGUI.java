@@ -42,11 +42,11 @@ public class EditorGUI {
         camera.resize();
 
         zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
-        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT -360));
+        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 360));
         moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
         eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
         playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, 30));
-        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 170-170, 30));
+        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 170 - 170, 30));
 
         //Tile buttons
         tileButtonBG = new Texture(Gdx.files.internal("mapeditor/tile_buttons_bg.png"));
@@ -60,13 +60,13 @@ public class EditorGUI {
         addTileButton(300, 200, TileIDs.UP_SPIKE);
         addTileButton(300, 100, TileIDs.RIGHT_SPIKE);
         addTileButton(400, 100, TileIDs.LEFT_SPIKE);
+
+        tileButtons.get(0).selected = true;
+        tileID = tileButtons.get(0).id;
     }
 
     private void addTileButton(int sheetX, int sheetY, int tileID) {
-        int PPM = (int) Box2DVars.PPM;
-        float listX = 320;
-
-        tileButtons.add(new TileButton(new TextureRegion(tileset, sheetX, sheetY, PPM, PPM), new Vector2(listX + (120 * tileButtons.size), MainGame.HEIGHT - 120), tileID));
+        tileButtons.add(new TileButton(new TextureRegion(tileset, sheetX, sheetY, (int) Box2DVars.PPM, (int) Box2DVars.PPM), new Vector2(320 + (120 * tileButtons.size), MainGame.HEIGHT - 120), tileID));
     }
 
     public void update(float step) {
@@ -81,6 +81,15 @@ public class EditorGUI {
             } else if (playMap.checkTouch(touch)) {
                 ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
             } else if (saveMap.checkTouch(touch)) {
+
+                if(MainGame.saveData.getMyMaps().size == 0) {
+                    MainGame.saveData.getMyMaps().add(new CustomMap(mapManager.getMap()));
+                } else {
+                    MainGame.saveData.getMyMaps().set(0, new CustomMap(mapManager.getMap()));
+                }
+
+                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+
                 ScreenManager.setScreen(new MainMenuScreen());
 
             } else if (!moveButton.checkTouch(touch)) {

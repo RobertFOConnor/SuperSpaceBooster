@@ -9,6 +9,7 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.screens.editor.NewLoadScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
@@ -67,7 +68,15 @@ public class MainMenuScreen implements Screen {
             if (playButton.checkTouch(touch)) {
                 advanceScreen(new LevelSelectScreen());
             } else if (editorButton.checkTouch(touch)) {
-                advanceScreen(new MapEditorScreen());
+
+                advanceScreen(new NewLoadScreen());
+
+                /*if (MainGame.saveData.getMyMaps().size > 0) {
+                    advanceScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen(MainGame.saveData.getMyMaps().get(0)));
+                } else {
+                    advanceScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen());
+                }*/
+
             } else if (statButton.checkTouch(touch)) {
                 advanceScreen(new HelmetSelectScreen());
             } else if (settings.checkTouch(touch)) {

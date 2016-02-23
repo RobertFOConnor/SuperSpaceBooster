@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 
 /**
  * Created by BobbyBoy on 20-Feb-16.
@@ -13,6 +14,8 @@ public class PlayerSaveObject {
 
     private boolean soundFXEnabled = true;
     private boolean musicEnabled = true;
+
+    private Array<CustomMap> myMaps = new Array<CustomMap>();
 
     public PlayerSaveObject() {
         unlockHead(0);
@@ -60,5 +63,9 @@ public class PlayerSaveObject {
 
     public void setMusicEnabled(boolean musicEnabled) {
         this.musicEnabled = musicEnabled;
+    }
+
+    public Array<CustomMap> getMyMaps() {
+        return myMaps;
     }
 }

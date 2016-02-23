@@ -1,16 +1,19 @@
-package com.yellowbytestudios.spacedoctor.screens;
+package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
+import com.yellowbytestudios.spacedoctor.screens.Screen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**
  * Created by BobbyBoy on 22-Jan-16.
@@ -25,6 +28,13 @@ public class MapEditorScreen implements Screen {
     private Button backButton;
 
     private EditorGUI gui;
+
+    private CustomMap savedMap;
+
+    public MapEditorScreen(CustomMap savedMap) {
+        this.savedMap = savedMap;
+    }
+
 
     public MapEditorScreen(TiledMap myMap) {
         this.myMap = myMap;
@@ -45,6 +55,8 @@ public class MapEditorScreen implements Screen {
 
         if (myMap != null) {
             mapManager.setMap(myMap);
+        } else if (savedMap != null) {
+            mapManager = new MapManager(savedMap);
         }
 
         gui = new EditorGUI(mapManager);

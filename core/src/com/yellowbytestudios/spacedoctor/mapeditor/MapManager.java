@@ -12,10 +12,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
-import com.yellowbytestudios.spacedoctor.objects.Entity;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
+import com.yellowbytestudios.spacedoctor.objects.Entity;
 
 public class MapManager {
 
@@ -27,8 +27,8 @@ public class MapManager {
     private OrthogonalTiledMapRenderer tmr;
     private Cell darkCell, lightCell, spikeCell_U, spikeCell_D, spikeCell_L, spikeCell_R;
 
-    public static final int customMapWidth = 30;
-    public static final int customMapHeight = 15;
+    public static int customMapWidth = 30;
+    public static int customMapHeight = 15;
     private int tileSize = 100;
 
     //Dragging
@@ -44,6 +44,42 @@ public class MapManager {
     private DraggableObject playerSpawn;
     public static float startX = 3;
     public static float startY = 4;
+
+
+    public MapManager(CustomMap savedMap) {
+
+        int[][] savedArray = savedMap.loadMap();
+
+        cam = new BoundedCamera();
+        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
+        customMapWidth = savedArray.length;
+        customMapHeight = savedArray[0].length;
+
+        float zoomBoundsX = 600;
+        float zoomBoundsY = 400;
+        cam.setBounds(-zoomBoundsX, customMapWidth * 100 + zoomBoundsX, -zoomBoundsY, customMapHeight * 100 + zoomBoundsY);
+
+        map = new TiledMap();
+        layers = map.getLayers();
+
+        layer1 = new TiledMapTileLayer(customMapWidth, customMapHeight, tileSize, tileSize);
+        layer1.setName("main");
+
+        initTiles();
+        setupMap(savedArray);
+
+        Vector2 exitPos = savedMap.getExitPos().cpy();
+        Vector2 startPos = savedMap.getStartPos().cpy();
+
+        exitX = exitPos.x/100;
+        exitY = exitPos.y/100;
+
+        startX = startPos.x/100;
+        startY = startPos.y/100;
+
+        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), exitPos);
+        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), startPos);
+    }
 
 
     public MapManager() {
@@ -69,38 +105,23 @@ public class MapManager {
     }
 
     private void initTiles() {
+
+        darkCell = buildTile(200, 100, 0);
+        lightCell = buildTile(0, 0, 0);
+        spikeCell_D = buildTile(200, 0, TileIDs.DOWN_SPIKE);
+        spikeCell_U = buildTile(300, 200, TileIDs.UP_SPIKE);
+        spikeCell_R = buildTile(300, 100, TileIDs.RIGHT_SPIKE);
+        spikeCell_L = buildTile(400, 100, TileIDs.LEFT_SPIKE);
+    }
+
+    private TiledMapTileLayer.Cell buildTile(int regX, int regY, int ID) {
+
         Texture tileSheet = new Texture(Gdx.files.internal("maps/tileset.png"));
-        StaticTiledMapTile t;
-
-        darkCell = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 200, 100, tileSize, tileSize));
-        t.setId(0);
-        darkCell.setTile(t);
-
-        lightCell = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 0, 0, tileSize, tileSize));
-        t.setId(0);
-        lightCell.setTile(t);
-
-        spikeCell_D = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 200, 0, tileSize, tileSize));
-        t.setId(TileIDs.DOWN_SPIKE);
-        spikeCell_D.setTile(t);
-
-        spikeCell_U = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 300, 200, tileSize, tileSize));
-        t.setId(TileIDs.UP_SPIKE);
-        spikeCell_U.setTile(t);
-
-        spikeCell_R = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 300, 100, tileSize, tileSize));
-        t.setId(TileIDs.RIGHT_SPIKE);
-        spikeCell_R.setTile(t);
-
-        spikeCell_L = new TiledMapTileLayer.Cell();
-        t = new StaticTiledMapTile(new TextureRegion(tileSheet, 400, 100, tileSize, tileSize));
-        t.setId(TileIDs.LEFT_SPIKE);
-        spikeCell_L.setTile(t);
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        StaticTiledMapTile t = new StaticTiledMapTile(new TextureRegion(tileSheet, regX, regY, tileSize, tileSize));
+        t.setId(ID);
+        cell.setTile(t);
+        return cell;
     }
 
     private void setupMap() {
@@ -111,6 +132,20 @@ public class MapManager {
                 if (row < 3 || col == 0 || row == layer1.getHeight() - 1 || col == layer1.getWidth() - 1) { //Borders.
                     layer1.setCell(col, row, darkCell);
                 }
+            }
+        }
+        layers.add(layer1);
+
+
+        tmr = new OrthogonalTiledMapRenderer(map);
+    }
+
+    private void setupMap(int[][] array) { //setup from saved map.
+
+        for (int row = 0; row < layer1.getHeight(); row++) {
+            for (int col = 0; col < layer1.getWidth(); col++) {
+
+                layer1.setCell(col, row, findCellById(array[col][row]));
             }
         }
         layers.add(layer1);
@@ -167,22 +202,28 @@ public class MapManager {
 
                     if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
 
-                        if (tileID == 0) {
-                            layer1.setCell(col, row, lightCell);
-                        } else if (tileID == 7) {
-                            layer1.setCell(col, row, darkCell);
-                        } else if (tileID == TileIDs.DOWN_SPIKE) {
-                            layer1.setCell(col, row, spikeCell_D);
-                        } else if (tileID == TileIDs.UP_SPIKE) {
-                            layer1.setCell(col, row, spikeCell_U);
-                        } else if (tileID == TileIDs.LEFT_SPIKE) {
-                            layer1.setCell(col, row, spikeCell_L);
-                        } else if (tileID == TileIDs.RIGHT_SPIKE) {
-                            layer1.setCell(col, row, spikeCell_R);
-                        }
+                        layer1.setCell(col, row, findCellById(tileID));
                     }
                 }
             }
+        }
+    }
+
+    private Cell findCellById(int tileID) {
+        if (tileID == 0) {
+            return lightCell;
+        } else if (tileID == 7) {
+            return darkCell;
+        } else if (tileID == TileIDs.DOWN_SPIKE) {
+            return spikeCell_D;
+        } else if (tileID == TileIDs.UP_SPIKE) {
+            return spikeCell_U;
+        } else if (tileID == TileIDs.LEFT_SPIKE) {
+            return spikeCell_L;
+        } else if (tileID == TileIDs.RIGHT_SPIKE) {
+            return spikeCell_R;
+        } else {
+            return null;
         }
     }
 

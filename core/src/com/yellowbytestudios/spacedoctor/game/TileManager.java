@@ -34,13 +34,16 @@ public class TileManager {
 
         float PPM = 100;
 
+        float leftSide = (-tileSize / 2) / (PPM);
+        float rightSide = (tileSize / 2) / (PPM);
+
         //BOTTOM CORNERS
-        Vector2 bot_L = new Vector2((-tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
-        Vector2 bot_R = new Vector2((tileSize / 2) / (PPM), (-tileSize / 2) / (PPM));
+        Vector2 bot_L = new Vector2(leftSide, leftSide);
+        Vector2 bot_R = new Vector2(rightSide, leftSide);
 
         //TOP CORNERS
-        Vector2 top_L = new Vector2((-tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
-        Vector2 top_R = new Vector2((tileSize / 2) / (PPM), (tileSize / 2) / (PPM));
+        Vector2 top_L = new Vector2(leftSide, rightSide);
+        Vector2 top_R = new Vector2(rightSide, rightSide);
 
         boolean shouldDrawVector;
         Vector2 start;

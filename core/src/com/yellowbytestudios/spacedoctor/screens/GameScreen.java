@@ -32,6 +32,7 @@ import com.yellowbytestudios.spacedoctor.objects.Door;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.objects.Platform;
+import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
 public class GameScreen implements Screen {
 
@@ -176,7 +177,7 @@ public class GameScreen implements Screen {
 
         if (player.isDead() || gui.getTimeElapsed() < 0) {
 
-            if(!dieing) {
+            if (!dieing) {
                 SoundManager.play(Assets.DEATH_SOUND);
 
                 Player.PlayerListener myListener = new Player.PlayerListener() {
@@ -392,7 +393,7 @@ public class GameScreen implements Screen {
         if (!isCustomMap) {
             ScreenManager.setScreen(new LevelSelectScreen());
         } else {
-            ScreenManager.setScreen(new MapEditorScreen(customMap));
+            ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen(customMap));
         }
         customMap = null;
     }

@@ -10,8 +10,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.LevelSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
-import com.yellowbytestudios.spacedoctor.screens.MapEditorScreen;
+import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
 /**

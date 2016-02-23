@@ -48,6 +48,12 @@ public class Assets {
     public static final String PLAY_MAP = "mapeditor/play_map.png";
     public static final String SAVE_MAP = "mapeditor/save_map.png";
 
+    public static final String SMALL_MAP = "mapeditor/small_map.png";
+    public static final String MEDIUM_MAP = "mapeditor/medium_map.png";
+    public static final String LARGE_MAP = "mapeditor/large_map.png";
+    public static final String NEW_MAP = "mapeditor/new_map.png";
+    public static final String LOAD_MAP = "mapeditor/load_map.png";
+
     public static final String MOVE_BUTTON = "mapeditor/move_button.png";
     public static final String MOVE_BUTTON_SEL = "mapeditor/move_button_selected.png";
     public static final String ERASE = "mapeditor/erase.png";
@@ -110,6 +116,12 @@ public class Assets {
         manager.load(ERASE_SEL, Texture.class);
         manager.load(PLAY_MAP, Texture.class);
         manager.load(SAVE_MAP, Texture.class);
+
+        manager.load(SMALL_MAP, Texture.class);
+        manager.load(MEDIUM_MAP, Texture.class);
+        manager.load(LARGE_MAP, Texture.class);
+        manager.load(NEW_MAP, Texture.class);
+        manager.load(LOAD_MAP, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);

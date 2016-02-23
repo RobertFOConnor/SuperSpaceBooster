@@ -14,7 +14,9 @@ import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
 
 public class SpacemanPlayer {
@@ -128,7 +130,7 @@ public class SpacemanPlayer {
                 SoundManager.play(Assets.DEATH_SOUND);
                 ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
             } else {
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
+                ScreenManager.setScreen(new MapEditorScreen(GameScreen.customMap));
             }
         }
     }
