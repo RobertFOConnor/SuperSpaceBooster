@@ -22,11 +22,14 @@ public class GUIManager {
     private ShapeRenderer shapeRenderer;
     private Texture gui_display;
 
+    private boolean isTimed;
 
-    public GUIManager(SpacemanPlayer player) {
+
+    public GUIManager(SpacemanPlayer player, boolean isTimed) {
         camera = new OrthoCamera();
         camera.resize();
         this.player = player;
+        this.isTimed = isTimed;
 
         //Initialize Timer
         duration = 30000;
@@ -37,8 +40,10 @@ public class GUIManager {
     }
 
     public void update() {
-        timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
 
+        if(isTimed) {
+            timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
+        }
     }
 
     public void render(SpriteBatch sb) {
@@ -57,6 +62,14 @@ public class GUIManager {
         sb.draw(gui_display, 100, MainGame.HEIGHT - 200);
         Fonts.GUIFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 225, MainGame.HEIGHT - 127);
 
+        if(isTimed) {
+            drawTimer(sb);
+        }
+
+        sb.end();
+    }
+
+    private void drawTimer(SpriteBatch sb) {
         Fonts.timerFont.draw(sb, "TIME", MainGame.WIDTH / 2 - 60, MainGame.HEIGHT - 30);
 
         String seconds;
@@ -69,11 +82,9 @@ public class GUIManager {
 
         Fonts.timerFont.draw(sb, seconds + ":" + ((timeElapsed % 1000) / 10), MainGame.WIDTH / 2 - 80, MainGame.HEIGHT - 100);
         Fonts.timerFont.setColor(Color.WHITE);
-
-        sb.end();
     }
 
-    public long getTimeElapsed() {
-        return timeElapsed;
+    public boolean timeIsUp() {
+        return isTimed && timeElapsed < 0;
     }
 }

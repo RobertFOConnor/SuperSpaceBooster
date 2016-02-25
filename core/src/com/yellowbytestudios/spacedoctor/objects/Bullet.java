@@ -1,24 +1,31 @@
 package com.yellowbytestudios.spacedoctor.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 
 /**
  * Created by BobbyBoy on 08-Jan-16.
  */
 public class Bullet extends Box2DSprite {
 
-    public static float SPEED = 35f;
+    private Vector2 dir;
 
-    public Bullet(Body body) {
+    public Bullet(Body body, Vector2 dir) {
         super(body);
         body.setUserData(this);
         texture = Assets.manager.get(Assets.BULLET, Texture.class);
         width = texture.getWidth();
         height = texture.getHeight();
+        this.dir = dir;
+    }
+
+    public void update() {
+        body.setLinearVelocity(dir.x * Gdx.graphics.getDeltaTime(), dir.y * Gdx.graphics.getDeltaTime());
     }
 
     public void render(SpriteBatch sb) {

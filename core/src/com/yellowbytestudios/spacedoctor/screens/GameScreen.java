@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -22,13 +23,14 @@ import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.GUIManager;
+import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.TileManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
-import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.Exit;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.objects.Platform;
@@ -52,13 +54,14 @@ public class GameScreen implements Screen {
     private Array<PickUp> pickups;
     private Array<Enemy> enemies;
     private Array<Platform> platforms;
-    private Door door;
+    private Exit exit;
     private Texture bg;
 
+    private LevelBackgroundManager bgManager;
     public static ParticleManager particleManager;
     private GUIManager gui;
 
-    boolean atDoor = false;
+    boolean atExit = false;
     public static int levelNo = 1;
 
     //ANDROID CONTROLLER
@@ -144,30 +147,27 @@ public class GameScreen implements Screen {
         bullets = new Array<Bullet>();
 
         bg = Assets.manager.get(Assets.BG, Texture.class);
+        bgManager = new LevelBackgroundManager(tileManager.getMapWidth(), tileManager.getMapHeight());
 
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);
         enemies = BodyFactory.createEnemies(world, tileMap);
         platforms = BodyFactory.createPlatforms(world, tileMap);
-        door = BodyFactory.createDoors(world, tileMap);
+        exit = BodyFactory.createExits(world, tileMap);
 
-        gui = new GUIManager(player);
-        atDoor = false;
+        gui = new GUIManager(player, false);
+        atExit = false;
     }
 
     public void addBullet() {
 
-        Bullet bullet = new Bullet(BodyFactory.createBody(world, "BULLET"));
-
-        float speed = Bullet.SPEED;
-
+        Bullet bullet;
+        int dir = 1;
         if (player.facingLeft()) {
-            bullet.getBody().setLinearVelocity(-speed, 0f);
-            bullet.getBody().setTransform(player.getPos().x - 1.2f, player.getPos().y, 0);
-        } else {
-            bullet.getBody().setLinearVelocity(speed, 0f);
-            bullet.getBody().setTransform(player.getPos().x + 1.2f, player.getPos().y, 0);
+            dir = -1;
         }
+        bullet = new Bullet(BodyFactory.createBody(world, "BULLET"), new Vector2(dir*2100, 0));
+        bullet.getBody().setTransform(player.getPos().x + (dir*1.2f), player.getPos().y, 0);
         bullets.add(bullet);
     }
 
@@ -175,50 +175,15 @@ public class GameScreen implements Screen {
     public void update(float step) {
         world.step(step, 8, 3);
 
-        if (player.isDead() || gui.getTimeElapsed() < 0) {
-
-            if (!dieing) {
-                SoundManager.play(Assets.DEATH_SOUND);
-
-                Player.PlayerListener myListener = new Player.PlayerListener() {
-                    @Override
-                    public void animationFinished(Animation animation) {
-                        setupMap();
-                        dieing = false;
-                    }
-
-                    @Override
-                    public void animationChanged(Animation oldAnim, Animation newAnim) {
-
-                    }
-
-                    @Override
-                    public void preProcess(Player player) {
-
-                    }
-
-                    @Override
-                    public void postProcess(Player player) {
-
-                    }
-
-                    @Override
-                    public void mainlineKeyChanged(Mainline.Key prevKey, Mainline.Key newKey) {
-
-                    }
-                };
-                player.startDeath(myListener);
-                dieing = true;
-            }
+        if (player.isDead() || gui.timeIsUp()) {
+            killPlayer();
         }
-
 
         if (MainGame.DEVICE.equals("ANDROID")) {
             androidController.update();
         }
 
         updateCameras();
-
         player.update();
         gui.update();
 
@@ -257,11 +222,15 @@ public class GameScreen implements Screen {
             p.update();
         }
 
+        for (Bullet b : bullets) {
+            b.update();
+        }
+
         for (Enemy e : enemies) {
             e.update(player);
         }
 
-        if (contactListener.isAtDoor()) {
+        if (contactListener.isAtExit()) {
 
             SoundManager.play(Assets.FINISHED_SOUND);
             SoundManager.stop(Assets.JETPACK_SOUND);
@@ -286,6 +255,42 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void killPlayer() {
+        if (!dieing) {
+            SoundManager.play(Assets.DEATH_SOUND);
+
+            Player.PlayerListener myListener = new Player.PlayerListener() {
+                @Override
+                public void animationFinished(Animation animation) {
+                    setupMap();
+                    dieing = false;
+                }
+
+                @Override
+                public void animationChanged(Animation oldAnim, Animation newAnim) {
+
+                }
+
+                @Override
+                public void preProcess(Player player) {
+
+                }
+
+                @Override
+                public void postProcess(Player player) {
+
+                }
+
+                @Override
+                public void mainlineKeyChanged(Mainline.Key prevKey, Mainline.Key newKey) {
+
+                }
+            };
+            player.startDeath(myListener);
+            dieing = true;
+        }
+    }
+
     private void updateCameras() {
         float targetX = player.getPos().x * PPM + MainGame.WIDTH / 50;
         float targetY = player.getPos().y * PPM + MainGame.HEIGHT / 50;
@@ -304,6 +309,7 @@ public class GameScreen implements Screen {
         sb.setProjectionMatrix(cam.combined);
         sb.begin();
         sb.draw(bg, cam.position.x - bg.getWidth() / 2, cam.position.y - bg.getHeight() / 2);
+        bgManager.render(sb);
         sb.end();
 
 
@@ -313,7 +319,7 @@ public class GameScreen implements Screen {
 
         sb.begin();
 
-        door.render(sb);
+        exit.render(sb);
         player.render();
 
         for (Platform p : platforms) {
@@ -393,7 +399,7 @@ public class GameScreen implements Screen {
         if (!isCustomMap) {
             ScreenManager.setScreen(new LevelSelectScreen());
         } else {
-            ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen(customMap));
+            ScreenManager.setScreen(new MapEditorScreen(customMap));
         }
         customMap = null;
     }

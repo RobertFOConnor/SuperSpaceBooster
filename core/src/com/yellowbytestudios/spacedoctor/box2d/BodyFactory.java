@@ -13,7 +13,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.objects.Box;
-import com.yellowbytestudios.spacedoctor.objects.Door;
+import com.yellowbytestudios.spacedoctor.objects.Box2DObject;
+import com.yellowbytestudios.spacedoctor.objects.Exit;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.objects.Platform;
@@ -69,7 +70,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.isSensor = true;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_DOOR | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_EXIT | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
 
             // create player foot fixture
             body.createFixture(fdef).setUserData("foot");
@@ -108,48 +109,6 @@ public class BodyFactory {
         }
     }
 
-
-    public static Door createDoors(World world, TiledMap tm) {
-
-        MapLayer ml = tm.getLayers().get("exits");
-        float width = 50 / Box2DVars.PPM;
-        float height = 100 / Box2DVars.PPM;
-        Door d = null;
-
-        if (ml == null) { //CUSTOM MAP - TEMP
-            d = createDoorBody(world, MapManager.exitX, MapManager.exitY, width, height);
-        } else {
-            for (MapObject mo : ml.getObjects()) {
-                d = createDoorBody(world, (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width), (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height), width, height);
-            }
-        }
-        return d;
-    }
-
-    private static Door createDoorBody(World world, float x, float y, float width, float height) {
-        BodyDef cdef = new BodyDef();
-        cdef.type = BodyDef.BodyType.StaticBody;
-        cdef.position.set(x, y);
-
-        Body body = world.createBody(cdef);
-
-        FixtureDef cfdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
-        cfdef.shape = shape;
-        cfdef.isSensor = true;
-        cfdef.filter.categoryBits = Box2DVars.BIT_DOOR;
-        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
-
-        body.createFixture(cfdef).setUserData("door");
-        shape.dispose();
-
-        Door d = new Door(body);
-        body.setUserData(d);
-        return d;
-    }
-
-
     public static Array<Box> createBoxes(World world, TiledMap tm) {
 
         MapLayer ml = tm.getLayers().get("boxes");
@@ -164,9 +123,8 @@ public class BodyFactory {
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.DynamicBody;
-            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
-            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
-            cdef.position.set(x, y);
+            Vector2 pos = getMapObjectPos(mo);
+            cdef.position.set(pos.x+width, pos.y+height);
 
             Body body = world.createBody(cdef);
 
@@ -189,6 +147,52 @@ public class BodyFactory {
     }
 
 
+
+    public static Exit createExits(World world, TiledMap tm) {
+
+        MapLayer ml = tm.getLayers().get("exits");
+        float width = 50 / Box2DVars.PPM;
+        float height = 100 / Box2DVars.PPM;
+        Exit exit = null;
+
+        if (ml == null) { //CUSTOM MAP - TEMP
+            exit = createExitBody(world, MapManager.exitX, MapManager.exitY, width, height);
+        } else {
+            for (MapObject mo : ml.getObjects()) {
+                Vector2 pos = getMapObjectPos(mo);
+                exit = createExitBody(world, pos.x + (width), pos.y + (height), width, height);
+            }
+        }
+        return exit;
+    }
+
+
+
+
+    private static Exit createExitBody(World world, float x, float y, float width, float height) {
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.StaticBody;
+        cdef.position.set(x, y);
+
+        Body body = world.createBody(cdef);
+
+        FixtureDef cfdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width, height);
+        cfdef.shape = shape;
+        cfdef.isSensor = true;
+        cfdef.filter.categoryBits = Box2DVars.BIT_EXIT;
+        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+        body.createFixture(cfdef).setUserData("door");
+        shape.dispose();
+
+        Exit d = new Exit(body);
+        body.setUserData(d);
+        return d;
+    }
+
+
     public static Array<PickUp> createPickups(World world, TiledMap tm) {
 
         MapLayer ml = tm.getLayers().get("pickups");
@@ -203,13 +207,13 @@ public class BodyFactory {
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.StaticBody;
-            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
-            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
             String type = mo.getProperties().get("type", String.class);
             if (type == null) { //Default to gas pickup if no type is specified.
                 type = "gas";
             }
-            cdef.position.set(x, y);
+
+            Vector2 pos = getMapObjectPos(mo);
+            cdef.position.set(pos.x+width, pos.y+height);
 
             Body body = world.createBody(cdef);
 
@@ -247,9 +251,8 @@ public class BodyFactory {
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.KinematicBody;
-            float x = mo.getProperties().get("x", Float.class) / Box2DVars.PPM;
-            float y = mo.getProperties().get("y", Float.class) / Box2DVars.PPM;
-            cdef.position.set(x + (width / 2), y + (height / 2));
+            Vector2 pos = getMapObjectPos(mo);
+            cdef.position.set(pos.x + (width / 2), pos.y + (height / 2));
 
             Body body = world.createBody(cdef);
 
@@ -287,9 +290,8 @@ public class BodyFactory {
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.DynamicBody;
-            float x = (mo.getProperties().get("x", Float.class) / Box2DVars.PPM) + (width);
-            float y = (mo.getProperties().get("y", Float.class) / Box2DVars.PPM) + (height);
-            cdef.position.set(x, y);
+            Vector2 pos = getMapObjectPos(mo);
+            cdef.position.set(pos.x+width, pos.y+height);
             cdef.fixedRotation = true;
 
             Body body = world.createBody(cdef);
@@ -310,5 +312,9 @@ public class BodyFactory {
             body.setUserData(e);
         }
         return enemies;
+    }
+
+    private static Vector2 getMapObjectPos(MapObject mo) {
+        return new Vector2((mo.getProperties().get("x", Float.class) / Box2DVars.PPM), (mo.getProperties().get("y", Float.class) / Box2DVars.PPM));
     }
 }

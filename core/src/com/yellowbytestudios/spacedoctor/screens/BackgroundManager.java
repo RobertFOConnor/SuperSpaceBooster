@@ -1,13 +1,11 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
-/**
- * Created by BobbyBoy on 19-Feb-16.
- */
 public class BackgroundManager {
 
     private Texture sky, stars1, stars2;
@@ -21,13 +19,13 @@ public class BackgroundManager {
     }
 
     public void update() {
-        stars1X = stars1X - 4;
+        stars1X = stars1X - 230f * Gdx.graphics.getDeltaTime();
 
         if (stars1X < -MainGame.WIDTH) {
             stars1X = 0;
         }
 
-        stars2X = stars2X - 2;
+        stars2X = stars2X - 120f * Gdx.graphics.getDeltaTime();
 
         if (stars2X < -MainGame.WIDTH) {
             stars2X = 0;

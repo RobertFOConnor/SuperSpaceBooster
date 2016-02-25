@@ -60,11 +60,15 @@ public class Assets {
     public static final String ERASE_SEL = "mapeditor/erase_selected.png";
 
     //Game objects.
-    public static final String BG = "game_objects/bg.png";
     public static final String BOX = "game_objects/box.png";
     public static final String BULLET = "game_objects/bullet.png";
     public static final String HOR_PLATFORM = "game_objects/hor_platform_medium.png";
     public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
+
+    //Background.
+    public static final String BG = "background/stars.png";
+    public static final String ASTEROIDS = "background/asteroids.png";
+    public static final String ASTEROIDS2 = "background/asteroids2.png";
 
     //Game GUI.
     public static final String GUI_DISPLAY = "gui/gui_display.png";
@@ -133,6 +137,9 @@ public class Assets {
         manager.load(SHOOT_PRESSED, Texture.class);
 
         manager.load(BG, Texture.class);
+        manager.load(ASTEROIDS, Texture.class);
+        manager.load(ASTEROIDS2, Texture.class);
+
         manager.load(BOX, Texture.class);
         manager.load(BULLET, Texture.class);
         manager.load(HOR_PLATFORM, Texture.class);

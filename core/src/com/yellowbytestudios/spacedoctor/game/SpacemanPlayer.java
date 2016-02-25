@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.brashmonkey.spriter.Player;
@@ -14,7 +13,6 @@ import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
@@ -27,8 +25,8 @@ public class SpacemanPlayer {
     private Body body;
 
     //Physics variables.
-    private float ACCELERATION = 30f;
-    private float SPEED = 7f;
+    private float ACCELERATION;
+    private float SPEED;
     private float posX, posY;
     private float velX, velY;
     private boolean movingLeft, movingRight, movingUp = false;
@@ -37,7 +35,7 @@ public class SpacemanPlayer {
 
 
     //Jetpack variables!
-    private float currGas = 500;
+    private float currGas = 500f;
 
     //Gun variables!
     private boolean shooting = false;
@@ -45,7 +43,6 @@ public class SpacemanPlayer {
 
     //Spriter variables.
     private int headType = MainGame.saveData.getHead();
-    int angle = 0;
 
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
@@ -76,7 +73,7 @@ public class SpacemanPlayer {
 
     public void update() {
 
-        if(!isDead) {
+        if (!isDead) {
 
             updateMovement();
 
@@ -106,11 +103,16 @@ public class SpacemanPlayer {
             if (currGas > 0) {
                 moveUp();
             } else {
-                movingUp = false;
-                SoundManager.stop(Assets.JETPACK_SOUND);
+                stopJetpack();
             }
 
         } else {
+            stopJetpack();
+        }
+    }
+
+    private void stopJetpack() {
+        if (movingUp) {
             movingUp = false;
             SoundManager.stop(Assets.JETPACK_SOUND);
         }
@@ -139,16 +141,6 @@ public class SpacemanPlayer {
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
         spriter.update();
         spriter.setObject("head", 1f, 4, headType);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            if (angle < 40) {
-                angle += 3;
-            }
-        } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            if (angle > -40) {
-                angle -= 3;
-            }
-        }
     }
 
 
@@ -158,6 +150,7 @@ public class SpacemanPlayer {
 
 
     private void moveLeft() {
+
         if (velX > -SPEED) {
             body.applyForce(-ACCELERATION, 0, posX, posY, true);
         } else {
@@ -197,7 +190,7 @@ public class SpacemanPlayer {
 
     private void moveUp() {
         if (velY < SPEED) {
-            body.applyForce(0, 20, posX, posY, true);
+            body.applyForce(0, ACCELERATION * 0.66f, posX, posY, true);
         } else {
             body.setLinearVelocity(velX, SPEED);
         }
@@ -246,10 +239,6 @@ public class SpacemanPlayer {
         }
     }
 
-    public int getAngle() {
-        return angle;
-    }
-
     public Vector2 getPos() {
         return body.getPosition();
     }
@@ -268,6 +257,10 @@ public class SpacemanPlayer {
     }
 
     private void assignVariables() {
+
+        ACCELERATION = Gdx.graphics.getDeltaTime() * 1800f;
+        SPEED = Gdx.graphics.getDeltaTime() * 450f;
+
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
 

@@ -17,8 +17,8 @@ public class Box2DContactListeners implements ContactListener {
     private Body enemy;
     private int numFootContacts;
 
-    private boolean atDoor = false;
-    private Body door;
+    private boolean atExit = false;
+    private Body Exit;
 
     private SpacemanPlayer player;
 
@@ -63,12 +63,12 @@ public class Box2DContactListeners implements ContactListener {
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("door")) {
-            door = fa.getBody();
-            atDoor = true;
+            Exit = fa.getBody();
+            atExit = true;
         }
         if (fb.getUserData() != null && fb.getUserData().equals("door")) {
-            door = fb.getBody();
-            atDoor = true;
+            Exit = fb.getBody();
+            atExit = true;
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("pickup")) {
@@ -143,12 +143,12 @@ public class Box2DContactListeners implements ContactListener {
         enemy = null;
     }
 
-    public Body getDoor() {
-        return door;
+    public Body getExit() {
+        return Exit;
     }
 
-    public boolean isAtDoor() {
-        return atDoor;
+    public boolean isAtExit() {
+        return atExit;
     }
 
     public void setPlayer(SpacemanPlayer player) {

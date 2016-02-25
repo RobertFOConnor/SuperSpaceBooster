@@ -1,9 +1,10 @@
 package com.yellowbytestudios.spacedoctor.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 
 /**
@@ -14,8 +15,8 @@ public class Enemy extends Box2DSprite {
     private String type = "";
     private int health = 3;
 
-    private float SPEED = 4f;
-    private float ACCELERATION = 30f;
+    private float SPEED;
+    private float ACCELERATION;
     private float posX, posY;
     private float velX, velY;
 
@@ -62,13 +63,17 @@ public class Enemy extends Box2DSprite {
 
     private void moveUp() {
         if (velY < SPEED) {
-            body.applyForce(0, 200, posX, posY, true);
+            body.applyForce(0, ACCELERATION * 0.066f, posX, posY, true);
         } else {
             body.setLinearVelocity(velX, SPEED);
         }
     }
 
     private void assignVariables() {
+
+        ACCELERATION = Gdx.graphics.getDeltaTime() * 1800f;
+        SPEED = Gdx.graphics.getDeltaTime() * 250f;
+
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
 
@@ -80,25 +85,22 @@ public class Enemy extends Box2DSprite {
 
         assignVariables();
 
-        if(Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
+        if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
             if (player.getPos().x < posX) {
                 moveLeft();
             } else {
                 moveRight();
             }
+        } else {
+            body.setLinearVelocity(0f, 0f);
         }
 
 
-        if(velX > 0.5 || velX < -0.5) {
+        if (velX > 0.5 || velX < -0.5) {
             spriter.setAnimation("walking");
         } else {
             spriter.setAnimation("idle");
         }
-
-
-        /*if((int) (Math.random() * 20) == 3) {
-            moveUp();
-        }*/
     }
 
     private boolean facingLeft() {

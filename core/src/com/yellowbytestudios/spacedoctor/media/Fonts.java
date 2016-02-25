@@ -26,6 +26,7 @@ public class Fonts {
     public static void dispose() {
         GUIFont.dispose();
         timerFont.dispose();
+        largeFont.dispose();
     }
 
     public static float getWidth(BitmapFont f, String s) {

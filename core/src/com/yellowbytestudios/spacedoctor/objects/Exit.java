@@ -5,13 +5,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.MainGame;
 
-public class Door extends Box2DSprite {
+public class Exit extends Box2DSprite {
 
     private float posX, posY;
     private com.brashmonkey.spriter.Player spriter;
 
 
-    public Door(Body body) {
+    public Exit(Body body) {
         super(body);
         spriter = MainGame.spriterManager.initExit();
     }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
@@ -43,6 +44,7 @@ public class MainGame extends ApplicationAdapter {
 
     public static final boolean TEST_MODE = false;
 
+    FPSLogger fps;
 
     public MainGame(String device) {
         DEVICE = device;
@@ -73,6 +75,8 @@ public class MainGame extends ApplicationAdapter {
         SoundManager.soundFXEnabled = saveData.isSoundFXEnabled();
 
         MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+
+        fps = new FPSLogger();
     }
 
     @Override
@@ -86,6 +90,8 @@ public class MainGame extends ApplicationAdapter {
 
             ScreenManager.getCurrentScreen().update(STEP);
             ScreenManager.getCurrentScreen().render(sb);
+
+            fps.log();
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
