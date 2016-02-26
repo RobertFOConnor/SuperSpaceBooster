@@ -1,6 +1,5 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -30,8 +29,8 @@ import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.objects.Box;
 import com.yellowbytestudios.spacedoctor.objects.Bullet;
-import com.yellowbytestudios.spacedoctor.objects.Exit;
 import com.yellowbytestudios.spacedoctor.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.objects.Exit;
 import com.yellowbytestudios.spacedoctor.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.objects.Platform;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
@@ -166,8 +165,8 @@ public class GameScreen implements Screen {
         if (player.facingLeft()) {
             dir = -1;
         }
-        bullet = new Bullet(BodyFactory.createBody(world, "BULLET"), new Vector2(dir*2100, 0));
-        bullet.getBody().setTransform(player.getPos().x + (dir*1.2f), player.getPos().y, 0);
+        bullet = new Bullet(BodyFactory.createBody(world, "BULLET"), new Vector2(dir * 2100, 0));
+        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y, 0);
         bullets.add(bullet);
     }
 

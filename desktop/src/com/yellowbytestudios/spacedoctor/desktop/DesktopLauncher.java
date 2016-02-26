@@ -12,6 +12,8 @@ public class DesktopLauncher {
         config.addIcon("icons/icon_64.png", Files.FileType.Internal);
         config.addIcon("icons/icon_32.png", Files.FileType.Internal);
 
+        config.vSyncEnabled=false;
+
         config.width = 960;
         config.height = 540;
 

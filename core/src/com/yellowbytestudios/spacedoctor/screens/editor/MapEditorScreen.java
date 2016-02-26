@@ -1,19 +1,24 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
+import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.game.Button;
 import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+
+import sun.security.provider.SHA;
 
 /**
  * Created by BobbyBoy on 22-Jan-16.
@@ -28,6 +33,8 @@ public class MapEditorScreen implements Screen {
     private Button backButton;
 
     private EditorGUI gui;
+
+    private ShapeRenderer shapeRenderer;
 
     private CustomMap savedMap;
 
@@ -61,6 +68,8 @@ public class MapEditorScreen implements Screen {
 
         gui = new EditorGUI(mapManager);
         backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
+
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -82,9 +91,14 @@ public class MapEditorScreen implements Screen {
 
     @Override
     public void render(SpriteBatch sb) {
-        // Clear screen.
-        Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl20.glClearColor(1, 1, 1, 0);
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.identity();
+        shapeRenderer.setColor(Color.SKY);
+        shapeRenderer.rect(0,0, MainGame.WIDTH, MainGame.HEIGHT);
+        shapeRenderer.end();
 
 
         mapManager.render(sb);

@@ -11,14 +11,11 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Button;
+import com.yellowbytestudios.spacedoctor.game.Button;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
-/**
- * Created by BobbyBoy on 25-Jan-16.
- */
 public class EditorGUI {
 
     private OrthoCamera camera;
@@ -33,8 +30,6 @@ public class EditorGUI {
     private Array<TileButton> tileButtons;
     private int tileID = -1;
 
-    private boolean buttonSelected = false;
-
 
     public EditorGUI(MapManager mapManager) {
         this.mapManager = mapManager;
@@ -43,10 +38,10 @@ public class EditorGUI {
 
         zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
         zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 360));
-        moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(30, 30));
-        eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(30 + 140 + 30, 30));
-        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 170, 30));
-        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 170 - 170, 30));
+        moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(20, 20));
+        eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(180, 20));
+        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 160, 20));
+        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 320, 20));
 
         //Tile buttons
         tileButtonBG = new Texture(Gdx.files.internal("mapeditor/tile_buttons_bg.png"));
@@ -54,8 +49,9 @@ public class EditorGUI {
         tileButtons = new Array<TileButton>();
 
 
-        addTileButton(0, 0, 0);
-        addTileButton(200, 100, 7);
+        addTileButton(0, 0, TileIDs.LIGHT_PURPLE);
+        addTileButton(200, 100, TileIDs.DARK_PURPLE);
+        addTileButton(100, 0, TileIDs.CAGED_WALL);
         addTileButton(200, 0, TileIDs.DOWN_SPIKE);
         addTileButton(300, 200, TileIDs.UP_SPIKE);
         addTileButton(300, 100, TileIDs.RIGHT_SPIKE);
@@ -92,10 +88,10 @@ public class EditorGUI {
 
                 ScreenManager.setScreen(new MainMenuScreen());
 
-            } else if (!moveButton.checkTouch(touch)) {
+            } else if (!moveButton.checkTouch(touch) && touch.y > 180) {
                 //CHECK MAP FOR INTERACTION.
 
-                buttonSelected = false;
+                boolean buttonSelected = false;
                 for (TileButton tb : tileButtons) {
                     if (tb.checkTouch(touch)) {
 
@@ -149,6 +145,9 @@ public class EditorGUI {
     public void render(SpriteBatch sb) {
         zoomIn.render(sb);
         zoomOut.render(sb);
+
+        sb.draw(tileButtonBG, 0, 0, MainGame.WIDTH, 180);
+
         moveButton.render(sb);
         eraseButton.render(sb);
         playMap.render(sb);

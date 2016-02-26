@@ -25,7 +25,7 @@ public class MapManager {
     private MapLayers layers;
     private TiledMapTileLayer layer1;
     private OrthogonalTiledMapRenderer tmr;
-    private Cell darkCell, lightCell, spikeCell_U, spikeCell_D, spikeCell_L, spikeCell_R;
+    private Cell darkCell, lightCell, cagedCell, spikeCell_U, spikeCell_D, spikeCell_L, spikeCell_R;
 
     public static int customMapWidth = 30;
     public static int customMapHeight = 15;
@@ -71,11 +71,11 @@ public class MapManager {
         Vector2 exitPos = savedMap.getExitPos().cpy();
         Vector2 startPos = savedMap.getStartPos().cpy();
 
-        exitX = exitPos.x/100;
-        exitY = exitPos.y/100;
+        exitX = exitPos.x / 100;
+        exitY = exitPos.y / 100;
 
-        startX = startPos.x/100;
-        startY = startPos.y/100;
+        startX = startPos.x / 100;
+        startY = startPos.y / 100;
 
         exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), exitPos);
         playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), startPos);
@@ -106,8 +106,9 @@ public class MapManager {
 
     private void initTiles() {
 
-        darkCell = buildTile(200, 100, 0);
-        lightCell = buildTile(0, 0, 0);
+        darkCell = buildTile(200, 100, TileIDs.DARK_PURPLE);
+        lightCell = buildTile(0, 0, TileIDs.LIGHT_PURPLE);
+        cagedCell = buildTile(100, 0, TileIDs.CAGED_WALL);
         spikeCell_D = buildTile(200, 0, TileIDs.DOWN_SPIKE);
         spikeCell_U = buildTile(300, 200, TileIDs.UP_SPIKE);
         spikeCell_R = buildTile(300, 100, TileIDs.RIGHT_SPIKE);
@@ -171,21 +172,23 @@ public class MapManager {
             touch = cam.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (playerSpawn.checkTouch(touch)) {
-                playerSpawn.selected = true;
-            } else if (exit.checkTouch(touch)) {
-                exit.selected = true;
-            }
+            if (!dragging) {
 
+                if (playerSpawn.checkTouch(touch)) {
+                    playerSpawn.selected = true;
+                } else if (exit.checkTouch(touch)) {
+                    exit.selected = true;
+                }
 
-            if (playerSpawn.selected) {
-                startX = (touch.x / Box2DVars.PPM);
-                startY = (touch.y / Box2DVars.PPM);
-                playerSpawn.setPos(touch);
-            } else if (exit.selected) {
-                exitX = (touch.x / Box2DVars.PPM);
-                exitY = (touch.y / Box2DVars.PPM);
-                exit.setPos(touch);
+                if (playerSpawn.selected) {
+                    startX = (touch.x / Box2DVars.PPM);
+                    startY = (touch.y / Box2DVars.PPM);
+                    playerSpawn.setPos(touch);
+                } else if (exit.selected) {
+                    exitX = (touch.x / Box2DVars.PPM);
+                    exitY = (touch.y / Box2DVars.PPM);
+                    exit.setPos(touch);
+                }
             }
         }
 
@@ -210,10 +213,12 @@ public class MapManager {
     }
 
     private Cell findCellById(int tileID) {
-        if (tileID == 0) {
+        if (tileID == TileIDs.LIGHT_PURPLE) {
             return lightCell;
-        } else if (tileID == 7) {
+        } else if (tileID == TileIDs.DARK_PURPLE) {
             return darkCell;
+        } else if (tileID == TileIDs.CAGED_WALL) {
+            return cagedCell;
         } else if (tileID == TileIDs.DOWN_SPIKE) {
             return spikeCell_D;
         } else if (tileID == TileIDs.UP_SPIKE) {
@@ -263,10 +268,12 @@ public class MapManager {
 
     public void render(SpriteBatch sb) {
 
+        sb.setProjectionMatrix(cam.combined);
+
         tmr.setView(cam);
         tmr.render();
 
-        sb.setProjectionMatrix(cam.combined);
+
         sb.begin();
         exit.render(sb);
         playerSpawn.render(sb);
@@ -310,6 +317,21 @@ public class MapManager {
 
         public void setPos(Vector2 pos) {
             this.pos = pos.add(-texture.getWidth() / 2, -texture.getHeight() / 2);
+            checkMapBounds();
+        }
+
+        public void checkMapBounds() {
+            if (pos.x < 0) {
+                pos.set(0, pos.y);
+            } else if (pos.x > customMapWidth * Box2DVars.PPM - texture.getWidth()) {
+                pos.set(customMapWidth * Box2DVars.PPM - texture.getWidth(), pos.y);
+            }
+
+            if (pos.y < 0) {
+                pos.set(pos.x, 0);
+            } else if (pos.y > customMapHeight * Box2DVars.PPM - texture.getHeight()) {
+                pos.set(pos.x, customMapHeight * Box2DVars.PPM - texture.getHeight());
+            }
         }
 
         public boolean isSelected() {

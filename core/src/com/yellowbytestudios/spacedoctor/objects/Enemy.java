@@ -21,7 +21,8 @@ public class Enemy extends Box2DSprite {
     private float velX, velY;
 
     private com.brashmonkey.spriter.Player spriter;
-
+    private boolean followsPlayer = true;
+    private boolean movingLeft = true;
 
     public Enemy(Body body) {
         super(body);
@@ -38,11 +39,7 @@ public class Enemy extends Box2DSprite {
     }
 
     private void moveLeft() {
-        if (velX > -SPEED) {
-            body.applyForce(-ACCELERATION, 0, posX, posY, true);
-        } else {
-            body.setLinearVelocity(-SPEED, velY);
-        }
+        body.setLinearVelocity(-SPEED, velY);
 
         if (facingLeft()) {
             flipSprite();
@@ -50,11 +47,7 @@ public class Enemy extends Box2DSprite {
     }
 
     private void moveRight() {
-        if (velX < SPEED) {
-            body.applyForce(ACCELERATION, 0, posX, posY, true);
-        } else {
-            body.setLinearVelocity(SPEED, velY);
-        }
+        body.setLinearVelocity(SPEED, velY);
 
         if (!facingLeft()) {
             flipSprite();
@@ -85,6 +78,14 @@ public class Enemy extends Box2DSprite {
 
         assignVariables();
 
+        if(followsPlayer) {
+            followPlayer(player);
+        } else {
+            moveLeft();
+        }
+    }
+
+    private void followPlayer(SpacemanPlayer player) {
         if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
             if (player.getPos().x < posX) {
                 moveLeft();
@@ -92,7 +93,7 @@ public class Enemy extends Box2DSprite {
                 moveRight();
             }
         } else {
-            body.setLinearVelocity(0f, 0f);
+            body.setLinearVelocity(0f, velY);
         }
 
 
