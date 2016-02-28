@@ -17,6 +17,7 @@ public class Box extends Box2DSprite {
         body.setUserData(this);
         texture = Assets.manager.get(Assets.BOX, Texture.class);
         tr = new TextureRegion(texture);
+
         width = texture.getWidth();
         height = texture.getHeight();
     }

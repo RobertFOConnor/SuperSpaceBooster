@@ -67,7 +67,7 @@ public class MapEditorScreen implements Screen {
         }
 
         gui = new EditorGUI(mapManager);
-        backButton = new Button(Assets.GO_BACK, new Vector2(50, 900));
+        //backButton = new Button(Assets.GO_BACK, new Vector2(20, 900));
 
         shapeRenderer = new ShapeRenderer();
     }
@@ -81,10 +81,6 @@ public class MapEditorScreen implements Screen {
         if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
-
-            if (backButton.checkTouch(touch)) {
-                goBack();
-            }
         }
     }
 
@@ -105,7 +101,7 @@ public class MapEditorScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        backButton.render(sb);
+        //backButton.render(sb);
         gui.render(sb);
         sb.end();
     }

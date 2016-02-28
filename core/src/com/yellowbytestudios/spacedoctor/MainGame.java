@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.SaveManager;
@@ -58,6 +59,7 @@ public class MainGame extends ApplicationAdapter {
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
         animationManager = new AnimationManager();
+        MapManager.initCells();
 
         checkForController();
         ScreenManager.setScreen(new SplashScreen());

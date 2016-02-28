@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -25,11 +26,10 @@ public class MapManager {
     private MapLayers layers;
     private TiledMapTileLayer layer1;
     private OrthogonalTiledMapRenderer tmr;
-    private Cell darkCell, lightCell, cagedCell, spikeCell_U, spikeCell_D, spikeCell_L, spikeCell_R;
 
     public static int customMapWidth = 30;
     public static int customMapHeight = 15;
-    private int tileSize = 100;
+    private static final int tileSize = 100;
 
     //Dragging
     private Vector2 startTouch, endTouch;
@@ -46,6 +46,20 @@ public class MapManager {
     public static float startY = 4;
 
 
+    //Tile Types.
+    private static final Array<Cell> CELLS = new Array<Cell>();
+
+    public static void initCells() {
+        CELLS.add(buildTile(0, 0, TileIDs.LIGHT_PURPLE));
+        CELLS.add(buildTile(200, 100, TileIDs.DARK_PURPLE));
+        CELLS.add(buildTile(100, 0, TileIDs.CAGED_WALL));
+        CELLS.add(buildTile(200, 0, TileIDs.DOWN_SPIKE));
+        CELLS.add(buildTile(300, 200, TileIDs.UP_SPIKE));
+        CELLS.add(buildTile(300, 100, TileIDs.RIGHT_SPIKE));
+        CELLS.add(buildTile(400, 100, TileIDs.LEFT_SPIKE));
+    }
+
+
     public MapManager(CustomMap savedMap) {
 
         int[][] savedArray = savedMap.loadMap();
@@ -55,17 +69,8 @@ public class MapManager {
         customMapWidth = savedArray.length;
         customMapHeight = savedArray[0].length;
 
-        float zoomBoundsX = 600;
-        float zoomBoundsY = 400;
-        cam.setBounds(-zoomBoundsX, customMapWidth * 100 + zoomBoundsX, -zoomBoundsY, customMapHeight * 100 + zoomBoundsY);
+        initObjects();
 
-        map = new TiledMap();
-        layers = map.getLayers();
-
-        layer1 = new TiledMapTileLayer(customMapWidth, customMapHeight, tileSize, tileSize);
-        layer1.setName("main");
-
-        initTiles();
         setupMap(savedArray);
 
         Vector2 exitPos = savedMap.getExitPos().cpy();
@@ -87,6 +92,15 @@ public class MapManager {
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
 
+        initObjects();
+
+        setupMap();
+
+        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
+        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
+    }
+
+    private void initObjects() {
         float zoomBoundsX = 600;
         float zoomBoundsY = 400;
         cam.setBounds(-zoomBoundsX, customMapWidth * 100 + zoomBoundsX, -zoomBoundsY, customMapHeight * 100 + zoomBoundsY);
@@ -96,26 +110,9 @@ public class MapManager {
 
         layer1 = new TiledMapTileLayer(customMapWidth, customMapHeight, tileSize, tileSize);
         layer1.setName("main");
-
-        initTiles();
-        setupMap();
-
-        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
-        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
     }
 
-    private void initTiles() {
-
-        darkCell = buildTile(200, 100, TileIDs.DARK_PURPLE);
-        lightCell = buildTile(0, 0, TileIDs.LIGHT_PURPLE);
-        cagedCell = buildTile(100, 0, TileIDs.CAGED_WALL);
-        spikeCell_D = buildTile(200, 0, TileIDs.DOWN_SPIKE);
-        spikeCell_U = buildTile(300, 200, TileIDs.UP_SPIKE);
-        spikeCell_R = buildTile(300, 100, TileIDs.RIGHT_SPIKE);
-        spikeCell_L = buildTile(400, 100, TileIDs.LEFT_SPIKE);
-    }
-
-    private TiledMapTileLayer.Cell buildTile(int regX, int regY, int ID) {
+    private static TiledMapTileLayer.Cell buildTile(int regX, int regY, int ID) {
 
         Texture tileSheet = new Texture(Gdx.files.internal("maps/tileset.png"));
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
@@ -131,7 +128,7 @@ public class MapManager {
             for (int col = 0; col < layer1.getWidth(); col++) {
 
                 if (row < 3 || col == 0 || row == layer1.getHeight() - 1 || col == layer1.getWidth() - 1) { //Borders.
-                    layer1.setCell(col, row, darkCell);
+                    layer1.setCell(col, row, CELLS.get(0));
                 }
             }
         }
@@ -213,23 +210,13 @@ public class MapManager {
     }
 
     private Cell findCellById(int tileID) {
-        if (tileID == TileIDs.LIGHT_PURPLE) {
-            return lightCell;
-        } else if (tileID == TileIDs.DARK_PURPLE) {
-            return darkCell;
-        } else if (tileID == TileIDs.CAGED_WALL) {
-            return cagedCell;
-        } else if (tileID == TileIDs.DOWN_SPIKE) {
-            return spikeCell_D;
-        } else if (tileID == TileIDs.UP_SPIKE) {
-            return spikeCell_U;
-        } else if (tileID == TileIDs.LEFT_SPIKE) {
-            return spikeCell_L;
-        } else if (tileID == TileIDs.RIGHT_SPIKE) {
-            return spikeCell_R;
-        } else {
-            return null;
+
+        for(Cell c : CELLS) {
+            if(c.getTile().getId() == tileID) {
+                return c;
+            }
         }
+        return null;
     }
 
     public void eraseTiles() {
@@ -280,17 +267,17 @@ public class MapManager {
         sb.end();
     }
 
-    public void zoomIn(float step) {
+    public void zoomIn() {
 
         if (cam.zoom > 0.5f) {
-            cam.zoom -= 0.03f;
+            cam.zoom -= (1.8f*Gdx.graphics.getDeltaTime());
         }
     }
 
-    public void zoomOut(float step) {
+    public void zoomOut() {
 
         if (cam.zoom < 3f) {
-            cam.zoom += 0.03f;
+            cam.zoom += (1.8f*Gdx.graphics.getDeltaTime());
         }
     }
 
@@ -309,9 +296,14 @@ public class MapManager {
     public class DraggableObject extends Entity {
 
         private boolean selected = false;
+        private float boundX, boundY;
 
         public DraggableObject(Texture texture, Vector2 pos) {
             super(texture, pos);
+
+            boundX = customMapWidth * Box2DVars.PPM - texture.getWidth();
+            boundY = customMapHeight * Box2DVars.PPM - texture.getHeight();
+
             setPos(pos);
         }
 
@@ -323,14 +315,14 @@ public class MapManager {
         public void checkMapBounds() {
             if (pos.x < 0) {
                 pos.set(0, pos.y);
-            } else if (pos.x > customMapWidth * Box2DVars.PPM - texture.getWidth()) {
-                pos.set(customMapWidth * Box2DVars.PPM - texture.getWidth(), pos.y);
+            } else if (pos.x > boundX) {
+                pos.set(boundX, pos.y);
             }
 
             if (pos.y < 0) {
                 pos.set(pos.x, 0);
-            } else if (pos.y > customMapHeight * Box2DVars.PPM - texture.getHeight()) {
-                pos.set(pos.x, customMapHeight * Box2DVars.PPM - texture.getHeight());
+            } else if (pos.y > boundY) {
+                pos.set(pos.x, boundY);
             }
         }
 

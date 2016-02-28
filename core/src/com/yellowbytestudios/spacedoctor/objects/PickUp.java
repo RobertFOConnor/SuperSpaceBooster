@@ -15,7 +15,6 @@ import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 public class PickUp extends Box2DSprite {
 
     private String type = "";
-    private float posX, posY;
     private com.brashmonkey.spriter.Player spriter;
 
     public PickUp(Body body, String type) {
@@ -29,10 +28,6 @@ public class PickUp extends Box2DSprite {
         } else if (type.equals("time")) {
             spriter = MainGame.spriterManager.initTimePickUp();
         }
-
-
-        posX = body.getPosition().x;
-        posY = body.getPosition().y;
     }
 
     public void render(SpriteBatch sb) {

@@ -7,7 +7,6 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 
 public class Exit extends Box2DSprite {
 
-    private float posX, posY;
     private com.brashmonkey.spriter.Player spriter;
 
 
@@ -19,7 +18,7 @@ public class Exit extends Box2DSprite {
     public void render(SpriteBatch sb) {
         posX = body.getPosition().x;
         posY = body.getPosition().y;
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM));
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM));
         spriter.update();
         MainGame.spriterManager.draw(spriter);
     }

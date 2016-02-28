@@ -17,7 +17,6 @@ public class Enemy extends Box2DSprite {
 
     private float SPEED;
     private float ACCELERATION;
-    private float posX, posY;
     private float velX, velY;
 
     private com.brashmonkey.spriter.Player spriter;
@@ -29,11 +28,11 @@ public class Enemy extends Box2DSprite {
         spriter = MainGame.spriterManager.initDemon();
 
         assignVariables();
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM) - 75);
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 75);
     }
 
     public void render(SpriteBatch sb) {
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM) - 75);
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 75);
         spriter.update();
         MainGame.spriterManager.draw(spriter);
     }

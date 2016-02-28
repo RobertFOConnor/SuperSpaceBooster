@@ -9,6 +9,8 @@ public class Box2DSprite {
 
     protected Body body;
     protected Texture texture;
+    protected float posX;
+    protected float posY;
     protected float width;
     protected float height;
     protected float stateTime;
@@ -18,6 +20,8 @@ public class Box2DSprite {
 
     public Box2DSprite(Body body) {
         this.body = body;
+        this.posX = body.getPosition().x;
+        this.posY = body.getPosition().y;
     }
 
     public void update(float dt) {
@@ -25,7 +29,7 @@ public class Box2DSprite {
     }
 
     public void render(SpriteBatch sb) {
-        sb.draw(texture, (int) (body.getPosition().x * Box2DVars.PPM - width / 2), (int) (body.getPosition().y * Box2DVars.PPM - height / 2));
+        sb.draw(texture, (posX * Box2DVars.PPM - width / 2), (posY * Box2DVars.PPM - height / 2));
     }
 
     public Body getBody() {
