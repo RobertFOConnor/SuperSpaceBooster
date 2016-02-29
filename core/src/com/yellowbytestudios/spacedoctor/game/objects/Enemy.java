@@ -7,9 +7,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 
-/**
- * Created by BobbyBoy on 11-Jan-16.
- */
+
 public class Enemy extends Box2DSprite {
 
     private String type = "";
@@ -28,11 +26,15 @@ public class Enemy extends Box2DSprite {
         spriter = MainGame.spriterManager.initDemon();
 
         assignVariables();
+        setSpriterPos();
+    }
+
+    private void setSpriterPos() {
         spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 75);
     }
 
     public void render(SpriteBatch sb) {
-        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 75);
+        setSpriterPos();
         spriter.update();
         MainGame.spriterManager.draw(spriter);
     }

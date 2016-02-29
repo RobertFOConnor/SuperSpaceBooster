@@ -2,6 +2,7 @@ package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -25,7 +26,7 @@ public class EditorGUI {
 
     private static final Texture tileButtonSelector = new Texture(Gdx.files.internal("mapeditor/tile_buttons_selector.png"));
     private static final TextureRegion tileset = new TextureRegion(new Texture(Gdx.files.internal("maps/tileset.png")));
-    private static final Texture bottom_bg = Assets.manager.get(Assets.BOTTOM_BAR, Texture.class);
+    private static final NinePatch bottom_bg = new NinePatch(Assets.manager.get(Assets.BOTTOM_BAR, Texture.class), 10, 10, 10, 10);
     private int tileID = -1;
 
     private ItemSideMenu sideMenu;
@@ -74,7 +75,7 @@ public class EditorGUI {
 
                 ScreenManager.setScreen(new MainMenuScreen());
 
-            } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 180)) {
+            } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 160)) {
                 //CHECK MAP FOR INTERACTION.
 
                 if (!mapManager.isHoldingObject()) {
@@ -121,7 +122,7 @@ public class EditorGUI {
         zoomIn.render(sb);
         zoomOut.render(sb);
 
-        sb.draw(bottom_bg, 0, 0);
+        bottom_bg.draw(sb, 0, 0, 1920, 160);
         sideMenu.render(sb);
         moveButton.render(sb);
         eraseButton.render(sb);
@@ -191,7 +192,7 @@ public class EditorGUI {
 
         private Array<TileButton> tileButtons;
         private Array<EnemyButton> enemyButtons;
-        private Texture sideMenu = Assets.manager.get(Assets.SIDE_MENU, Texture.class);
+        private NinePatch sideMenuBG = new NinePatch(Assets.manager.get(Assets.SIDE_MENU, Texture.class), 10, 10, 10, 10);
 
         private float bottomY = 290;
 
@@ -260,7 +261,7 @@ public class EditorGUI {
         public void render(SpriteBatch sb) {
             if (showing) {
 
-                sb.draw(sideMenu, 10, 200);
+                sideMenuBG.draw(sb, 10, 200, 260, 760);
                 blockTab.render(sb);
                 enemyTab.render(sb);
 

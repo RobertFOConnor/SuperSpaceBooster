@@ -15,7 +15,7 @@ public class Box2DSprite {
     protected float height;
     protected float stateTime;
     protected int[] associationNumbers;
-    protected boolean activatable = false;
+    protected boolean active = false;
 
 
     public Box2DSprite(Body body) {
@@ -49,6 +49,6 @@ public class Box2DSprite {
     }
 
     public boolean isActivatable() {
-        return activatable;
+        return active;
     }
 }

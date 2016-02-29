@@ -2,7 +2,9 @@ package com.yellowbytestudios.spacedoctor.box2d;
 
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -11,14 +13,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
-import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 
 public class BodyFactory {
+
+    private static float PPM = Box2DVars.PPM;
 
     public static Body createBody(World world, String bodyType) {
 
@@ -38,8 +42,8 @@ public class BodyFactory {
 
             // Create circle for players head.
             CircleShape circleShape = new CircleShape();
-            circleShape.setRadius(51 / Box2DVars.PPM);
-            circleShape.setPosition(new Vector2(0, 22 / Box2DVars.PPM));
+            circleShape.setRadius(51 / PPM);
+            circleShape.setPosition(new Vector2(0, 22 / PPM));
 
             // Create Fixture Definition for head collision.
             FixtureDef fdef = new FixtureDef();
@@ -51,7 +55,7 @@ public class BodyFactory {
 
             // Create box for players torso.
             PolygonShape shape = new PolygonShape();
-            shape.setAsBox(32 / Box2DVars.PPM, 44 / Box2DVars.PPM, new Vector2(0, -30 / Box2DVars.PPM), 0);
+            shape.setAsBox(32 / PPM, 44 / PPM, new Vector2(0, -30 / PPM), 0);
 
             // Create Fixture Definition for torso collision box.
             fdef.shape = shape;
@@ -63,7 +67,7 @@ public class BodyFactory {
 
             // Create box for players foot.
             shape = new PolygonShape();
-            shape.setAsBox(30 / Box2DVars.PPM, 20 / Box2DVars.PPM, new Vector2(0, -60 / Box2DVars.PPM), 0);
+            shape.setAsBox(30 / PPM, 20 / PPM, new Vector2(0, -60 / PPM), 0);
 
             // Create Fixture Definition for foot collision box.
             fdef.shape = shape;
@@ -90,7 +94,7 @@ public class BodyFactory {
 
             // create box shape for bullet.
             PolygonShape shape = new PolygonShape();
-            shape.setAsBox(50 / Box2DVars.PPM, 1 / Box2DVars.PPM);
+            shape.setAsBox(50 / PPM, 1 / PPM);
 
             // create fixturedef for bullet.
             FixtureDef cfdef = new FixtureDef();
@@ -115,15 +119,15 @@ public class BodyFactory {
 
         if (ml == null) return new Array<Box>();
 
-        float width = 48 / Box2DVars.PPM;
-        float height = 48 / Box2DVars.PPM;
+        float width = 48 / PPM;
+        float height = 48 / PPM;
 
         for (MapObject mo : ml.getObjects()) {
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.DynamicBody;
             Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x+width, pos.y+height);
+            cdef.position.set(pos.x + width, pos.y + height);
 
             Body body = world.createBody(cdef);
 
@@ -146,12 +150,11 @@ public class BodyFactory {
     }
 
 
-
     public static Exit createExits(World world, TiledMap tm) {
 
         MapLayer ml = tm.getLayers().get("exits");
-        float width = 50 / Box2DVars.PPM;
-        float height = 100 / Box2DVars.PPM;
+        float width = 50 / PPM;
+        float height = 100 / PPM;
         Exit exit = null;
 
         if (ml == null) { //CUSTOM MAP - TEMP
@@ -164,8 +167,6 @@ public class BodyFactory {
         }
         return exit;
     }
-
-
 
 
     private static Exit createExitBody(World world, float x, float y, float width, float height) {
@@ -199,8 +200,8 @@ public class BodyFactory {
 
         if (ml == null) return new Array<PickUp>();
 
-        float width = 35 / Box2DVars.PPM;
-        float height = 35 / Box2DVars.PPM;
+        float width = 35 / PPM;
+        float height = 35 / PPM;
 
         for (MapObject mo : ml.getObjects()) {
 
@@ -212,7 +213,7 @@ public class BodyFactory {
             }
 
             Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x+width, pos.y+height);
+            cdef.position.set(pos.x + width, pos.y + height);
 
             Body body = world.createBody(cdef);
 
@@ -244,9 +245,11 @@ public class BodyFactory {
 
         for (MapObject mo : ml.getObjects()) {
 
+            Rectangle rectangle = ((RectangleMapObject) mo).getRectangle();
+
             String type = mo.getProperties().get("type", String.class);
-            float width = (Float.parseFloat(mo.getProperties().get("width", String.class)));
-            float height = (Float.parseFloat(mo.getProperties().get("height", String.class)));
+            float width = rectangle.width / PPM;
+            float height = rectangle.height / PPM;
 
             BodyDef cdef = new BodyDef();
             cdef.type = BodyDef.BodyType.KinematicBody;
@@ -281,8 +284,8 @@ public class BodyFactory {
         Array<Enemy> enemies = new Array<Enemy>();
 
         if (ml == null) {
-            for(MapManager.DraggableObject mapObject : MapManager.enemyList) {
-                Vector2 pos = new Vector2(mapObject.getPos().x/100, mapObject.getPos().y/100);
+            for (MapManager.DraggableObject mapObject : MapManager.enemyList) {
+                Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
                 enemies.add(createEnemy(world, pos));
             }
         } else {
@@ -295,12 +298,12 @@ public class BodyFactory {
 
     private static Enemy createEnemy(World world, Vector2 pos) {
 
-        float width = 51 / Box2DVars.PPM;
-        float height = 75 / Box2DVars.PPM;
+        float width = 51 / PPM;
+        float height = 75 / PPM;
 
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.DynamicBody;
-        cdef.position.set(pos.x+width, pos.y+height);
+        cdef.position.set(pos.x + width, pos.y + height);
         cdef.fixedRotation = true;
 
         Body body = world.createBody(cdef);
@@ -322,6 +325,6 @@ public class BodyFactory {
     }
 
     private static Vector2 getMapObjectPos(MapObject mo) {
-        return new Vector2((mo.getProperties().get("x", Float.class) / Box2DVars.PPM), (mo.getProperties().get("y", Float.class) / Box2DVars.PPM));
+        return new Vector2((mo.getProperties().get("x", Float.class) / PPM), (mo.getProperties().get("y", Float.class) / PPM));
     }
 }
