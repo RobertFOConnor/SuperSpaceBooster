@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.objects;
+package com.yellowbytestudios.spacedoctor.game.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -44,6 +44,9 @@ public class Platform extends Box2DSprite {
                 changeDirection();
             }
         }
+
+        posX = body.getPosition().x;
+        posY = body.getPosition().y;
 
     }
 

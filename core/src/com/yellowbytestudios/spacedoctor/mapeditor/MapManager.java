@@ -16,7 +16,8 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
-import com.yellowbytestudios.spacedoctor.objects.Entity;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.game.objects.Entity;
 
 public class MapManager {
 
@@ -31,9 +32,13 @@ public class MapManager {
     public static int customMapHeight = 15;
     private static final int tileSize = 100;
 
-    //Dragging
+    //Dragging / Navigating Map.
     private Vector2 startTouch, endTouch;
     private boolean dragging = false;
+
+    //Object currently being used.
+    private DraggableObject currObject;
+    private boolean holdingObject = false;
 
     //EXIT
     private DraggableObject exit;
@@ -44,6 +49,9 @@ public class MapManager {
     private DraggableObject playerSpawn;
     public static float startX = 3;
     public static float startY = 4;
+
+    //ENEMIES.
+    public static Array<DraggableObject> enemyList;
 
 
     //Tile Types.
@@ -64,13 +72,10 @@ public class MapManager {
 
         int[][] savedArray = savedMap.loadMap();
 
-        cam = new BoundedCamera();
-        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
         customMapWidth = savedArray.length;
         customMapHeight = savedArray[0].length;
 
         initObjects();
-
         setupMap(savedArray);
 
         Vector2 exitPos = savedMap.getExitPos().cpy();
@@ -78,29 +83,46 @@ public class MapManager {
 
         exitX = exitPos.x / 100;
         exitY = exitPos.y / 100;
-
         startX = startPos.x / 100;
         startY = startPos.y / 100;
 
-        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), exitPos);
-        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), startPos);
+        setupPlayerAndExit();
+        enemyList = new Array<DraggableObject>();
+        for (Vector2 enemy : savedMap.getEnemyArray()) {
+            enemyList.add(new DraggableObject(Assets.manager.get(Assets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
+        }
     }
 
 
     public MapManager() {
+        initObjects();
+        setupMap();
+        setupPlayerAndExit();
+    }
+
+    public MapManager(TiledMap tm) {
+        initObjects();
+
+        setupMap();
+        setupPlayerAndExit();
+
+        this.map = tm;
+        layers = map.getLayers();
+        layer1 = (TiledMapTileLayer) layers.get(0);
+        tmr = new OrthogonalTiledMapRenderer(map);
+    }
+
+    private void setupPlayerAndExit() {
+        exit = new DraggableObject(Assets.manager.get(Assets.EXIT_SPAWN, Texture.class), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
+        playerSpawn = new DraggableObject(Assets.manager.get(Assets.PLAYER_SPAWN, Texture.class), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
+    }
+
+
+    private void initObjects() {
 
         cam = new BoundedCamera();
         cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
 
-        initObjects();
-
-        setupMap();
-
-        exit = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/exit_icon.png")), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
-        playerSpawn = new DraggableObject(new Texture(Gdx.files.internal("mapeditor/player_spawn.png")), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
-    }
-
-    private void initObjects() {
         float zoomBoundsX = 600;
         float zoomBoundsY = 400;
         cam.setBounds(-zoomBoundsX, customMapWidth * 100 + zoomBoundsX, -zoomBoundsY, customMapHeight * 100 + zoomBoundsY);
@@ -153,7 +175,7 @@ public class MapManager {
     }
 
 
-    public void update(float step) {
+    public void update() {
 
         if (!Gdx.input.isTouched()) {
 
@@ -162,8 +184,18 @@ public class MapManager {
                 endTouch = null;
                 dragging = false;
             }
-            exit.selected = false;
-            playerSpawn.selected = false;
+
+            if (holdingObject) {
+
+                for (DraggableObject enemy : enemyList) {
+                    enemy.selected = false;
+                }
+
+                exit.selected = false;
+                playerSpawn.selected = false;
+                holdingObject = false;
+                currObject = null;
+            }
 
         } else {
             touch = cam.unprojectCoordinates(Gdx.input.getX(),
@@ -171,25 +203,41 @@ public class MapManager {
 
             if (!dragging) {
 
-                if (playerSpawn.checkTouch(touch)) {
-                    playerSpawn.selected = true;
-                } else if (exit.checkTouch(touch)) {
-                    exit.selected = true;
-                }
+                if (currObject == null) {
 
-                if (playerSpawn.selected) {
-                    startX = (touch.x / Box2DVars.PPM);
-                    startY = (touch.y / Box2DVars.PPM);
-                    playerSpawn.setPos(touch);
-                } else if (exit.selected) {
-                    exitX = (touch.x / Box2DVars.PPM);
-                    exitY = (touch.y / Box2DVars.PPM);
-                    exit.setPos(touch);
+                    if (playerSpawn.checkTouch(touch)) {
+                        setDraggableSelected(playerSpawn);
+                    } else if (exit.checkTouch(touch)) {
+                        setDraggableSelected(exit);
+                    }
+
+                    for (DraggableObject enemy : enemyList) {
+                        if (enemy.checkTouch(touch)) {
+                            setDraggableSelected(enemy);
+                        }
+                    }
+                } else {
+
+                    if (playerSpawn.selected) {
+                        startX = (touch.x / Box2DVars.PPM);
+                        startY = (touch.y / Box2DVars.PPM);
+                    } else if (exit.selected) {
+                        exitX = (touch.x / Box2DVars.PPM);
+                        exitY = (touch.y / Box2DVars.PPM);
+                    }
+
+                    currObject.setPos(touch);
                 }
             }
         }
 
         cam.update();
+    }
+
+    private void setDraggableSelected(DraggableObject dragObj) {
+        dragObj.selected = true;
+        holdingObject = true;
+        currObject = dragObj;
     }
 
     public void checkForTilePlacement(int tileID) {
@@ -211,8 +259,8 @@ public class MapManager {
 
     private Cell findCellById(int tileID) {
 
-        for(Cell c : CELLS) {
-            if(c.getTile().getId() == tileID) {
+        for (Cell c : CELLS) {
+            if (c.getTile().getId() == tileID) {
                 return c;
             }
         }
@@ -227,7 +275,7 @@ public class MapManager {
             for (int row = 0; row < layer1.getHeight(); row++) {
                 for (int col = 0; col < layer1.getWidth(); col++) {
 
-                    if (row != 0 || col != 0 || row != layer1.getHeight() - 1 || col != layer1.getWidth() - 1) { //Borders.
+                    if (row != 0 && col != 0 && row != layer1.getHeight() - 1 && col != layer1.getWidth() - 1) { //Borders.
                         if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
                             layer1.setCell(col, row, null);
                         }
@@ -264,28 +312,30 @@ public class MapManager {
         sb.begin();
         exit.render(sb);
         playerSpawn.render(sb);
+
+        for (DraggableObject enemy : enemyList) {
+            enemy.render(sb);
+        }
+
         sb.end();
     }
 
     public void zoomIn() {
 
         if (cam.zoom > 0.5f) {
-            cam.zoom -= (1.8f*Gdx.graphics.getDeltaTime());
+            cam.zoom -= (1.8f * Gdx.graphics.getDeltaTime());
         }
     }
 
     public void zoomOut() {
 
         if (cam.zoom < 3f) {
-            cam.zoom += (1.8f*Gdx.graphics.getDeltaTime());
+            cam.zoom += (1.8f * Gdx.graphics.getDeltaTime());
         }
     }
 
-    public void setMap(TiledMap map) {
-        this.map = map;
-        layers = map.getLayers();
-        layer1 = (TiledMapTileLayer) layers.get(0);
-        tmr = new OrthogonalTiledMapRenderer(map);
+    public void addEnemy() {
+        enemyList.add(new DraggableObject(Assets.manager.get(Assets.ENEMY_SPAWN, Texture.class), new Vector2((customMapWidth * Box2DVars.PPM) / 2, (customMapHeight * Box2DVars.PPM) / 2)));
     }
 
     public TiledMap getMap() {
@@ -293,14 +343,19 @@ public class MapManager {
     }
 
 
+    /**
+     * DRAGGABLE OBJECT CLASS - used to represent entities in the editor.
+     */
+
     public class DraggableObject extends Entity {
 
+        private Texture texture;
         private boolean selected = false;
         private float boundX, boundY;
 
         public DraggableObject(Texture texture, Vector2 pos) {
             super(texture, pos);
-
+            this.texture = texture;
             boundX = customMapWidth * Box2DVars.PPM - texture.getWidth();
             boundY = customMapHeight * Box2DVars.PPM - texture.getHeight();
 
@@ -310,6 +365,10 @@ public class MapManager {
         public void setPos(Vector2 pos) {
             this.pos = pos.add(-texture.getWidth() / 2, -texture.getHeight() / 2);
             checkMapBounds();
+        }
+
+        public Vector2 getPos() {
+            return pos;
         }
 
         public void checkMapBounds() {
@@ -326,8 +385,8 @@ public class MapManager {
             }
         }
 
-        public boolean isSelected() {
-            return selected;
+        public Texture getTexture() {
+            return texture;
         }
     }
 
@@ -335,16 +394,16 @@ public class MapManager {
         return exit;
     }
 
-    public DraggableObject getPlayerSpawn() {
-        return playerSpawn;
+    public boolean isHoldingObject() {
+        return holdingObject;
     }
 
     public static void reset() {
         exitX = 15;
         exitY = 4;
-
         startX = 3;
         startY = 4;
+        enemyList = new Array<DraggableObject>();
     }
 }
 

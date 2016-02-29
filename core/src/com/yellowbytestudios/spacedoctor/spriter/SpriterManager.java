@@ -31,49 +31,49 @@ public class SpriterManager {
     }
 
     public Player initPlayer() {
-        Player player = new Player(data.getEntity(0));
+        Player player = new Player(data.getEntity("player"));
         player.setScale(0.6f);
         player.setAnimation("idle");
         return player;
     }
 
     public Player initDemon() {
-        Player player = new Player(data.getEntity(1));
-        player.setScale(0.6f);
+        Player player = new Player(data.getEntity("platty"));
+        player.setScale(0.8f);
         player.setAnimation("walking");
         return player;
     }
 
     public Player initGasPickUp() {
-        Player player = new Player(data.getEntity(2));
+        Player player = new Player(data.getEntity("gas_pickup"));
         player.setScale(0.85f);
         player.setAnimation("default");
         return player;
     }
 
     public Player initAmmoPickUp() {
-        Player player = new Player(data.getEntity(3));
+        Player player = new Player(data.getEntity("ammo_pickup"));
         player.setScale(0.85f);
         player.setAnimation("default");
         return player;
     }
 
     public Player initTimePickUp() {
-        Player player = new Player(data.getEntity(4));
+        Player player = new Player(data.getEntity("time_pickup"));
         player.setScale(0.85f);
         player.setAnimation("default");
         return player;
     }
 
     public Player initExit() {
-        Player player = new Player(data.getEntity(5));
+        Player player = new Player(data.getEntity("exit"));
         player.setScale(0.85f);
         player.setAnimation("default");
         return player;
     }
 
     public Player initSelector() {
-        Player player = new Player(data.getEntity(6));
+        Player player = new Player(data.getEntity("selector"));
         player.setScale(1.6f);
         player.setAnimation("default");
         return player;

@@ -27,12 +27,12 @@ import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.TileManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.objects.Box;
-import com.yellowbytestudios.spacedoctor.objects.Bullet;
-import com.yellowbytestudios.spacedoctor.objects.Enemy;
-import com.yellowbytestudios.spacedoctor.objects.Exit;
-import com.yellowbytestudios.spacedoctor.objects.PickUp;
-import com.yellowbytestudios.spacedoctor.objects.Platform;
+import com.yellowbytestudios.spacedoctor.game.objects.Box;
+import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
+import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.objects.Exit;
+import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
 public class GameScreen implements Screen {

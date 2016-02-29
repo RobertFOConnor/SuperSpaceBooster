@@ -68,6 +68,7 @@ public class SpacemanPlayer {
 
         //Start player facing right.
         moveRight();
+        spriter.setObject("head", 1f, 4, headType);
     }
 
 

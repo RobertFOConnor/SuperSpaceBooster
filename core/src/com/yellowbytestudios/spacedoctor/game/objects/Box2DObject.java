@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.objects;
+package com.yellowbytestudios.spacedoctor.game.objects;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;

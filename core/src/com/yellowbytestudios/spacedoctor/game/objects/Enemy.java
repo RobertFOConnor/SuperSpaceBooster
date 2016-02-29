@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.objects;
+package com.yellowbytestudios.spacedoctor.game.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -38,7 +38,11 @@ public class Enemy extends Box2DSprite {
     }
 
     private void moveLeft() {
-        body.setLinearVelocity(-SPEED, velY);
+        if (velX > -SPEED) {
+            body.applyForce(-ACCELERATION, 0, posX, posY, true);
+        } else {
+            body.setLinearVelocity(-SPEED, velY);
+        }
 
         if (facingLeft()) {
             flipSprite();
@@ -46,7 +50,11 @@ public class Enemy extends Box2DSprite {
     }
 
     private void moveRight() {
-        body.setLinearVelocity(SPEED, velY);
+        if (velX < SPEED) {
+            body.applyForce(ACCELERATION, 0, posX, posY, true);
+        } else {
+            body.setLinearVelocity(SPEED, velY);
+        }
 
         if (!facingLeft()) {
             flipSprite();
@@ -104,7 +112,7 @@ public class Enemy extends Box2DSprite {
     }
 
     private boolean facingLeft() {
-        return spriter.flippedX() == 1;
+        return spriter.flippedX() != 1;
     }
 
     private void flipSprite() {

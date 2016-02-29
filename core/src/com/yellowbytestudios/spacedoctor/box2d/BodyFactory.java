@@ -12,12 +12,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
-import com.yellowbytestudios.spacedoctor.objects.Box;
-import com.yellowbytestudios.spacedoctor.objects.Box2DObject;
-import com.yellowbytestudios.spacedoctor.objects.Exit;
-import com.yellowbytestudios.spacedoctor.objects.Enemy;
-import com.yellowbytestudios.spacedoctor.objects.PickUp;
-import com.yellowbytestudios.spacedoctor.objects.Platform;
+import com.yellowbytestudios.spacedoctor.game.objects.Box;
+import com.yellowbytestudios.spacedoctor.game.objects.Exit;
+import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 
 public class BodyFactory {
 
@@ -281,37 +280,45 @@ public class BodyFactory {
         MapLayer ml = tm.getLayers().get("enemies");
         Array<Enemy> enemies = new Array<Enemy>();
 
-        if (ml == null) return new Array<Enemy>();
+        if (ml == null) {
+            for(MapManager.DraggableObject mapObject : MapManager.enemyList) {
+                Vector2 pos = new Vector2(mapObject.getPos().x/100, mapObject.getPos().y/100);
+                enemies.add(createEnemy(world, pos));
+            }
+        } else {
+            for (MapObject mo : ml.getObjects()) {
+                enemies.add(createEnemy(world, getMapObjectPos(mo)));
+            }
+        }
+        return enemies;
+    }
+
+    private static Enemy createEnemy(World world, Vector2 pos) {
 
         float width = 51 / Box2DVars.PPM;
         float height = 75 / Box2DVars.PPM;
 
-        for (MapObject mo : ml.getObjects()) {
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.DynamicBody;
+        cdef.position.set(pos.x+width, pos.y+height);
+        cdef.fixedRotation = true;
 
-            BodyDef cdef = new BodyDef();
-            cdef.type = BodyDef.BodyType.DynamicBody;
-            Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x+width, pos.y+height);
-            cdef.fixedRotation = true;
+        Body body = world.createBody(cdef);
 
-            Body body = world.createBody(cdef);
+        FixtureDef cfdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width, height);
+        cfdef.shape = shape;
+        cfdef.density = 5f;
+        cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
+        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
-            FixtureDef cfdef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(width, height);
-            cfdef.shape = shape;
-            cfdef.density = 5f;
-            cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+        body.createFixture(cfdef).setUserData("enemy");
+        shape.dispose();
 
-            body.createFixture(cfdef).setUserData("enemy");
-            shape.dispose();
-
-            Enemy e = new Enemy(body);
-            enemies.add(e);
-            body.setUserData(e);
-        }
-        return enemies;
+        Enemy e = new Enemy(body);
+        body.setUserData(e);
+        return e;
     }
 
     private static Vector2 getMapObjectPos(MapObject mo) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spriter_data scml_version="1.0" generator="BrashMonkey Spriter" generator_version="r3">
+<spriter_data scml_version="1.0" generator="BrashMonkey Spriter" generator_version="r6">
     <folder id="0">
         <file id="0" name="body.png" width="145" height="133" pivot_x="0.4" pivot_y="0.360902"/>
         <file id="1" name="head.png" width="183" height="178" pivot_x="0.52459" pivot_y="0.134831"/>
@@ -50,7 +50,7 @@
         <file id="7" name="beaky/red_eyes.png" width="92" height="28" pivot_x="0" pivot_y="1"/>
         <file id="8" name="beaky/beak_open.png" width="108" height="66" pivot_x="0" pivot_y="1"/>
     </folder>
-    <entity id="0" name="entity_000">
+    <entity id="0" name="player">
         <obj_info name="bone_000" type="bone" w="60.0162" h="10"/>
         <obj_info name="bone_001" type="bone" w="38.6075" h="10"/>
         <obj_info name="bone_003" type="bone" w="43.3956" h="10"/>
@@ -553,7 +553,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="1" name="entity_001">
+    <entity id="1" name="demon">
         <obj_info name="bone_000" type="bone" w="64.6762" h="10"/>
         <obj_info name="bone_001" type="bone" w="90.2239" h="10"/>
         <obj_info name="bone_002" type="bone" w="62.5638" h="10"/>
@@ -943,7 +943,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="2" name="entity_002">
+    <entity id="2" name="gas_pickup">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -988,7 +988,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="3" name="entity_003">
+    <entity id="3" name="ammo_pickup">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1033,7 +1033,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="4" name="entity_004">
+    <entity id="4" name="time_pickup">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1078,7 +1078,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="5" name="entity_005">
+    <entity id="5" name="exit">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1147,7 +1147,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="6" name="entity_006">
+    <entity id="6" name="selector">
         <animation id="0" name="default" length="500" interval="100">
             <mainline>
                 <key id="0">
@@ -1177,7 +1177,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="7" name="entity_007">
+    <entity id="7" name="platty">
         <obj_info name="bone_000" type="bone" w="120.08" h="10"/>
         <obj_info name="bone_001" type="bone" w="39.5724" h="10"/>
         <obj_info name="bone_002" type="bone" w="41.578" h="10"/>
@@ -1329,7 +1329,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" parent="2" timeline="6" key="1" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="0" z_index="7"/>
                 </key>
                 <key id="1" time="48">
                     <bone_ref id="0" timeline="7" key="0"/>
@@ -1346,7 +1345,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" parent="2" timeline="6" key="2" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="0" z_index="7"/>
                 </key>
                 <key id="2" time="117">
                     <bone_ref id="0" timeline="7" key="0"/>
@@ -1363,7 +1361,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" parent="2" timeline="6" key="3" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="0" z_index="7"/>
                 </key>
                 <key id="3" time="150">
                     <bone_ref id="0" timeline="7" key="1"/>
@@ -1380,7 +1377,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" timeline="6" key="5" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="1" z_index="7"/>
                 </key>
                 <key id="4" time="163">
                     <bone_ref id="0" timeline="7" key="1"/>
@@ -1397,7 +1393,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" timeline="6" key="5" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="1" z_index="7"/>
                 </key>
                 <key id="5" time="172">
                     <bone_ref id="0" timeline="7" key="1"/>
@@ -1414,7 +1409,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" timeline="6" key="5" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="1" z_index="7"/>
                 </key>
                 <key id="6" time="175">
                     <bone_ref id="0" timeline="7" key="1"/>
@@ -1431,7 +1425,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" timeline="6" key="5" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="1" z_index="7"/>
                 </key>
                 <key id="7" time="218">
                     <bone_ref id="0" timeline="7" key="1"/>
@@ -1448,7 +1441,6 @@
                     <object_ref id="4" parent="3" timeline="3" key="0" z_index="4"/>
                     <object_ref id="5" parent="1" timeline="5" key="0" z_index="5"/>
                     <object_ref id="6" timeline="6" key="6" z_index="6"/>
-                    <object_ref id="7" parent="2" timeline="14" key="1" z_index="7"/>
                 </key>
             </mainline>
             <timeline id="0" name="body_000">
@@ -1458,7 +1450,7 @@
             </timeline>
             <timeline id="1" name="beak_closed">
                 <key id="0" spin="0">
-                    <object folder="5" file="8" x="74.65854" y="-8.292683" angle="180"/>
+                    <object folder="5" file="3" x="74.65854" y="-8.292683" angle="180"/>
                 </key>
             </timeline>
             <timeline id="2" name="tail">
@@ -1579,14 +1571,6 @@
                 </key>
                 <key id="1" time="150" spin="0">
                     <bone x="65.165588" y="-9.331043" angle="92.095253"/>
-                </key>
-            </timeline>
-            <timeline id="14" name="red_eyes">
-                <key id="0" spin="0">
-                    <object folder="5" file="7" x="-6.653639" y="54.303192" angle="238.92096"/>
-                </key>
-                <key id="1" time="150" spin="0">
-                    <object folder="5" file="7" x="-6.653639" y="54.303192" angle="238.92096"/>
                 </key>
             </timeline>
         </animation>

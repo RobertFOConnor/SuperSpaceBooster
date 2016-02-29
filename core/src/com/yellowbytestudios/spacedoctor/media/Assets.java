@@ -53,11 +53,21 @@ public class Assets {
     public static final String LARGE_MAP = "mapeditor/large_map.png";
     public static final String NEW_MAP = "mapeditor/new_map.png";
     public static final String LOAD_MAP = "mapeditor/load_map.png";
+    public static final String EXIT_EDITOR = "mapeditor/exit.png";
+    public static final String SIDE_MENU = "mapeditor/side_menu.png";
+    public static final String BLOCK_TAB = "mapeditor/block_tab.png";
+    public static final String ENEMY_TAB = "mapeditor/enemy_tab.png";
 
     public static final String MOVE_BUTTON = "mapeditor/move_button.png";
     public static final String MOVE_BUTTON_SEL = "mapeditor/move_button_selected.png";
     public static final String ERASE = "mapeditor/erase.png";
     public static final String ERASE_SEL = "mapeditor/erase_selected.png";
+    public static final String BOTTOM_BAR = "mapeditor/bottom_bar.png";
+
+    public static final String PLAYER_SPAWN = "mapeditor/player_spawn.png";
+    public static final String EXIT_SPAWN = "mapeditor/exit_icon.png";
+    public static final String ENEMY_SPAWN = "mapeditor/enemy_spawn.png";
+    public static final String ENEMY_ICON = "mapeditor/enemy_icon.png";
 
     //Game objects.
     public static final String BOX = "game_objects/box.png";
@@ -121,11 +131,21 @@ public class Assets {
         manager.load(PLAY_MAP, Texture.class);
         manager.load(SAVE_MAP, Texture.class);
 
+        manager.load(ENEMY_SPAWN, Texture.class);
+        manager.load(ENEMY_ICON, Texture.class);
+        manager.load(PLAYER_SPAWN, Texture.class);
+        manager.load(EXIT_SPAWN, Texture.class);
+        manager.load(BLOCK_TAB, Texture.class);
+        manager.load(ENEMY_TAB, Texture.class);
+
         manager.load(SMALL_MAP, Texture.class);
         manager.load(MEDIUM_MAP, Texture.class);
         manager.load(LARGE_MAP, Texture.class);
         manager.load(NEW_MAP, Texture.class);
         manager.load(LOAD_MAP, Texture.class);
+        manager.load(EXIT_EDITOR, Texture.class);
+        manager.load(SIDE_MENU, Texture.class);
+        manager.load(BOTTOM_BAR, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);

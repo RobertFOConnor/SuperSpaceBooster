@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.objects;
+package com.yellowbytestudios.spacedoctor.game.objects;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,7 +14,7 @@ public class Box2DSprite {
     protected float width;
     protected float height;
     protected float stateTime;
-    protected int associationNumber = 0;
+    protected int[] associationNumbers;
     protected boolean activatable = false;
 
 
@@ -44,8 +44,8 @@ public class Box2DSprite {
         return height;
     }
 
-    public int getAssociationNumber() {
-        return associationNumber;
+    public int[] getAssociationNumbers() {
+        return associationNumbers;
     }
 
     public boolean isActivatable() {
