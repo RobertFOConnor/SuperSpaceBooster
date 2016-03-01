@@ -68,6 +68,8 @@ public class Assets {
     public static final String EXIT_SPAWN = "mapeditor/exit_icon.png";
     public static final String ENEMY_SPAWN = "mapeditor/enemy_spawn.png";
     public static final String ENEMY_ICON = "mapeditor/enemy_icon.png";
+    public static final String TILESHEET = "maps/tileset.png";
+    public static final String TILE_SELECTOR = "mapeditor/tile_buttons_selector.png";
 
     //Game objects.
     public static final String BOX = "game_objects/box.png";
@@ -82,9 +84,7 @@ public class Assets {
 
     //Game GUI.
     public static final String GUI_DISPLAY = "gui/gui_display.png";
-
     public static final String VICTORY = "victory.png";
-
     public static final String LOCKED_HEAD = "menu/locked_head.png";
 
 
@@ -97,6 +97,8 @@ public class Assets {
     public static final String FINISHED_SOUND = "sounds/finished.wav";
     public static final String PICKUP_SOUND = "sounds/pickup.wav";
     public static final String DEATH_SOUND = "sounds/death.wav";
+    public static final String TILE_PLACE = "sounds/tile_place.wav";
+    public static final String TILE_ERASE = "sounds/tile_erase.wav";
 
 
     public static final String MAIN_THEME = "music/main_theme.mp3";
@@ -146,6 +148,8 @@ public class Assets {
         manager.load(EXIT_EDITOR, Texture.class);
         manager.load(SIDE_MENU, Texture.class);
         manager.load(BOTTOM_BAR, Texture.class);
+        manager.load(TILESHEET, Texture.class);
+        manager.load(TILE_SELECTOR, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);
@@ -184,6 +188,8 @@ public class Assets {
         manager.load(FINISHED_SOUND, Sound.class);
         manager.load(PICKUP_SOUND, Sound.class);
         manager.load(DEATH_SOUND, Sound.class);
+        manager.load(TILE_PLACE, Sound.class);
+        manager.load(TILE_ERASE, Sound.class);
 
         manager.load(MAIN_THEME, Music.class);
         manager.load(LEVEL_THEME, Music.class);

@@ -9,6 +9,8 @@ import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 
 public class CustomMap extends TiledMap {
 
+    private String name;
+
     private int[][] tileArray;
 
     private Vector2 exitPos = new Vector2(15, 4);
@@ -21,7 +23,9 @@ public class CustomMap extends TiledMap {
     }
 
 
-    public CustomMap(TiledMap tm) {
+    public CustomMap(String name, TiledMap tm) {
+        this.name = name;
+
         TiledMapTileLayer layer = (TiledMapTileLayer) tm.getLayers().get(0);
         tileArray = new int[layer.getWidth()][layer.getHeight()];
 
@@ -43,6 +47,10 @@ public class CustomMap extends TiledMap {
         for(MapManager.DraggableObject enemy : MapManager.enemyList) {
             enemyArray.add(new Vector2(enemy.getPos().x+enemy.getTexture().getWidth()/2, enemy.getPos().y+enemy.getTexture().getHeight()/2));
         }
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int[][] loadMap() {

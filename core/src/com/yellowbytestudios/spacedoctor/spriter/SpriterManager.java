@@ -78,4 +78,11 @@ public class SpriterManager {
         player.setAnimation("default");
         return player;
     }
+
+    public Player initCoin() {
+        Player player = new Player(data.getEntity("coin"));
+        player.setScale(0.8f);
+        player.setAnimation("default");
+        return player;
+    }
 }

@@ -25,6 +25,7 @@ import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.TileManager;
+import com.yellowbytestudios.spacedoctor.game.objects.Door;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
@@ -53,6 +54,7 @@ public class GameScreen implements Screen {
     private Array<PickUp> pickups;
     private Array<Enemy> enemies;
     private Array<Platform> platforms;
+    private Array<Door> doors;
     private Exit exit;
     private Texture bg;
 
@@ -152,6 +154,7 @@ public class GameScreen implements Screen {
         pickups = BodyFactory.createPickups(world, tileMap);
         enemies = BodyFactory.createEnemies(world, tileMap);
         platforms = BodyFactory.createPlatforms(world, tileMap);
+        doors = BodyFactory.createDoors(world, tileMap);
         exit = BodyFactory.createExits(world, tileMap);
 
         gui = new GUIManager(player, false);
@@ -215,6 +218,10 @@ public class GameScreen implements Screen {
         if (player.isShooting()) {
             addBullet();
             player.setShooting(false);
+        }
+
+        for (Door d : doors) {
+            d.activate();
         }
 
         for (Platform p : platforms) {
@@ -309,6 +316,11 @@ public class GameScreen implements Screen {
         sb.begin();
         sb.draw(bg, cam.position.x - bg.getWidth() / 2, cam.position.y - bg.getHeight() / 2);
         bgManager.render(sb);
+
+        for (Door d : doors) {
+            d.render(sb);
+        }
+
         sb.end();
 
 
@@ -393,6 +405,7 @@ public class GameScreen implements Screen {
     public void goBack() {
 
         SoundManager.switchMusic(Assets.MAIN_THEME);
+        SoundManager.stop(Assets.JETPACK_SOUND);
         world.dispose();
 
         if (!isCustomMap) {

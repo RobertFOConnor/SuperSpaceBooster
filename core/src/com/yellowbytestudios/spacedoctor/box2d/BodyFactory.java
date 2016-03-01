@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
+import com.yellowbytestudios.spacedoctor.game.objects.Door;
 import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
@@ -61,7 +62,7 @@ public class BodyFactory {
             fdef.shape = shape;
             fdef.restitution = 0.03f;
             fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY;
+            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
             body.createFixture(fdef).setUserData("player");
 
 
@@ -209,7 +210,7 @@ public class BodyFactory {
             cdef.type = BodyDef.BodyType.StaticBody;
             String type = mo.getProperties().get("type", String.class);
             if (type == null) { //Default to gas pickup if no type is specified.
-                type = "gas";
+                type = "coin";
             }
 
             Vector2 pos = getMapObjectPos(mo);
@@ -275,6 +276,47 @@ public class BodyFactory {
         }
 
         return platforms;
+    }
+
+
+    public static Array<Door> createDoors(World world, TiledMap tm) {
+
+        Array<Door> doors = new Array<Door>();
+
+        MapLayer ml = tm.getLayers().get("doors");
+        if (ml == null) return new Array<Door>();
+
+
+        for (MapObject mo : ml.getObjects()) {
+
+            Rectangle rectangle = ((RectangleMapObject) mo).getRectangle();
+
+            float width = rectangle.width / PPM;
+            float height = rectangle.height / PPM;
+
+            BodyDef cdef = new BodyDef();
+            cdef.type = BodyDef.BodyType.KinematicBody;
+            Vector2 pos = getMapObjectPos(mo);
+            cdef.position.set(pos.x + (width / 2), pos.y + (height / 2));
+
+            Body body = world.createBody(cdef);
+
+            PolygonShape bodyShape = new PolygonShape();
+            bodyShape.setAsBox(width / 2, height / 2);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.density = 1f;
+            fixtureDef.shape = bodyShape;
+            fixtureDef.filter.categoryBits = Box2DVars.BIT_WALL;
+            fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+            body.createFixture(fixtureDef).setUserData("wall");
+            Door d = new Door(body, width*Box2DVars.PPM, height*Box2DVars.PPM);
+            body.setUserData(d);
+            doors.add(d);
+            bodyShape.dispose();
+        }
+
+        return doors;
     }
 
 

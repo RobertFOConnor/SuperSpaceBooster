@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.game.objects.Entity;
 
@@ -126,6 +127,7 @@ public class MapManager {
         float zoomBoundsX = 600;
         float zoomBoundsY = 400;
         cam.setBounds(-zoomBoundsX, customMapWidth * 100 + zoomBoundsX, -zoomBoundsY, customMapHeight * 100 + zoomBoundsY);
+        cam.zoom = 2f;
 
         map = new TiledMap();
         layers = map.getLayers();
@@ -250,6 +252,9 @@ public class MapManager {
 
                     if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
 
+                        if(layer1.getCell(col, row) == null) {
+                            SoundManager.play(Assets.TILE_PLACE);
+                        }
                         layer1.setCell(col, row, findCellById(tileID));
                     }
                 }
@@ -277,9 +282,20 @@ public class MapManager {
 
                     if (row != 0 && col != 0 && row != layer1.getHeight() - 1 && col != layer1.getWidth() - 1) { //Borders.
                         if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
-                            layer1.setCell(col, row, null);
+
+                            if(layer1.getCell(col, row) != null) {
+                                layer1.setCell(col, row, null);
+                                SoundManager.play(Assets.TILE_ERASE);
+                                System.out.println("ERASED");
+                            }
                         }
                     }
+                }
+            }
+
+            for (DraggableObject enemy : enemyList) {
+                if (enemy.checkTouch(touch)) {
+                    enemyList.removeValue(enemy, true);
                 }
             }
         }

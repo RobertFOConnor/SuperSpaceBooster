@@ -23,6 +23,8 @@
         <file id="2" name="Pick Ups/square2.png" width="120" height="120" pivot_x="0.5" pivot_y="0.5"/>
         <file id="3" name="Pick Ups/round.png" width="90" height="82" pivot_x="0.5" pivot_y="0.5"/>
         <file id="4" name="Pick Ups/clock.png" width="100" height="100" pivot_x="0.5" pivot_y="0.5"/>
+        <file id="5" name="Pick Ups/coin.png" width="70" height="80" pivot_x="0" pivot_y="1"/>
+        <file id="6" name="Pick Ups/shine.png" width="40" height="40" pivot_x="0.5" pivot_y="0.5"/>
     </folder>
     <folder id="3" name="exit">
         <file id="0" name="exit/part1.png" width="200" height="200" pivot_x="0.5" pivot_y="0.5"/>
@@ -988,7 +990,73 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="3" name="ammo_pickup">
+    <entity id="3" name="coin">
+        <animation id="0" name="default" length="1000" interval="100">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="14">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                    <object_ref id="1" timeline="1" key="0" z_index="1"/>
+                </key>
+                <key id="2" time="235">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                    <object_ref id="1" timeline="1" key="1" z_index="1"/>
+                </key>
+                <key id="3" time="494">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                    <object_ref id="1" timeline="1" key="2" z_index="1"/>
+                </key>
+                <key id="4" time="501">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+                <key id="5" time="513">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="1" timeline="2" key="0" z_index="1"/>
+                </key>
+                <key id="6" time="808">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="1" timeline="2" key="1" z_index="1"/>
+                </key>
+                <key id="7" time="917">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="1" timeline="2" key="2" z_index="1"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="coin">
+                <key id="0" spin="0">
+                    <object folder="2" file="5" x="-35" y="40"/>
+                </key>
+                <key id="1" time="501" spin="0">
+                    <object folder="2" file="5" x="-35" y="46"/>
+                </key>
+            </timeline>
+            <timeline id="1" name="shine">
+                <key id="0" time="14" spin="-1">
+                    <object folder="2" file="6" x="23.346304" y="29.571984" a="0"/>
+                </key>
+                <key id="1" time="235" spin="-1">
+                    <object folder="2" file="6" x="23.346304" y="29.571984" angle="252.204011" scale_y="1"/>
+                </key>
+                <key id="2" time="494" spin="-1">
+                    <object folder="2" file="6" x="23.346304" y="29.571984" angle="157.782406" scale_y="1" a="0"/>
+                </key>
+            </timeline>
+            <timeline id="2" name="shine_000">
+                <key id="0" time="513" spin="-1">
+                    <object folder="2" file="6" x="-19.844358" y="-22.568093" a="0"/>
+                </key>
+                <key id="1" time="808" spin="-1">
+                    <object folder="2" file="6" x="-19.844358" y="-22.568093" angle="270"/>
+                </key>
+                <key id="2" time="917" spin="-1">
+                    <object folder="2" file="6" x="-19.844358" y="-22.568093" angle="179.464541" a="0"/>
+                </key>
+            </timeline>
+        </animation>
+    </entity>
+    <entity id="4" name="ammo_pickup">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1033,7 +1101,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="4" name="time_pickup">
+    <entity id="5" name="time_pickup">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1078,7 +1146,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="5" name="exit">
+    <entity id="6" name="exit">
         <animation id="0" name="default" length="1000" interval="100">
             <mainline>
                 <key id="0">
@@ -1147,7 +1215,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="6" name="selector">
+    <entity id="7" name="selector">
         <animation id="0" name="default" length="500" interval="100">
             <mainline>
                 <key id="0">
@@ -1177,7 +1245,7 @@
             </timeline>
         </animation>
     </entity>
-    <entity id="7" name="platty">
+    <entity id="8" name="platty">
         <obj_info name="bone_000" type="bone" w="120.08" h="10"/>
         <obj_info name="bone_001" type="bone" w="39.5724" h="10"/>
         <obj_info name="bone_002" type="bone" w="41.578" h="10"/>

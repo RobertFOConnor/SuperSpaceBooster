@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,8 +25,8 @@ public class EditorGUI {
     private MapManager mapManager;
     private Button zoomIn, zoomOut, moveButton, eraseButton, playMap, saveMap, exitButton;
 
-    private static final Texture tileButtonSelector = new Texture(Gdx.files.internal("mapeditor/tile_buttons_selector.png"));
-    private static final TextureRegion tileset = new TextureRegion(new Texture(Gdx.files.internal("maps/tileset.png")));
+    private static final Texture tileButtonSelector = Assets.manager.get(Assets.TILE_SELECTOR, Texture.class);
+    private static final TextureRegion tileset = new TextureRegion(Assets.manager.get(Assets.TILESHEET, Texture.class));
     private static final NinePatch bottom_bg = new NinePatch(Assets.manager.get(Assets.BOTTOM_BAR, Texture.class), 10, 10, 10, 10);
     private int tileID = -1;
 
@@ -53,37 +54,32 @@ public class EditorGUI {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (zoomIn.checkTouch(touch)) {
+            if (zoomIn.checkTouch(touch)) { //ZOOM IN
                 mapManager.zoomIn();
-            } else if (zoomOut.checkTouch(touch)) {
+
+            } else if (zoomOut.checkTouch(touch)) { //ZOOM OUT
                 mapManager.zoomOut();
-            } else if (playMap.checkTouch(touch)) {
+
+            } else if (playMap.checkTouch(touch)) { //TEST PLAY MAP
                 ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
-            } else if (saveMap.checkTouch(touch)) {
 
-                if (MainGame.saveData.getMyMaps().size == 0) {
-                    MainGame.saveData.getMyMaps().add(new CustomMap(mapManager.getMap()));
-                } else {
-                    MainGame.saveData.getMyMaps().set(0, new CustomMap(mapManager.getMap()));
-                }
+            } else if (saveMap.checkTouch(touch) && Gdx.input.justTouched()) { //SAVE MAP
+                saveMap();
 
-                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-
-                //MAP SAVED MESSAGE DISPLAY HERE!!!!
-
-            } else if (exitButton.checkTouch(touch)) {
-
+            } else if (exitButton.checkTouch(touch)) { //EXIT EDITOR
                 ScreenManager.setScreen(new MainMenuScreen());
 
             } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 160)) {
                 //CHECK MAP FOR INTERACTION.
 
+                if (eraseButton.isPressed()) {
+                    mapManager.eraseTiles();
+                }
+
                 if (!mapManager.isHoldingObject()) {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
-                    } else if (eraseButton.isPressed()) {
-                        mapManager.eraseTiles();
-                    } else if (sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
+                    } else if (!eraseButton.isPressed() && sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
                         mapManager.checkForTilePlacement(tileID);
                     }
                 }
@@ -118,11 +114,16 @@ public class EditorGUI {
         }
     }
 
+    private void saveMap() {
+        MyTextInputListener listener = new MyTextInputListener();
+        Gdx.input.getTextInput(listener, "Save Map", "", "Enter Map Name");
+    }
+
     public void render(SpriteBatch sb) {
         zoomIn.render(sb);
         zoomOut.render(sb);
 
-        bottom_bg.draw(sb, 0, 0, 1920, 160);
+        bottom_bg.draw(sb, 0, 0, MainGame.WIDTH, 160);
         sideMenu.render(sb);
         moveButton.render(sb);
         eraseButton.render(sb);
@@ -224,8 +225,10 @@ public class EditorGUI {
 
                 if (blockTab.checkTouch(touch)) {
                     state = BLOCK_STATE;
+                    eraseButton.setPressed(false);
                 } else if (enemyTab.checkTouch(touch)) {
                     state = ENEMY_STATE;
+                    eraseButton.setPressed(false);
                 }
 
 
@@ -296,6 +299,25 @@ public class EditorGUI {
             }
 
             tileButtons.add(new TileButton(new TextureRegion(tileset, sheetX, sheetY, (int) Box2DVars.PPM, (int) Box2DVars.PPM), new Vector2(30 + (120 * (tileButtons.size % 2)), bottomY), tileID));
+        }
+    }
+
+    public class MyTextInputListener implements Input.TextInputListener {
+        @Override
+        public void input (String text) {
+
+            if(MainGame.saveData.getMyMaps().size < 12) {
+                MainGame.saveData.getMyMaps().add(new CustomMap(text, mapManager.getMap()));
+            } else {
+                MainGame.saveData.getMyMaps().set(11, new CustomMap(text, mapManager.getMap()));
+            }
+            MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+
+            //MAP SAVED MESSAGE DISPLAY HERE!!!!
+        }
+
+        @Override
+        public void canceled () {
         }
     }
 }

@@ -2,34 +2,35 @@ package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
+import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
-import com.yellowbytestudios.spacedoctor.screens.HelmetSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.LevelSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
-import com.yellowbytestudios.spacedoctor.screens.SettingsScreen;
-import com.yellowbytestudios.spacedoctor.screens.TitleScreen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 
-
-public class NewLoadScreen implements Screen {
+public class LoadMapScreen implements Screen {
 
     private OrthoCamera camera;
     private Vector2 touch;
     private BackgroundManager bg;
     private SpriteText title;
-    private SpriteButton newMapButton, loadMapButton;
+    private Array<LoadMapButton> mapButtons;
     private SpriteButton backButton;
-    private float buttonY = 180;
 
 
     @Override
@@ -39,18 +40,35 @@ public class NewLoadScreen implements Screen {
         touch = new Vector2();
 
         bg = new BackgroundManager();
-        newMapButton = new SpriteButton(Assets.NEW_MAP, new Vector2(-600, buttonY));
-        loadMapButton = new SpriteButton(Assets.LOAD_MAP, new Vector2(MainGame.WIDTH, buttonY));
-        title = new SpriteText("PLEASE SELECT AN OPTION", Fonts.timerFont);
+        title = new SpriteText("SELECT A MAP TO LOAD", Fonts.timerFont);
         title.centerText();
+
+        setupMapButtons();
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
-        AnimationManager.applyAnimation(newMapButton, 200, buttonY);
-        AnimationManager.applyAnimation(loadMapButton, 1120, buttonY);
         AnimationManager.startAnimation();
+    }
+
+    private void setupMapButtons() {
+        mapButtons = new Array<LoadMapButton>();
+
+        float x = 150;
+        float y = 100;
+
+        for (CustomMap cm : MainGame.saveData.getMyMaps()) {
+            LoadMapButton lmb = new LoadMapButton(cm.getName(), new Vector2(x, y-MainGame.HEIGHT));
+            mapButtons.add(lmb);
+            AnimationManager.applyAnimation(lmb, x, y);
+
+            y += 180;
+            if(mapButtons.size % 4 == 0) {
+                x += 560;
+                y = 100;
+            }
+        }
     }
 
 
@@ -61,23 +79,22 @@ public class NewLoadScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(new MapEditorScreen());
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(new MapEditorScreen());
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (newMapButton.checkTouch(touch)) {
-                advanceScreen(new SizeSelectScreen());
-            } else if(loadMapButton.checkTouch(touch)) {
-                if (MainGame.saveData.getMyMaps().size > 0) {
-                    advanceScreen(new LoadMapScreen());
+            for (LoadMapButton lmb : mapButtons) {
+                if (lmb.checkTouch(touch)) {
+                    ScreenManager.setScreen(new MapEditorScreen(MainGame.saveData.getMyMaps().get(mapButtons.indexOf(lmb, true))));
+                    System.out.println("clicked");
                 }
-            } else if (backButton.checkTouch(touch)) {
+            }
+
+            if (backButton.checkTouch(touch)) {
                 goBack();
             }
         }
@@ -87,9 +104,11 @@ public class NewLoadScreen implements Screen {
     private void advanceScreen(final Screen s) {
 
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
-        AnimationManager.applyAnimation(newMapButton, -600, buttonY);
-        AnimationManager.applyAnimation(loadMapButton, MainGame.WIDTH, buttonY);
-        AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), s);
+        for(LoadMapButton lb : mapButtons) {
+            AnimationManager.applyAnimation(lb, lb.getX(), lb.getY()-MainGame.HEIGHT);
+        }
+
+        AnimationManager.applyExitAnimation(backButton, -150, 900, s);
 
         AnimationManager.startAnimation();
     }
@@ -102,9 +121,39 @@ public class NewLoadScreen implements Screen {
         bg.render(sb);
         title.draw(sb);
         backButton.draw(sb);
-        newMapButton.draw(sb);
-        loadMapButton.draw(sb);
+
+        for(LoadMapButton lmb : mapButtons) {
+            lmb.draw(sb);
+        }
         sb.end();
+    }
+
+    private class LoadMapButton extends SpriteButton {
+
+        private NinePatch bg;
+        private String name;
+        private int width = 500;
+        private int height = 150;
+
+        public LoadMapButton(String name, Vector2 pos) {
+            super(Assets.BOX, pos);
+            this.name = name;
+            if(name == null) {
+                this.name = "Map name here";
+            }
+
+            this.bg = new NinePatch(getTexture(), 40, 40, 40, 40);
+            setRegionWidth(width);
+            setRegionHeight(height);
+        }
+
+        @Override
+        public void draw(Batch sb) {
+            bg.draw(sb, getX(), getY(), width, height);
+            Fonts.GUIFont.setColor(Color.BLACK);
+            Fonts.GUIFont.draw(sb, name, getX() + 50, getY() + 90);
+            Fonts.GUIFont.setColor(Color.WHITE);
+        }
     }
 
     @Override
@@ -139,6 +188,6 @@ public class NewLoadScreen implements Screen {
 
     @Override
     public void goBack() {
-        advanceScreen(new MainMenuScreen());
+        advanceScreen(new NewLoadScreen());
     }
 }

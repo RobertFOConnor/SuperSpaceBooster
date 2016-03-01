@@ -27,6 +27,8 @@ public class PickUp extends Box2DSprite {
             spriter = MainGame.spriterManager.initAmmoPickUp();
         } else if (type.equals("time")) {
             spriter = MainGame.spriterManager.initTimePickUp();
+        } else {
+            spriter = MainGame.spriterManager.initCoin();
         }
     }
 
