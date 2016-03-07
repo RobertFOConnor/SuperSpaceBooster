@@ -49,6 +49,7 @@ public class GameScreen implements Screen {
 
     private Box2DContactListeners contactListener;
 
+    //GAME-OBJECT ARRAYS.
     private Array<Bullet> bullets;
     private Array<Box> boxes;
     private Array<PickUp> pickups;
@@ -110,6 +111,7 @@ public class GameScreen implements Screen {
         setupMap();
     }
 
+
     private void setupMap() {
 
         //Setup camera.
@@ -119,13 +121,14 @@ public class GameScreen implements Screen {
         contactListener = new Box2DContactListeners();
         world.setContactListener(contactListener);
 
-        TileManager tileManager;
-        tileManager = new TileManager();
+        TileManager tileManager = new TileManager();
         tileManager.createWalls(world, tileMap);
 
         // Set camera boundries.
-        b2dCam.setBounds(0, tileManager.getMapWidth() / PPM, 0, tileManager.getMapHeight() / PPM);
-        cam.setBounds(0, tileManager.getMapWidth(), 0, tileManager.getMapHeight());
+        int mapWidth = tileManager.getMapWidth();
+        int mapHeight = tileManager.getMapHeight();
+        b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
+        cam.setBounds(0, mapWidth, 0, mapHeight);
 
 
         float startX;
@@ -148,7 +151,7 @@ public class GameScreen implements Screen {
         bullets = new Array<Bullet>();
 
         bg = Assets.manager.get(Assets.BG, Texture.class);
-        bgManager = new LevelBackgroundManager(tileManager.getMapWidth(), tileManager.getMapHeight());
+        bgManager = new LevelBackgroundManager(mapWidth, mapHeight);
 
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);

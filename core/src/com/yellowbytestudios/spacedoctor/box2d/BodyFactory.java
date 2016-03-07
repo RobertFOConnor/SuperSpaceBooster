@@ -311,7 +311,7 @@ public class BodyFactory {
             fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
 
             body.createFixture(fixtureDef).setUserData("wall");
-            Door d = new Door(body, width*Box2DVars.PPM, height*Box2DVars.PPM);
+            Door d = new Door(body, width * Box2DVars.PPM, height * Box2DVars.PPM);
             body.setUserData(d);
             doors.add(d);
             bodyShape.dispose();
@@ -332,8 +332,10 @@ public class BodyFactory {
                 enemies.add(createEnemy(world, pos));
             }
         } else {
-            for (MapObject mo : ml.getObjects()) {
-                enemies.add(createEnemy(world, getMapObjectPos(mo)));
+            if (ml != null) {
+                for (MapObject mo : ml.getObjects()) {
+                    enemies.add(createEnemy(world, getMapObjectPos(mo)));
+                }
             }
         }
         return enemies;

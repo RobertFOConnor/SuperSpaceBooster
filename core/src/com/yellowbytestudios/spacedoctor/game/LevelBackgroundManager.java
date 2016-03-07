@@ -19,7 +19,6 @@ public class LevelBackgroundManager {
         farLayer = new Array<BackgroundObject>();
 
         int temp = ((width*height)/1000000);
-        System.out.println(temp);
 
         for (int i = 0; i < temp-3; i++) {
             int x = (int) (Math.random() * width);
