@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 public class BodyFactory {
 
@@ -325,7 +326,7 @@ public class BodyFactory {
         MapLayer ml = tm.getLayers().get("enemies");
         Array<Enemy> enemies = new Array<Enemy>();
 
-        if (ml == null) {
+        if (GameScreen.customMap != null) {
             for (MapManager.DraggableObject mapObject : MapManager.enemyList) {
                 Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
                 enemies.add(createEnemy(world, pos));

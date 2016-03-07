@@ -12,7 +12,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.game.Button;
-import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
@@ -25,9 +25,9 @@ public class EditorGUI {
     private MapManager mapManager;
     private Button zoomIn, zoomOut, moveButton, eraseButton, playMap, saveMap, exitButton;
 
-    private static final Texture tileButtonSelector = Assets.manager.get(Assets.TILE_SELECTOR, Texture.class);
-    private static final TextureRegion tileset = new TextureRegion(Assets.manager.get(Assets.TILESHEET, Texture.class));
-    private static final NinePatch bottom_bg = new NinePatch(Assets.manager.get(Assets.BOTTOM_BAR, Texture.class), 10, 10, 10, 10);
+    private Texture tileButtonSelector;
+    private TextureRegion tileset;
+    private NinePatch bottom_bg;
     private int tileID = -1;
 
     private ItemSideMenu sideMenu;
@@ -38,13 +38,18 @@ public class EditorGUI {
         camera.resize();
         touch = new Vector2();
 
-        zoomIn = new Button(Assets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
-        zoomOut = new Button(Assets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 285));
-        moveButton = new Button(Assets.manager.get(Assets.MOVE_BUTTON, Texture.class), Assets.manager.get(Assets.MOVE_BUTTON_SEL, Texture.class), new Vector2(20, 20));
-        eraseButton = new Button(Assets.manager.get(Assets.ERASE, Texture.class), Assets.manager.get(Assets.ERASE_SEL, Texture.class), new Vector2(180, 20));
-        playMap = new Button(Assets.PLAY_MAP, new Vector2(MainGame.WIDTH - 280 - 140, 20));
-        saveMap = new Button(Assets.SAVE_MAP, new Vector2(MainGame.WIDTH - 280, 20));
-        exitButton = new Button(Assets.EXIT_EDITOR, new Vector2(MainGame.WIDTH - 140, 20));
+        zoomIn = new Button(MapEditorAssets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170), true);
+        zoomOut = new Button(MapEditorAssets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 285), true);
+        moveButton = new Button(MapEditorAssets.manager.get(MapEditorAssets.MOVE_BUTTON, Texture.class), MapEditorAssets.manager.get(MapEditorAssets.MOVE_BUTTON_SEL, Texture.class), new Vector2(20, 20));
+        eraseButton = new Button(MapEditorAssets.manager.get(MapEditorAssets.ERASE, Texture.class), MapEditorAssets.manager.get(MapEditorAssets.ERASE_SEL, Texture.class), new Vector2(180, 20));
+        playMap = new Button(MapEditorAssets.PLAY_MAP, new Vector2(MainGame.WIDTH - 280 - 140, 20), true);
+        saveMap = new Button(MapEditorAssets.SAVE_MAP, new Vector2(MainGame.WIDTH - 280, 20), true);
+        exitButton = new Button(MapEditorAssets.EXIT_EDITOR, new Vector2(MainGame.WIDTH - 140, 20), true);
+
+        tileButtonSelector = MapEditorAssets.manager.get(MapEditorAssets.TILE_SELECTOR, Texture.class);
+        tileset = new TextureRegion(MapEditorAssets.manager.get(MapEditorAssets.TILESHEET, Texture.class));
+        bottom_bg = new NinePatch(MapEditorAssets.manager.get(MapEditorAssets.BOTTOM_BAR, Texture.class), 10, 10, 10, 10);
+
 
         sideMenu = new ItemSideMenu();
     }
@@ -68,6 +73,7 @@ public class EditorGUI {
 
             } else if (exitButton.checkTouch(touch)) { //EXIT EDITOR
                 ScreenManager.setScreen(new MainMenuScreen());
+                MapEditorAssets.dispose();
 
             } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 160)) {
                 //CHECK MAP FOR INTERACTION.
@@ -162,7 +168,7 @@ public class EditorGUI {
         private boolean selected = false;
 
         public EnemyButton(String texture, Vector2 pos, int id) {
-            super(texture, pos);
+            super(texture, pos, true);
             this.id = id;
         }
 
@@ -193,17 +199,17 @@ public class EditorGUI {
 
         private Array<TileButton> tileButtons;
         private Array<EnemyButton> enemyButtons;
-        private NinePatch sideMenuBG = new NinePatch(Assets.manager.get(Assets.SIDE_MENU, Texture.class), 10, 10, 10, 10);
+        private NinePatch sideMenuBG = new NinePatch(MapEditorAssets.manager.get(MapEditorAssets.SIDE_MENU, Texture.class), 10, 10, 10, 10);
 
         private float bottomY = 290;
 
         public ItemSideMenu() {
 
-            blockTab = new Button(Assets.BLOCK_TAB, new Vector2(270, 830));
-            enemyTab = new Button(Assets.ENEMY_TAB, new Vector2(270, 710));
+            blockTab = new Button(MapEditorAssets.BLOCK_TAB, new Vector2(270, 830), true);
+            enemyTab = new Button(MapEditorAssets.ENEMY_TAB, new Vector2(270, 710), true);
 
             enemyButtons = new Array<EnemyButton>();
-            enemyButtons.add(new EnemyButton(Assets.ENEMY_ICON, new Vector2(30, bottomY), 0));
+            enemyButtons.add(new EnemyButton(MapEditorAssets.ENEMY_ICON, new Vector2(30, bottomY), 0));
 
             tileButtons = new Array<TileButton>();
 

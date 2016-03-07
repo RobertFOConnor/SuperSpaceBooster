@@ -17,8 +17,9 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
-import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.game.objects.Entity;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 
 public class MapManager {
 
@@ -90,7 +91,7 @@ public class MapManager {
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
         for (Vector2 enemy : savedMap.getEnemyArray()) {
-            enemyList.add(new DraggableObject(Assets.manager.get(Assets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
+            enemyList.add(new DraggableObject(Assets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
         }
     }
 
@@ -114,8 +115,8 @@ public class MapManager {
     }
 
     private void setupPlayerAndExit() {
-        exit = new DraggableObject(Assets.manager.get(Assets.EXIT_SPAWN, Texture.class), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
-        playerSpawn = new DraggableObject(Assets.manager.get(Assets.PLAYER_SPAWN, Texture.class), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
+        exit = new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.EXIT_SPAWN, Texture.class), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
+        playerSpawn = new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.PLAYER_SPAWN, Texture.class), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
     }
 
 
@@ -351,7 +352,7 @@ public class MapManager {
     }
 
     public void addEnemy() {
-        enemyList.add(new DraggableObject(Assets.manager.get(Assets.ENEMY_SPAWN, Texture.class), new Vector2((customMapWidth * Box2DVars.PPM) / 2, (customMapHeight * Box2DVars.PPM) / 2)));
+        enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2((customMapWidth * Box2DVars.PPM) / 2, (customMapHeight * Box2DVars.PPM) / 2)));
     }
 
     public TiledMap getMap() {

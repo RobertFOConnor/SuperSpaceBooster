@@ -56,17 +56,22 @@ public class LoadMapScreen implements Screen {
         mapButtons = new Array<LoadMapButton>();
 
         float x = 150;
-        float y = 100;
+        float y = 640;
+
+        if(MainGame.saveData.getMyMaps().size <= 4) {
+            x += 560;
+        }
+
 
         for (CustomMap cm : MainGame.saveData.getMyMaps()) {
             LoadMapButton lmb = new LoadMapButton(cm.getName(), new Vector2(x, y-MainGame.HEIGHT));
             mapButtons.add(lmb);
             AnimationManager.applyAnimation(lmb, x, y);
 
-            y += 180;
+            y -= 180;
             if(mapButtons.size % 4 == 0) {
                 x += 560;
-                y = 100;
+                y = 640;
             }
         }
     }
@@ -89,7 +94,7 @@ public class LoadMapScreen implements Screen {
 
             for (LoadMapButton lmb : mapButtons) {
                 if (lmb.checkTouch(touch)) {
-                    ScreenManager.setScreen(new MapEditorScreen(MainGame.saveData.getMyMaps().get(mapButtons.indexOf(lmb, true))));
+                    ScreenManager.setScreen(new MapEditorSplashScreen(new MapEditorScreen(MainGame.saveData.getMyMaps().get(mapButtons.indexOf(lmb, true)))));
                     System.out.println("clicked");
                 }
             }

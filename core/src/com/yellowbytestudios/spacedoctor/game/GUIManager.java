@@ -62,6 +62,8 @@ public class GUIManager {
         sb.draw(gui_display, 100, MainGame.HEIGHT - 200);
         Fonts.GUIFont.draw(sb, player.getMaxAmmo() + "/" + player.getCurrAmmo(), 225, MainGame.HEIGHT - 127);
 
+        Fonts.GUIFont.draw(sb, String.format("%07d", player.getCoins()), MainGame.WIDTH-250, MainGame.HEIGHT - 70);
+
         if(isTimed) {
             drawTimer(sb);
         }

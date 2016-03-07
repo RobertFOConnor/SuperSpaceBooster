@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 
 public class Button {
 
@@ -14,6 +15,12 @@ public class Button {
 
     public Button(String imgRef, Vector2 pos) {
         this.texture = Assets.manager.get(imgRef, Texture.class);
+        this.texture_pressed = texture;
+        this.pos = pos;
+    }
+
+    public Button(String imgRef, Vector2 pos, boolean mapButton) {
+        this.texture = MapEditorAssets.manager.get(imgRef, Texture.class);
         this.texture_pressed = texture;
         this.pos = pos;
     }

@@ -8,6 +8,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 /**
  * Created by BobbyBoy on 10-Jan-16.
@@ -45,6 +46,9 @@ public class PickUp extends Box2DSprite {
             player.setCurrGas(player.getCurrGas() + 250);
         } else if (type.equals("time")) {
             GUIManager.duration += 15000;
+        } else {
+            player.setCoins(player.getCoins()+1);
+            GameScreen.particleManager.addCoinEffect((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM));
         }
         SoundManager.play(Assets.PICKUP_SOUND);
     }

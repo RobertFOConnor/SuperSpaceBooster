@@ -44,6 +44,9 @@ public class SpacemanPlayer {
     //Spriter variables.
     private int headType = MainGame.saveData.getHead();
 
+    //Coins
+    private static int coins = 0;
+
 
     public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
         this.body = body;
@@ -316,5 +319,13 @@ public class SpacemanPlayer {
         spriter.setAnimation("death");
         spriter.addListener(listener);
         isDead = true;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
     }
 }

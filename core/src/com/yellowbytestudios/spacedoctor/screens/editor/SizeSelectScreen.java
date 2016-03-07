@@ -10,6 +10,7 @@ import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
 import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
@@ -60,11 +61,11 @@ public class SizeSelectScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(new MapEditorScreen());
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(new MapEditorScreen());
+            advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
 
         } else if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
@@ -74,17 +75,17 @@ public class SizeSelectScreen implements Screen {
                 MapManager.customMapWidth = 25;
                 MapManager.customMapHeight = 15;
 
-                advanceScreen(new MapEditorScreen());
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
             } else if(mediumButton.checkTouch(touch)) {
                 MapManager.customMapWidth = 40;
                 MapManager.customMapHeight = 20;
 
-                advanceScreen(new MapEditorScreen());
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
             } else if(largeButton.checkTouch(touch)) {
                 MapManager.customMapWidth = 70;
                 MapManager.customMapHeight = 40;
 
-                advanceScreen(new MapEditorScreen());
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
             } else if (backButton.checkTouch(touch)) {
                 goBack();
             }
