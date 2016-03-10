@@ -91,7 +91,7 @@ public class MapManager {
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
         for (Vector2 enemy : savedMap.getEnemyArray()) {
-            enemyList.add(new DraggableObject(Assets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
+            enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
         }
     }
 
@@ -253,7 +253,7 @@ public class MapManager {
 
                     if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
 
-                        if(layer1.getCell(col, row) == null) {
+                        if (layer1.getCell(col, row) == null) {
                             SoundManager.play(Assets.TILE_PLACE);
                         }
                         layer1.setCell(col, row, findCellById(tileID));
@@ -284,7 +284,7 @@ public class MapManager {
                     if (row != 0 && col != 0 && row != layer1.getHeight() - 1 && col != layer1.getWidth() - 1) { //Borders.
                         if (new Rectangle(col * 100, row * 100, 100, 100).contains(touch)) {
 
-                            if(layer1.getCell(col, row) != null) {
+                            if (layer1.getCell(col, row) != null) {
                                 layer1.setCell(col, row, null);
                                 SoundManager.play(Assets.TILE_ERASE);
                                 System.out.println("ERASED");
@@ -352,7 +352,11 @@ public class MapManager {
     }
 
     public void addEnemy() {
-        enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2((customMapWidth * Box2DVars.PPM) / 2, (customMapHeight * Box2DVars.PPM) / 2)));
+        if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
+            if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
+                enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), touch));
+            }
+        }
     }
 
     public TiledMap getMap() {

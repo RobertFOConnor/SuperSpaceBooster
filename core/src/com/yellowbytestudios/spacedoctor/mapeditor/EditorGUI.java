@@ -29,6 +29,7 @@ public class EditorGUI {
     private TextureRegion tileset;
     private NinePatch bottom_bg;
     private int tileID = -1;
+    private int enemyID = -1;
 
     private ItemSideMenu sideMenu;
 
@@ -85,8 +86,12 @@ public class EditorGUI {
                 if (!mapManager.isHoldingObject()) {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
-                    } else if (!eraseButton.isPressed() && sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
-                        mapManager.checkForTilePlacement(tileID);
+                    } else if (!eraseButton.isPressed()) {
+                        if(sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
+                            mapManager.checkForTilePlacement(tileID);
+                        } else if(sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
+                            mapManager.addEnemy();
+                        }
                     }
                 }
             }
@@ -223,6 +228,8 @@ public class EditorGUI {
 
             tileButtons.get(0).selected = true;
             tileID = tileButtons.get(0).id;
+            enemyButtons.get(0).selected = true;
+            enemyID = enemyButtons.get(0).id;
         }
 
         public boolean checkTouch() {
@@ -255,9 +262,13 @@ public class EditorGUI {
                     for (EnemyButton eb : enemyButtons) {
                         if (eb.checkTouch(touch)) {
 
-                            if (Gdx.input.justTouched()) {
-                                mapManager.addEnemy();
+                            for (EnemyButton uneb : enemyButtons) {
+                                uneb.selected = false;
                             }
+                            eraseButton.setPressed(false);
+                            eb.selected = true;
+                            enemyID = eb.id;
+                            return true;
                         }
                     }
                 }

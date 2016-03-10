@@ -13,6 +13,7 @@ import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.HelmetSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
@@ -43,6 +44,7 @@ public class SpacemanPlayer {
 
     //Spriter variables.
     private int headType = MainGame.saveData.getHead();
+    private float[] gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
 
     //Coins
     private static int coins = 0;
@@ -254,9 +256,9 @@ public class SpacemanPlayer {
 
     private void addSmoke() {
         if (!facingLeft()) {
-            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2), (int) (posY * 100 - HEIGHT / 2));
+            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2), (int) (posY * 100 - HEIGHT / 2), gasColor);
         } else {
-            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2));
+            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2), gasColor);
         }
     }
 

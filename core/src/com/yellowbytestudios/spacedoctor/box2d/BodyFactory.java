@@ -44,7 +44,7 @@ public class BodyFactory {
 
             // Create circle for players head.
             CircleShape circleShape = new CircleShape();
-            circleShape.setRadius(51 / PPM);
+            circleShape.setRadius(49 / PPM);
             circleShape.setPosition(new Vector2(0, 22 / PPM));
 
             // Create Fixture Definition for head collision.

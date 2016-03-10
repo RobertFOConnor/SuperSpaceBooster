@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -164,18 +165,6 @@ public class GameScreen implements Screen {
         atExit = false;
     }
 
-    public void addBullet() {
-
-        Bullet bullet;
-        int dir = 1;
-        if (player.facingLeft()) {
-            dir = -1;
-        }
-        bullet = new Bullet(BodyFactory.createBody(world, "BULLET"), new Vector2(dir * 2100, 0));
-        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y, 0);
-        bullets.add(bullet);
-    }
-
     @Override
     public void update(float step) {
         world.step(step, 8, 3);
@@ -191,38 +180,21 @@ public class GameScreen implements Screen {
         updateCameras();
         player.update();
         gui.update();
-
-        if (contactListener.getBodies().size > 0) {
-            for (Fixture f : contactListener.getBodies()) {
-                Body b = f.getBody();
-                if (f.getUserData().equals("bullet")) {
-                    bullets.removeValue((Bullet) b.getUserData(), true);
-                } else if (f.getUserData().equals("pickup")) {
-                    PickUp pickUp = (PickUp) b.getUserData();
-                    pickUp.activate(player);
-                    pickups.removeValue(pickUp, true);
-                }
-                world.destroyBody(b);
-            }
-        }
-
-        if (contactListener.getEnemy() != null) {
-
-            Enemy e = (Enemy) contactListener.getEnemy().getUserData();
-            e.setHealth(e.getHealth() - 1);
-
-            if (e.getHealth() <= 0) {
-                enemies.removeValue(e, true);
-                world.destroyBody(contactListener.getEnemy());
-            }
-            contactListener.nullifyEnemy();
-        }
+        removeObjects();
+        removeEnemies();
+        updateObjects();
 
         if (player.isShooting()) {
             addBullet();
             player.setShooting(false);
         }
 
+        if (contactListener.isAtExit()) {
+            exitLevel();
+        }
+    }
+
+    private void updateObjects() {
         for (Door d : doors) {
             d.activate();
         }
@@ -238,34 +210,76 @@ public class GameScreen implements Screen {
         for (Enemy e : enemies) {
             e.update(player);
         }
+    }
 
-        if (contactListener.isAtExit()) {
-
-            SoundManager.play(Assets.FINISHED_SOUND);
-            SoundManager.stop(Assets.JETPACK_SOUND);
-            SoundManager.switchMusic(Assets.MAIN_THEME);
-
-            if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
-                ScreenManager.setScreen(new MapEditorScreen(customMap));
-            } else {
-
-                world.dispose();
-
-                if (levelNo != 10) {
-                    MainGame.saveData.unlockHead(levelNo);
-                    MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
-                    MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-                    ScreenManager.setScreen(new LevelSelectScreen());
-                } else {
-                    ScreenManager.setScreen(new ResultsScreen());
+    private void removeObjects() {
+        if (contactListener.getBodies().size > 0) {
+            for (Fixture f : contactListener.getBodies()) {
+                Body b = f.getBody();
+                if (f.getUserData().equals("bullet")) {
+                    bullets.removeValue((Bullet) b.getUserData(), true);
+                } else if (f.getUserData().equals("pickup")) {
+                    PickUp pickUp = (PickUp) b.getUserData();
+                    pickUp.activate(player);
+                    pickups.removeValue(pickUp, true);
                 }
+                world.destroyBody(b);
             }
-            customMap = null;
         }
+    }
+
+    private void removeEnemies() {
+        if (contactListener.getEnemy() != null) {
+
+            Enemy e = (Enemy) contactListener.getEnemy().getUserData();
+            e.setHealth(e.getHealth() - 1);
+
+            if (e.getHealth() <= 0) {
+                enemies.removeValue(e, true);
+                world.destroyBody(contactListener.getEnemy());
+            }
+            contactListener.nullifyEnemy();
+        }
+    }
+
+    public void addBullet() {
+
+        Bullet bullet;
+        int dir = 1;
+        if (player.facingLeft()) {
+            dir = -1;
+        }
+        bullet = new Bullet(BodyFactory.createBody(world, "BULLET"), new Vector2(dir * 2100, 0));
+        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y, 0);
+        bullets.add(bullet);
+    }
+
+    private void exitLevel() {
+        SoundManager.play(Assets.FINISHED_SOUND);
+        SoundManager.stop(Assets.JETPACK_SOUND);
+        SoundManager.switchMusic(Assets.MAIN_THEME);
+
+        if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
+            ScreenManager.setScreen(new MapEditorScreen(customMap));
+        } else {
+
+            world.dispose();
+
+            if (levelNo != 10) {
+                MainGame.saveData.unlockHead(levelNo);
+                MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
+                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                ScreenManager.setScreen(new LevelSelectScreen());
+            } else {
+                ScreenManager.setScreen(new ResultsScreen());
+            }
+        }
+        customMap = null;
     }
 
     private void killPlayer() {
         if (!dieing) {
+            SoundManager.stop(Assets.JETPACK_SOUND);
             SoundManager.play(Assets.DEATH_SOUND);
 
             Player.PlayerListener myListener = new Player.PlayerListener() {
@@ -304,7 +318,27 @@ public class GameScreen implements Screen {
         float targetX = player.getPos().x * PPM + MainGame.WIDTH / 50;
         float targetY = player.getPos().y * PPM + MainGame.HEIGHT / 50;
 
-        cam.setPosition(targetX, targetY);
+        float newX;
+        float newY;
+        float SPEEDX = Gdx.graphics.getDeltaTime() * (Math.abs(targetX-cam.position.x)*1.8f);
+        float SPEEDY = Gdx.graphics.getDeltaTime() * (Math.abs(targetY-cam.position.y)*3);
+        if(cam.position.x < targetX-SPEEDX) {
+            newX = cam.position.x+SPEEDX;
+        } else if(cam.position.x > targetX+SPEEDX) {
+            newX = cam.position.x-SPEEDX;
+        } else {
+            newX = targetX;
+        }
+
+        if(cam.position.y < targetY-SPEEDY) {
+            newY = cam.position.y+SPEEDY;
+        } else if(cam.position.y > targetY+SPEEDY) {
+            newY = cam.position.y-SPEEDY;
+        } else {
+            newY = targetY;
+        }
+
+        cam.setPosition(newX, newY);
         b2dCam.setPosition(player.getPos().x + MainGame.WIDTH / 50 / PPM, player.getPos().y + MainGame.HEIGHT / 50 / PPM);
 
         b2dCam.update();
@@ -323,19 +357,33 @@ public class GameScreen implements Screen {
         for (Door d : doors) {
             d.render(sb);
         }
-
         sb.end();
-
 
         //Render tiles.
         tmr.setView(cam);
         tmr.render();
 
         sb.begin();
-
         exit.render(sb);
         player.render();
+        renderObjects(sb);
+        particleManager.render(sb);
+        sb.end();
 
+        //DRAW GUI!
+        gui.render(sb);
+
+        if (MainGame.DEVICE.equals("ANDROID")) {
+            androidController.render(sb);
+        }
+
+        //Render Box2D world.
+        if (MainGame.TEST_MODE) {
+            b2dr.render(world, b2dCam.combined);
+        }
+    }
+
+    private void renderObjects(SpriteBatch sb) {
         for (Platform p : platforms) {
             p.render(sb);
         }
@@ -354,23 +402,6 @@ public class GameScreen implements Screen {
 
         for (Enemy e : enemies) { //DRAW ENEMIES.
             e.render(sb);
-        }
-
-        particleManager.render(sb);
-
-        sb.end();
-
-
-        //DRAW GUI!
-        gui.render(sb);
-
-        if (MainGame.DEVICE.equals("ANDROID")) {
-            androidController.render(sb);
-        }
-
-        //Render Box2D world.
-        if (MainGame.TEST_MODE) {
-            b2dr.render(world, b2dCam.combined);
         }
     }
 
