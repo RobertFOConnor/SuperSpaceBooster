@@ -149,6 +149,9 @@ public class MainGame extends ApplicationAdapter {
         if (Controllers.getControllers().size != 0) {
             hasControllers = true;
             controller = Controllers.getControllers().get(0);
+            if(Controllers.getControllers().size > 1) {
+                controller = Controllers.getControllers().get(1);
+            }
         }
     }
 }

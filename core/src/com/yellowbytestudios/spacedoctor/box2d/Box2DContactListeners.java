@@ -7,20 +7,17 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class Box2DContactListeners implements ContactListener {
 
     private Array<Fixture> bodiesToRemove;
     private Body enemy;
-    private int numFootContacts;
 
     private boolean atExit = false;
     private Body Exit;
-
-    private SpacemanPlayer player;
 
     public Box2DContactListeners() {
         super();
@@ -36,22 +33,22 @@ public class Box2DContactListeners implements ContactListener {
         if (fa == null || fb == null) return;
 
         if (fa.getUserData() != null && fa.getUserData().equals("foot")) {
-            numFootContacts++;
+            ((SpacemanPlayer) fa.getBody().getUserData()).addNumFootContacts(1);
             playFootstep();
         }
         if (fb.getUserData() != null && fb.getUserData().equals("foot")) {
-            numFootContacts++;
+            ((SpacemanPlayer) fb.getBody().getUserData()).addNumFootContacts(1);
             playFootstep();
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("player")) {
             if (fb.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
-                killPlayer();
+                killPlayer((SpacemanPlayer) fa.getBody().getUserData());
             }
         }
         if (fb.getUserData() != null && fb.getUserData().equals("player")) {
             if (fa.getFilterData().categoryBits == Box2DVars.BIT_SPIKE) {
-                killPlayer();
+                killPlayer((SpacemanPlayer) fb.getBody().getUserData());
             }
         }
 
@@ -64,10 +61,12 @@ public class Box2DContactListeners implements ContactListener {
 
         if (fa.getUserData() != null && fa.getUserData().equals("door")) {
             Exit = fa.getBody();
+            ((SpacemanPlayer) fb.getBody().getUserData()).setFinished(true);
             atExit = true;
         }
         if (fb.getUserData() != null && fb.getUserData().equals("door")) {
             Exit = fb.getBody();
+            ((SpacemanPlayer) fa.getBody().getUserData()).setFinished(true);
             atExit = true;
         }
 
@@ -81,12 +80,12 @@ public class Box2DContactListeners implements ContactListener {
         if (fa.getUserData() != null && fa.getUserData().equals("enemy")) {
 
             if (fb.getUserData().equals("player")) {
-                killPlayer();
+                killPlayer((SpacemanPlayer) fb.getBody().getUserData());
             }
         }
         if (fb.getUserData() != null && fb.getUserData().equals("enemy")) {
             if (fa.getUserData().equals("player")) {
-                killPlayer();
+                killPlayer((SpacemanPlayer) fa.getBody().getUserData());
             }
         }
     }
@@ -100,10 +99,10 @@ public class Box2DContactListeners implements ContactListener {
         if (fa == null || fb == null) return;
 
         if (fa.getUserData() != null && fa.getUserData().equals("foot")) {
-            numFootContacts--;
+            ((SpacemanPlayer) fa.getBody().getUserData()).addNumFootContacts(-1);
         }
         if (fb.getUserData() != null && fb.getUserData().equals("foot")) {
-            numFootContacts--;
+            ((SpacemanPlayer) fb.getBody().getUserData()).addNumFootContacts(-1);
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("bullet")) {
@@ -119,10 +118,6 @@ public class Box2DContactListeners implements ContactListener {
         if (fb.getUserData() != null && fb.getUserData().equals("pickup")) {
             bodiesToRemove.removeValue(fb, true);
         }
-    }
-
-    public boolean playerInAir() {
-        return numFootContacts == 0;
     }
 
     public void preSolve(Contact c, Manifold m) {
@@ -151,10 +146,6 @@ public class Box2DContactListeners implements ContactListener {
         return atExit;
     }
 
-    public void setPlayer(SpacemanPlayer player) {
-        this.player = player;
-    }
-
     private void playFootstep() {
         if ((int) (Math.random() * 3) == 2) {
             SoundManager.play(Assets.FOOTSTEP_SOUND);
@@ -173,7 +164,7 @@ public class Box2DContactListeners implements ContactListener {
         }
     }
 
-    private void killPlayer() {
+    private void killPlayer(SpacemanPlayer player) {
         player.setDead(true);
     }
 }

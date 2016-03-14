@@ -11,8 +11,8 @@ public class XBoxController implements BasicController {
     private Controller controller;
     private boolean rightTriggerJustPressed = false;
 
-    public XBoxController() {
-        controller = Controllers.getControllers().get(0);
+    public XBoxController(int controllerNumber) {
+        controller = Controllers.getControllers().get(controllerNumber);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class XBoxController implements BasicController {
 
     @Override
     public boolean upPressed() {
-        return controller.getAxis(XBox360Pad.AXIS_LEFT_Y) < -0.2f;
+        return controller.getButton(XBox360Pad.BUTTON_A);
     }
 
     @Override

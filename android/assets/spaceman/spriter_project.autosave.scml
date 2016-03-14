@@ -172,10 +172,10 @@
                     <bone_ref id="3" timeline="8" key="1"/>
                     <bone_ref id="4" timeline="9" key="1"/>
                     <object_ref id="0" parent="4" timeline="4" key="0" z_index="0"/>
-                    <object_ref id="1" parent="3" timeline="3" key="0" z_index="1"/>
+                    <object_ref id="1" parent="3" timeline="3" key="1" z_index="1"/>
                     <object_ref id="2" parent="0" timeline="0" key="1" z_index="2"/>
                     <object_ref id="3" parent="2" timeline="1" key="1" z_index="3"/>
-                    <object_ref id="4" parent="1" timeline="2" key="0" z_index="4"/>
+                    <object_ref id="4" parent="1" timeline="2" key="1" z_index="4"/>
                 </key>
             </mainline>
             <timeline id="0" name="body">
@@ -191,17 +191,23 @@
                     <object folder="0" file="1" x="-19.652417" y="3.383379" angle="267.214834"/>
                 </key>
                 <key id="1" time="250" spin="0">
-                    <object folder="0" file="1" x="137.292949" y="-15.80391" angle="267.214834" scale_x="4.350297" scale_y="4.285224"/>
+                    <object folder="0" file="1" x="137.292949" y="-15.80391" angle="267.214834" scale_x="4.350297" scale_y="4.285224" a="0"/>
                 </key>
             </timeline>
             <timeline id="2" name="r_arm">
                 <key id="0" spin="0">
                     <object folder="0" file="7" x="5.239966" y="1.118556" angle="72.536073"/>
                 </key>
+                <key id="1" time="250" spin="0">
+                    <object folder="0" file="7" x="5.239966" y="1.118556" angle="72.536073" a="0"/>
+                </key>
             </timeline>
             <timeline id="3" name="l_leg">
                 <key id="0" spin="0">
                     <object folder="0" file="4" x="5.645368" y="-3.084294" angle="90"/>
+                </key>
+                <key id="1" time="250" spin="0">
+                    <object folder="0" file="4" x="5.645368" y="-3.084294" angle="90" a="0"/>
                 </key>
             </timeline>
             <timeline id="4" name="r_leg">
@@ -243,7 +249,7 @@
                     <bone x="27.906977" y="-40" angle="306.144379"/>
                 </key>
                 <key id="1" time="250" spin="0">
-                    <bone x="781.24031" y="-1593.333333" angle="306.144379"/>
+                    <bone x="781.24031" y="-1593.333333" angle="306.144379" a="0"/>
                 </key>
             </timeline>
         </animation>
@@ -1660,10 +1666,10 @@
             </mainline>
             <timeline id="0" name="eyeguy">
                 <key id="0" spin="0">
-                    <object folder="6" file="0" x="-70.950337" y="102" scale_x="0.877104"/>
+                    <object folder="6" file="0" x="-70.950337" y="102" angle="0" scale_x="0.877104"/>
                 </key>
                 <key id="1" time="499" spin="0">
-                    <object folder="6" file="0" x="-84.916162" y="100" scale_x="1.056566"/>
+                    <object folder="6" file="0" x="-84.916162" y="100" angle="0" scale_x="1.056566"/>
                 </key>
             </timeline>
         </animation>
@@ -1701,44 +1707,44 @@
             </mainline>
             <timeline id="0" name="eyeguy">
                 <key id="0" spin="0">
-                    <object folder="6" file="0" x="-82" y="102"/>
+                    <object folder="6" file="0" x="-82" y="102" angle="0"/>
                 </key>
             </timeline>
             <timeline id="1" name="death_eye">
                 <key id="0" time="22">
-                    <object folder="6" file="1" x="-50.104115" y="64.800863" angle="327.264774" scale_y="1"/>
+                    <object folder="6" file="1" x="-50.104115" y="64.800863" angle="327.264774"/>
                 </key>
                 <key id="1" time="351" spin="-1">
-                    <object folder="6" file="1" x="-239.660202" y="381.816256" angle="16.488687" scale_x="1" scale_y="1" a="0"/>
+                    <object folder="6" file="1" x="-239.660202" y="381.816256" angle="16.488687" a="0"/>
                 </key>
             </timeline>
             <timeline id="2" name="death_chunk">
                 <key id="0" time="22" spin="0">
-                    <object folder="6" file="2" x="16.602317" y="5.019305" angle="162.083551" scale_x="1"/>
+                    <object folder="6" file="2" x="16.602317" y="5.019305" angle="162.083551"/>
                 </key>
                 <key id="1" time="351" spin="0">
-                    <object folder="6" file="2" x="163.268983" y="111.685972" angle="162.083551" scale_x="1" a="0"/>
+                    <object folder="6" file="2" x="163.268983" y="111.685972" angle="162.083551" a="0"/>
                 </key>
             </timeline>
             <timeline id="3" name="death_chunk_000">
                 <key id="0" time="22" spin="0">
-                    <object folder="6" file="2" x="-42.857143" y="35.907336" angle="244.960216" scale_y="1"/>
+                    <object folder="6" file="2" x="-42.857143" y="35.907336" angle="244.960216"/>
                 </key>
                 <key id="1" time="351" spin="0">
-                    <object folder="6" file="2" x="-197.301587" y="-44.092664" angle="244.960216" scale_y="1" a="0"/>
+                    <object folder="6" file="2" x="-197.301587" y="-44.092664" angle="244.960216" a="0"/>
                 </key>
             </timeline>
             <timeline id="4" name="death_chunk_001">
                 <key id="0" time="22" spin="0">
-                    <object folder="6" file="2" x="-45.945946" y="25.868726"/>
+                    <object folder="6" file="2" x="-45.945946" y="25.868726" angle="0"/>
                 </key>
                 <key id="1" time="351" spin="0">
-                    <object folder="6" file="2" x="-9.279279" y="-116.353496" a="0"/>
+                    <object folder="6" file="2" x="-9.279279" y="-116.353496" angle="0" a="0"/>
                 </key>
             </timeline>
             <timeline id="5" name="death_smoke">
                 <key id="0" time="29" spin="-1">
-                    <object folder="0" file="8" x="-92.222222" y="92.222222"/>
+                    <object folder="0" file="8" x="-92.222222" y="92.222222" angle="0"/>
                 </key>
                 <key id="1" time="153">
                     <object folder="0" file="8" x="50.772623" y="175.019027" angle="286.831669" scale_x="1.83106" scale_y="1.95869" a="0"/>

@@ -100,6 +100,8 @@ public class LevelSelectScreen implements Screen {
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
                 advanceScreen(selLevel);
+            } else if (MainGame.controller.getButton(XBox360Pad.BUTTON_BACK)) {
+                goBack();
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {

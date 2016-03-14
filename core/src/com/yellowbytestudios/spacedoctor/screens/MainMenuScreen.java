@@ -61,22 +61,16 @@ public class MainMenuScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             advanceScreen(new SettingsScreen());
 
-        } else if (Gdx.input.justTouched()) {
+        }
+
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
             if (playButton.checkTouch(touch)) {
                 advanceScreen(new LevelSelectScreen());
             } else if (editorButton.checkTouch(touch)) {
-
                 advanceScreen(new NewLoadScreen());
-
-                /*if (MainGame.saveData.getMyMaps().size > 0) {
-                    advanceScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen(MainGame.saveData.getMyMaps().get(0)));
-                } else {
-                    advanceScreen(new com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen());
-                }*/
-
             } else if (statButton.checkTouch(touch)) {
                 advanceScreen(new HelmetSelectScreen());
             } else if (settings.checkTouch(touch)) {

@@ -59,15 +59,7 @@ public class NewLoadScreen implements Screen {
         camera.update();
         bg.update();
 
-        if (MainGame.hasControllers) {
-            if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(new MapEditorScreen());
-            }
-
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(new MapEditorScreen());
-
-        } else if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 

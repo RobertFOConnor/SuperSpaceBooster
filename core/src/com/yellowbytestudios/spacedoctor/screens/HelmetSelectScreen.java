@@ -110,7 +110,7 @@ public class HelmetSelectScreen implements Screen {
 
 
         if (MainGame.hasControllers) {
-            if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
+            if (MainGame.controller.getButton(XBox360Pad.BUTTON_BACK)) {
                 goBack();
             }
 

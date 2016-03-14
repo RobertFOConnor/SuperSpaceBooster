@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
@@ -20,7 +19,6 @@ import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
 public class SpacemanPlayer {
 
-    private Box2DContactListeners contactListener;
     private BasicController controller;
     private Player spriter;
     private Body body;
@@ -31,8 +29,11 @@ public class SpacemanPlayer {
     private float posX, posY;
     private float velX, velY;
     private boolean movingLeft, movingRight, movingUp = false;
+    private boolean dieing = false;
     private boolean isDead = false;
+    private boolean finished = false;
     public static float WIDTH, HEIGHT;
+    private int numFootContacts = 0;
 
 
     //Jetpack variables!
@@ -43,16 +44,17 @@ public class SpacemanPlayer {
     private int currAmmo = 10;
 
     //Spriter variables.
-    private int headType = MainGame.saveData.getHead();
-    private float[] gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
+    private int headType;
+    private float[] gasColor;
 
     //Coins
     private static int coins = 0;
 
 
-    public SpacemanPlayer(Body body, Box2DContactListeners contactListener) {
+    public SpacemanPlayer(Body body, int playerNum, int headType) {
         this.body = body;
-        this.contactListener = contactListener;
+        this.headType = headType;
+        gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
         spriter = MainGame.spriterManager.initPlayer();
 
         WIDTH = 80;
@@ -63,7 +65,7 @@ public class SpacemanPlayer {
         if (MainGame.DEVICE.equals("ANDROID")) {
             controller = GameScreen.androidController;
         } else if (MainGame.hasControllers) {
-            controller = new XBoxController();
+            controller = new XBoxController(playerNum);
         } else {
             controller = new KeyboardController();
         }
@@ -216,7 +218,7 @@ public class SpacemanPlayer {
         movingRight = false;
         movingLeft = false;
 
-        if (!contactListener.playerInAir()) {
+        if (!inAir()) {
             spriter.setAnimation("idle");
             if (velX != 0) {
                 body.setLinearVelocity(0, velY);
@@ -238,7 +240,7 @@ public class SpacemanPlayer {
 
 
     private void setMovingHorImage() {
-        if (!contactListener.playerInAir()) {
+        if (!inAir()) {
             spriter.setAnimation("running");
         } else {
             spriter.setAnimation("jump");
@@ -328,6 +330,38 @@ public class SpacemanPlayer {
     }
 
     public void setCoins(int coins) {
-        this.coins = coins;
+        SpacemanPlayer.coins = coins;
+    }
+
+    public void setController(BasicController controller) {
+        this.controller = controller;
+    }
+
+    public boolean isDieing() {
+        return dieing;
+    }
+
+    public void setDieing(boolean dieing) {
+        this.dieing = dieing;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public void addNumFootContacts(int newContact) {
+        this.numFootContacts += newContact;
+    }
+
+    private boolean inAir() {
+        return numFootContacts == 0;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }

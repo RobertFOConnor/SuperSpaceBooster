@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
 import com.yellowbytestudios.spacedoctor.game.objects.Door;
 import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
@@ -26,92 +27,86 @@ public class BodyFactory {
 
     private static float PPM = Box2DVars.PPM;
 
-    public static Body createBody(World world, String bodyType) {
+    public static SpacemanPlayer createPlayer(World world, int playerNum, int headType) {
 
-        if (bodyType.equals("PLAYER")) {
+        // Create Body Definition object to define settings.
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.DynamicBody;
 
-            // Create Body Definition object to define settings.
-            BodyDef bdef = new BodyDef();
-            bdef.type = BodyDef.BodyType.DynamicBody;
+        bdef.fixedRotation = true;
+        bdef.linearVelocity.set(0f, 0f);
+        bdef.position.set(2, 5);
 
-            bdef.fixedRotation = true;
-            bdef.linearVelocity.set(0f, 0f);
-            bdef.position.set(2, 5);
-
-            // Create Body object to hold fixtures.
-            Body body = world.createBody(bdef);
+        // Create Body object to hold fixtures.
+        Body body = world.createBody(bdef);
 
 
-            // Create circle for players head.
-            CircleShape circleShape = new CircleShape();
-            circleShape.setRadius(49 / PPM);
-            circleShape.setPosition(new Vector2(0, 22 / PPM));
+        // Create circle for players head.
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(49 / PPM);
+        circleShape.setPosition(new Vector2(0, 22 / PPM));
 
-            // Create Fixture Definition for head collision.
-            FixtureDef fdef = new FixtureDef();
-            fdef.shape = circleShape;
-            fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
-            body.createFixture(fdef).setUserData("player");
-
-
-            // Create box for players torso.
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(32 / PPM, 44 / PPM, new Vector2(0, -30 / PPM), 0);
-
-            // Create Fixture Definition for torso collision box.
-            fdef.shape = shape;
-            fdef.restitution = 0.03f;
-            fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
-            body.createFixture(fdef).setUserData("player");
+        // Create Fixture Definition for head collision.
+        FixtureDef fdef = new FixtureDef();
+        fdef.shape = circleShape;
+        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BULLET;
+        body.createFixture(fdef).setUserData("player");
 
 
-            // Create box for players foot.
-            shape = new PolygonShape();
-            shape.setAsBox(30 / PPM, 20 / PPM, new Vector2(0, -60 / PPM), 0);
+        // Create box for players torso.
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(32 / PPM, 44 / PPM, new Vector2(0, -30 / PPM), 0);
 
-            // Create Fixture Definition for foot collision box.
-            fdef.shape = shape;
-            fdef.isSensor = true;
-            fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
-            fdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_EXIT | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE;
-
-            // create player foot fixture
-            body.createFixture(fdef).setUserData("foot");
-            shape.dispose();
-
-            return body;
+        // Create Fixture Definition for torso collision box.
+        fdef.shape = shape;
+        fdef.restitution = 0.03f;
+        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_PICKUP | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BULLET;
+        body.createFixture(fdef).setUserData("player");
 
 
-        } else if (bodyType.equals("BULLET")) {
+        // Create box for players foot.
+        shape = new PolygonShape();
+        shape.setAsBox(30 / PPM, 20 / PPM, new Vector2(0, -60 / PPM), 0);
 
-            BodyDef bdef = new BodyDef();
-            bdef.type = BodyDef.BodyType.DynamicBody;
+        // Create Fixture Definition for foot collision box.
+        fdef.shape = shape;
+        fdef.isSensor = true;
+        fdef.filter.categoryBits = Box2DVars.BIT_PLAYER;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_WALL | Box2DVars.BIT_EXIT | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BULLET;
 
-            bdef.fixedRotation = true;
+        // create player foot fixture
+        body.createFixture(fdef).setUserData("foot");
+        shape.dispose();
+        SpacemanPlayer p = new SpacemanPlayer(body, playerNum, headType);
+        body.setUserData(p);
+        return p;
+    }
 
-            // create body from bodydef
-            Body body = world.createBody(bdef);
+    public static Body createBullet(World world) {
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.DynamicBody;
 
-            // create box shape for bullet.
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(50 / PPM, 1 / PPM);
+        bdef.fixedRotation = true;
+        bdef.bullet = true;
+        // create body from bodydef
+        Body body = world.createBody(bdef);
 
-            // create fixturedef for bullet.
-            FixtureDef cfdef = new FixtureDef();
-            cfdef.shape = shape;
-            cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
-            cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
-            body.createFixture(cfdef).setUserData("bullet");
-            body.setGravityScale(0f);
-            shape.dispose();
+        // create box shape for bullet.
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(50 / PPM, 1 / PPM);
 
-            return body;
+        // create fixturedef for bullet.
+        FixtureDef cfdef = new FixtureDef();
+        cfdef.shape = shape;
+        cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
+        cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER;
+        body.createFixture(cfdef).setUserData("bullet");
+        body.setGravityScale(0f);
+        shape.dispose();
 
-        } else {
-            return null;
-        }
+        return body;
     }
 
     public static Array<Box> createBoxes(World world, TiledMap tm) {

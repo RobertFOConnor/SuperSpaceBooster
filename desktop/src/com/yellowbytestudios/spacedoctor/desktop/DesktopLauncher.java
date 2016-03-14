@@ -17,6 +17,10 @@ public class DesktopLauncher {
         config.width = 960;
         config.height = 540;
 
+        /*config.width = 1920;
+        config.height = 1080;
+        config.fullscreen = true;*/
+
         config.title = "Super Space Booster";
 
         new LwjglApplication(new MainGame("DESKTOP"), config);

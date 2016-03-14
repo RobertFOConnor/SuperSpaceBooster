@@ -74,12 +74,7 @@ public class SettingsScreen implements Screen {
         camera.update();
         bg.update();
 
-        if (MainGame.hasControllers) {
-            if (controller.getButton(XBox360Pad.BUTTON_A)) {
-                //change setting for xbox
-            }
-
-        } else if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
