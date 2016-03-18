@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
 public class Box2DContactListeners implements ContactListener {
@@ -71,9 +72,11 @@ public class Box2DContactListeners implements ContactListener {
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("pickup")) {
+            ((PickUp) fa.getBody().getUserData()).activate((SpacemanPlayer) fb.getBody().getUserData());
             bodiesToRemove.add(fa);
         }
         if (fb.getUserData() != null && fb.getUserData().equals("pickup")) {
+            ((PickUp) fb.getBody().getUserData()).activate((SpacemanPlayer) fa.getBody().getUserData());
             bodiesToRemove.add(fb);
         }
 

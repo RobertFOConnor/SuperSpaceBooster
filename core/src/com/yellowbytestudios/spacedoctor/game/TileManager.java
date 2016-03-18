@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.TileIDs;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
@@ -18,21 +19,25 @@ public class TileManager {
 
     private int tileSize, tileMapWidth, tileMapHeight;
     private FixtureDef fdef;
+    int wallCount = 0;
 
-    public void createWalls(World world, TiledMap tileMap) {
-        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
-
-        if (tileMap.getProperties().get("width", Integer.class) != null) { //Check for Custom Map.
-            tileMapWidth = tileMap.getProperties().get("width", Integer.class);
-            tileMapHeight = tileMap.getProperties().get("height", Integer.class);
+    private void setMapWidthHeight(TiledMap tm) {
+        if (tm.getProperties().get("width", Integer.class) != null) { //Check for Custom Map.
+            tileMapWidth = tm.getProperties().get("width", Integer.class);
+            tileMapHeight = tm.getProperties().get("height", Integer.class);
         } else {
             tileMapWidth = MapManager.customMapWidth;
             tileMapHeight = MapManager.customMapHeight;
         }
+    }
+
+    public void createWalls(World world, TiledMap tileMap) {
+        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
+        setMapWidthHeight(tileMap);
 
         tileSize = (int) layer.getTileWidth();
 
-        float PPM = 100;
+        float PPM = Box2DVars.PPM;
 
         float leftSide = (-tileSize / 2) / (PPM);
         float rightSide = (tileSize / 2) / (PPM);
@@ -45,7 +50,7 @@ public class TileManager {
         Vector2 top_L = new Vector2(leftSide, rightSide);
         Vector2 top_R = new Vector2(rightSide, rightSide);
 
-        boolean shouldDrawVector;
+        boolean shouldDrawVector = false;
         Vector2 start;
         Vector2 finish;
 
@@ -56,49 +61,36 @@ public class TileManager {
         for (int row = 0; row < layer.getHeight(); row++) {
             for (int col = 0; col < layer.getWidth(); col++) {
 
+                //Get cell at (row, col) position.
                 TiledMapTileLayer.Cell cell = layer.getCell(col, row);
 
+                //Get cell above current cell.
                 TiledMapTileLayer.Cell above_cell = layer.getCell(col, row + 1);
 
                 start = top_L;
                 finish = top_R;
 
-                shouldDrawVector = false;
-
+                //Set the main cell to our current cell.
                 TiledMapTileLayer.Cell main_cell = cell;
 
+
+                //Check if cell is a tile.
                 if (cell != null) {
-                    if (above_cell == null) {
-                        shouldDrawVector = true;
-                    }
+                    //If cell is a tile and there is nothing above it, we should draw.
+                    shouldDrawVector = (above_cell == null);
                 } else {
+
+                    //If cell is empty but there is a tile above it, we should draw.
                     if (above_cell != null) {
                         shouldDrawVector = true;
                         main_cell = above_cell;
+                    } else {
+                        shouldDrawVector = false;
                     }
                 }
 
                 if (shouldDrawVector) {
-
-                    bdef.type = BodyDef.BodyType.StaticBody;
-                    bdef.position.set((col + 0.5f), (row + 0.5f));
-
-                    ChainShape chainShape = new ChainShape();
-
-                    Vector2[] v;
-                    v = new Vector2[2];
-                    v[0] = start;
-                    v[1] = finish;
-
-
-                    chainShape.createChain(v);
-                    fdef.density = 1f;
-                    fdef.shape = chainShape;
-
-
-                    setCollisionVariables(main_cell);
-                    world.createBody(bdef).createFixture(fdef).setUserData("ground");
-                    chainShape.dispose();
+                    drawVector(world, main_cell, start, finish, row, col);
                 }
             }
         }
@@ -112,44 +104,52 @@ public class TileManager {
                 start = top_L;
                 finish = bot_L;
 
-                shouldDrawVector = false;
+
                 TiledMapTileLayer.Cell main_cell = cell;
 
 
                 if (cell != null) {
-                    if (left_cell == null) {
-                        shouldDrawVector = true;
-                    }
+                    shouldDrawVector = (left_cell == null);
                 } else {
                     if (left_cell != null) {
                         shouldDrawVector = true;
                         main_cell = left_cell;
+                    } else {
+                        shouldDrawVector = false;
                     }
                 }
 
                 if (shouldDrawVector) {
-
-                    bdef.type = BodyDef.BodyType.StaticBody;
-                    bdef.position.set((col + 0.5f), (row + 0.5f));
-
-                    ChainShape chainShape = new ChainShape();
-
-                    Vector2[] v;
-                    v = new Vector2[2];
-                    v[0] = start;
-                    v[1] = finish;
-
-
-                    chainShape.createChain(v);
-                    fdef.density = 1f;
-                    fdef.shape = chainShape;
-
-                    setCollisionVariables(main_cell);
-                    world.createBody(bdef).createFixture(fdef).setUserData("ground");
-                    chainShape.dispose();
+                    drawVector(world, main_cell, start, finish, row, col);
                 }
             }
         }
+    }
+
+    private void drawVector(World world, TiledMapTileLayer.Cell main_cell, Vector2 start, Vector2 finish, int row, int col) {
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set((col + 0.5f), (row + 0.5f));
+
+        ChainShape chainShape = new ChainShape();
+
+        Vector2[] v;
+        v = new Vector2[2];
+        v[0] = start;
+        v[1] = finish;
+
+
+        chainShape.createChain(v);
+        fdef.density = 1f;
+        fdef.shape = chainShape;
+
+
+        setCollisionVariables(main_cell);
+        world.createBody(bdef).createFixture(fdef).setUserData("ground");
+        chainShape.dispose();
+
+        wallCount++;
+        System.out.println(wallCount + ": WALL CREATED!");
     }
 
     public void setCollisionVariables(TiledMapTileLayer.Cell main_cell) {
@@ -161,13 +161,13 @@ public class TileManager {
             }
 
             if (id == TileIDs.DOWN_SPIKE || id == TileIDs.LEFT_SPIKE || id == TileIDs.RIGHT_SPIKE || id == TileIDs.UP_SPIKE) {
-                fdef.filter.categoryBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_SPIKE;
+                fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
 
             } else {
-                fdef.filter.categoryBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_WALL;
+                fdef.filter.categoryBits = Box2DVars.BIT_WALL;
             }
         }
-        fdef.filter.maskBits = com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_PLAYER | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_BULLET | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_BOX | com.yellowbytestudios.spacedoctor.box2d.Box2DVars.BIT_ENEMY;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
     }
 
     public int getMapWidth() {

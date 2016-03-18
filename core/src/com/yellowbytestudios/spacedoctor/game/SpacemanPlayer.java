@@ -8,11 +8,12 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
+import com.yellowbytestudios.spacedoctor.controllers.SecondKeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.HelmetSelectScreen;
+import com.yellowbytestudios.spacedoctor.screens.menu.HelmetSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
@@ -37,7 +38,8 @@ public class SpacemanPlayer {
 
 
     //Jetpack variables!
-    private float currGas = 500f;
+    private float maxGas = 500f;
+    private float currGas = maxGas;
 
     //Gun variables!
     private boolean shooting = false;
@@ -69,6 +71,10 @@ public class SpacemanPlayer {
         } else {
             controller = new KeyboardController();
         }
+
+        /*if(playerNum == 1) {
+            controller = new SecondKeyboardController();
+        }*/
 
         assignVariables();
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
@@ -127,10 +133,14 @@ public class SpacemanPlayer {
     }
 
     private void updateGun() {
-        if (controller.shootPressed() && currAmmo > 0) {
-            shooting = true;
-            SoundManager.play(Assets.GUN_SOUND);
-            currAmmo--;
+        if (controller.shootPressed()) {
+            if(currAmmo > 0) {
+                shooting = true;
+                SoundManager.play(Assets.GUN_SOUND);
+                currAmmo--;
+            } else {
+                SoundManager.play(Assets.GUN_SOUND_EMPTY);
+            }
         }
     }
 
@@ -286,6 +296,10 @@ public class SpacemanPlayer {
         this.shooting = shooting;
     }
 
+    public float getMaxGas() {
+        return maxGas;
+    }
+
     public float getCurrGas() {
         return currGas;
     }
@@ -293,7 +307,6 @@ public class SpacemanPlayer {
     public void setCurrGas(float currGas) {
         this.currGas = currGas;
 
-        float maxGas = 500;
         if (this.currGas > maxGas) {
             this.currGas = maxGas;
         }

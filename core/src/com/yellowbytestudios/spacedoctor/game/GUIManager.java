@@ -56,7 +56,7 @@ public class GUIManager {
         shapeRenderer.setColor(Color.RED);
 
         for(int i = 0; i < players.size; i++) {
-            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 105, (players.get(i).getCurrGas() / 5) * 1.2f, 40);
+            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 105, (players.get(i).getCurrGas() / (players.get(i).getMaxGas()/100)) * 1.2f, 40);
         }
         shapeRenderer.end();
 

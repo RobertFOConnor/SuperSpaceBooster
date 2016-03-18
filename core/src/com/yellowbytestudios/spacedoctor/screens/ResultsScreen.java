@@ -72,6 +72,6 @@ public class ResultsScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new MainMenuScreen());
+        ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen());
     }
 }

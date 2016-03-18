@@ -1023,15 +1023,15 @@
                     <object_ref id="0" timeline="0" key="1" z_index="0"/>
                 </key>
                 <key id="5" time="513">
-                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
                     <object_ref id="1" timeline="2" key="0" z_index="1"/>
                 </key>
                 <key id="6" time="808">
-                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
                     <object_ref id="1" timeline="2" key="1" z_index="1"/>
                 </key>
                 <key id="7" time="917">
-                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                    <object_ref id="0" timeline="0" key="2" z_index="0"/>
                     <object_ref id="1" timeline="2" key="2" z_index="1"/>
                 </key>
             </mainline>
@@ -1041,6 +1041,9 @@
                 </key>
                 <key id="1" time="501" spin="0">
                     <object folder="2" file="5" x="-35" y="46" angle="0"/>
+                </key>
+                <key id="2" time="513" spin="0">
+                    <object folder="2" file="5" x="-35" y="47.85571" angle="0"/>
                 </key>
             </timeline>
             <timeline id="1" name="shine">

@@ -2,9 +2,11 @@ package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -17,7 +19,6 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
-import com.yellowbytestudios.spacedoctor.game.objects.Entity;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 
@@ -55,6 +56,9 @@ public class MapManager {
     //ENEMIES.
     public static Array<DraggableObject> enemyList;
 
+    //ITEMS
+    public static Array<DraggableObject> itemList;
+
 
     //Tile Types.
     private static final Array<Cell> CELLS = new Array<Cell>();
@@ -91,7 +95,12 @@ public class MapManager {
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
         for (Vector2 enemy : savedMap.getEnemyArray()) {
-            enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), new Vector2(enemy.x, enemy.y)));
+            enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), enemy.cpy()));
+        }
+
+        itemList = new Array<DraggableObject>();
+        for (CustomMapObject item : savedMap.getItemArray()) {
+            itemList.add(new DraggableObject(item.getId(), MapEditorAssets.manager.get(MapEditorAssets.COIN_ICON, Texture.class), item.getPos().cpy()));
         }
     }
 
@@ -194,6 +203,10 @@ public class MapManager {
                     enemy.selected = false;
                 }
 
+                for (DraggableObject item : itemList) {
+                    item.selected = false;
+                }
+
                 exit.selected = false;
                 playerSpawn.selected = false;
                 holdingObject = false;
@@ -219,6 +232,13 @@ public class MapManager {
                             setDraggableSelected(enemy);
                         }
                     }
+
+                    for (DraggableObject item : itemList) {
+                        if (item.checkTouch(touch)) {
+                            setDraggableSelected(item);
+                        }
+                    }
+
                 } else {
 
                     if (playerSpawn.selected) {
@@ -299,6 +319,12 @@ public class MapManager {
                     enemyList.removeValue(enemy, true);
                 }
             }
+
+            for (DraggableObject item : itemList) {
+                if (item.checkTouch(touch)) {
+                    itemList.removeValue(item, true);
+                }
+            }
         }
     }
 
@@ -324,17 +350,20 @@ public class MapManager {
 
         tmr.setView(cam);
         tmr.render();
-
-
         sb.begin();
-        exit.render(sb);
-        playerSpawn.render(sb);
+        exit.draw(sb);
+        playerSpawn.draw(sb);
 
-        for (DraggableObject enemy : enemyList) {
-            enemy.render(sb);
-        }
+        drawDraggableObjects(itemList, sb);
+        drawDraggableObjects(enemyList, sb);
 
         sb.end();
+    }
+
+    private void drawDraggableObjects(Array<DraggableObject> array, SpriteBatch sb) {
+        for (DraggableObject item : array) {
+            item.draw(sb);
+        }
     }
 
     public void zoomIn() {
@@ -351,13 +380,25 @@ public class MapManager {
         }
     }
 
-    public void addEnemy() {
+    public void addEnemy() { // will take enemy id.
         if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
             if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
                 enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), touch));
             }
         }
     }
+
+    public void addItem(String itemID) { //will take item id.
+        if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
+            if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
+
+                if(itemID.equals("COIN")) {
+                    itemList.add(new DraggableObject(itemID, MapEditorAssets.manager.get(MapEditorAssets.COIN_ICON, Texture.class), touch));
+                }
+            }
+        }
+    }
+
 
     public TiledMap getMap() {
         return map;
@@ -368,46 +409,60 @@ public class MapManager {
      * DRAGGABLE OBJECT CLASS - used to represent entities in the editor.
      */
 
-    public class DraggableObject extends Entity {
+    public class DraggableObject extends Sprite {
 
-        private Texture texture;
         private boolean selected = false;
         private float boundX, boundY;
+        private String id = "";
 
         public DraggableObject(Texture texture, Vector2 pos) {
-            super(texture, pos);
-            this.texture = texture;
-            boundX = customMapWidth * Box2DVars.PPM - texture.getWidth();
-            boundY = customMapHeight * Box2DVars.PPM - texture.getHeight();
-
+            super(texture);
+            setBounds();
             setPos(pos);
         }
 
+        public DraggableObject(String id, Texture texture, Vector2 pos) {
+            super(texture);
+            this.id = id;
+            setBounds();
+            setPos(pos);
+        }
+
+        private void setBounds() {
+            boundX = customMapWidth * Box2DVars.PPM - getWidth();
+            boundY = customMapHeight * Box2DVars.PPM - getHeight();
+        }
+
+
         public void setPos(Vector2 pos) {
-            this.pos = pos.add(-texture.getWidth() / 2, -texture.getHeight() / 2);
+            setCenter(pos.x, pos.y);
             checkMapBounds();
         }
 
-        public Vector2 getPos() {
-            return pos;
-        }
-
         public void checkMapBounds() {
-            if (pos.x < 0) {
-                pos.set(0, pos.y);
-            } else if (pos.x > boundX) {
-                pos.set(boundX, pos.y);
+            if (getX() < 0) {
+                setPosition(0, getY());
+            } else if (getX() > boundX) {
+                setPosition(boundX, getY());
             }
 
-            if (pos.y < 0) {
-                pos.set(pos.x, 0);
-            } else if (pos.y > boundY) {
-                pos.set(pos.x, boundY);
+            if (getY() < 0) {
+                setPosition(getX(), 0);
+            } else if (getY() > boundY) {
+                setPosition(getX(), boundY);
             }
         }
 
-        public Texture getTexture() {
-            return texture;
+        public Rectangle getBounds() {
+            return new Rectangle(getX(), getY(), getWidth(), getHeight());
+        }
+
+        public boolean checkTouch(Vector2 touch) {
+            return getBounds().contains(touch);
+        }
+
+        public String getId() {
+            return id;
         }
     }
 
@@ -425,6 +480,7 @@ public class MapManager {
         startX = 3;
         startY = 4;
         enemyList = new Array<DraggableObject>();
+        itemList = new Array<DraggableObject>();
     }
 }
 

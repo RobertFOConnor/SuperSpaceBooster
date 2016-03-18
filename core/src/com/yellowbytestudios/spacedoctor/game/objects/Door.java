@@ -27,14 +27,14 @@ public class Door extends Box2DSprite {
 
     public void activate() {
 
-        if (!active)
+        /*if (!active)
             body.setLinearVelocity(Math.signum(SPEED) * (startPos.x - body.getPosition().x) * SPEED,
                     Math.signum(SPEED) * (startPos.y - body.getPosition().y) * SPEED
             );
         else
             body.setLinearVelocity(Math.signum(SPEED) * (endPos.x - body.getPosition().x) * SPEED,
                     Math.signum(SPEED) * (endPos.y - body.getPosition().y) * SPEED
-            );
+            );*/
     }
 
     @Override

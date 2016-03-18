@@ -1,21 +1,15 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
-import com.yellowbytestudios.spacedoctor.screens.HelmetSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.LevelSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
-import com.yellowbytestudios.spacedoctor.screens.SettingsScreen;
-import com.yellowbytestudios.spacedoctor.screens.TitleScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;

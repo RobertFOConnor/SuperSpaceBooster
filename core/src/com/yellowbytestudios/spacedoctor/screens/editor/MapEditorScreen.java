@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
-import com.yellowbytestudios.spacedoctor.screens.MainMenuScreen;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 
@@ -55,6 +56,7 @@ public class MapEditorScreen implements Screen {
         } else {
             mapManager = new MapManager();
         }
+        SoundManager.switchEditorMusic(MapEditorAssets.EDITOR_THEME);
         gui = new EditorGUI(mapManager);
         shapeRenderer = new ShapeRenderer();
 

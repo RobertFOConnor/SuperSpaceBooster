@@ -3,6 +3,7 @@ package com.yellowbytestudios.spacedoctor.effects;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 
 public class SoundManager {
 
@@ -36,6 +37,21 @@ public class SoundManager {
             setMusic(music);
         }
     }
+
+    //TEMP METHOD
+    public static void switchEditorMusic(String music) {
+        if (musicEnabled) {
+            if (GAME_MUSIC.isPlaying()) {
+                GAME_MUSIC.stop();
+            }
+            GAME_MUSIC = MapEditorAssets.manager.get(music, Music.class);
+            if (musicEnabled) {
+                GAME_MUSIC.setLooping(true);
+                GAME_MUSIC.play();
+            }
+        }
+    }
+
 
     public static void setMusic(String music) {
             GAME_MUSIC = Assets.manager.get(music, Music.class);

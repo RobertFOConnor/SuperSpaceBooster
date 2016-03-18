@@ -195,42 +195,52 @@ public class BodyFactory {
         MapLayer ml = tm.getLayers().get("pickups");
         Array<PickUp> pickups = new Array<PickUp>();
 
-        if (ml == null) return new Array<PickUp>();
+        if (GameScreen.customMap != null) {
+            for (MapManager.DraggableObject mapObject : MapManager.itemList) {
+                Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
+                pickups.add(createPickUp(world, pos, null));
+            }
+        } else {
+            if (ml != null) {
+                for (MapObject mo : ml.getObjects()) {
+                    pickups.add(createPickUp(world, getMapObjectPos(mo), mo.getProperties().get("type", String.class)));
+                }
+            }
+        }
+        return pickups;
+    }
+
+    public static PickUp createPickUp(World world, Vector2 pos, String type) {
 
         float width = 35 / PPM;
         float height = 35 / PPM;
 
-        for (MapObject mo : ml.getObjects()) {
-
-            BodyDef cdef = new BodyDef();
-            cdef.type = BodyDef.BodyType.StaticBody;
-            String type = mo.getProperties().get("type", String.class);
-            if (type == null) { //Default to gas pickup if no type is specified.
-                type = "coin";
-            }
-
-            Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x + width, pos.y + height);
-
-            Body body = world.createBody(cdef);
-
-            FixtureDef cfdef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(width, height);
-            cfdef.shape = shape;
-            cfdef.isSensor = true;
-            cfdef.filter.categoryBits = Box2DVars.BIT_PICKUP;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
-
-            body.createFixture(cfdef).setUserData("pickup");
-            shape.dispose();
-
-            PickUp p = new PickUp(body, type);
-            pickups.add(p);
-            body.setUserData(p);
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.StaticBody;
+        if (type == null) { //Default to gas pickup if no type is specified.
+            type = "coin";
         }
-        return pickups;
+        cdef.position.set(pos.x + width, pos.y + height);
+
+        Body body = world.createBody(cdef);
+
+        FixtureDef cfdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width, height);
+        cfdef.shape = shape;
+        cfdef.isSensor = true;
+        cfdef.filter.categoryBits = Box2DVars.BIT_PICKUP;
+        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+        body.createFixture(cfdef).setUserData("pickup");
+        shape.dispose();
+
+        PickUp pu = new PickUp(body, type);
+        body.setUserData(pu);
+
+        return pu;
     }
+
 
     public static Array<Platform> createPlatforms(World world, TiledMap tm) {
 
@@ -323,7 +333,7 @@ public class BodyFactory {
 
         if (GameScreen.customMap != null) {
             for (MapManager.DraggableObject mapObject : MapManager.enemyList) {
-                Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
+                Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
                 enemies.add(createEnemy(world, pos));
             }
         } else {

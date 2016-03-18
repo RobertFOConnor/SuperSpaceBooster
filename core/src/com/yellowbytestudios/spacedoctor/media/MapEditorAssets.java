@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.media;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 
 public class MapEditorAssets {
@@ -18,6 +19,7 @@ public class MapEditorAssets {
     public static final String SIDE_MENU = "mapeditor/side_menu.png";
     public static final String BLOCK_TAB = "mapeditor/block_tab.png";
     public static final String ENEMY_TAB = "mapeditor/enemy_tab.png";
+    public static final String ITEM_TAB = "mapeditor/item_tab.png";
 
     public static final String MOVE_BUTTON = "mapeditor/move_button.png";
     public static final String MOVE_BUTTON_SEL = "mapeditor/move_button_selected.png";
@@ -29,8 +31,12 @@ public class MapEditorAssets {
     public static final String EXIT_SPAWN = "mapeditor/exit_icon.png";
     public static final String ENEMY_SPAWN = "mapeditor/enemy_spawn.png";
     public static final String ENEMY_ICON = "mapeditor/enemy_icon.png";
+    public static final String ITEM_SHEET = "mapeditor/item_sheet.png";
     public static final String TILESHEET = "maps/tileset.png";
+    public static final String COIN_ICON = "mapeditor/coin_icon.png";
     public static final String TILE_SELECTOR = "mapeditor/tile_buttons_selector.png";
+
+    public static final String EDITOR_THEME = "music/editor_theme.mp3";
 
 
     public static void load() {
@@ -47,10 +53,13 @@ public class MapEditorAssets {
 
         manager.load(ENEMY_SPAWN, Texture.class);
         manager.load(ENEMY_ICON, Texture.class);
+        manager.load(ITEM_SHEET, Texture.class);
+        manager.load(COIN_ICON, Texture.class);
         manager.load(PLAYER_SPAWN, Texture.class);
         manager.load(EXIT_SPAWN, Texture.class);
         manager.load(BLOCK_TAB, Texture.class);
         manager.load(ENEMY_TAB, Texture.class);
+        manager.load(ITEM_TAB, Texture.class);
 
 
         manager.load(EXIT_EDITOR, Texture.class);
@@ -58,6 +67,8 @@ public class MapEditorAssets {
         manager.load(BOTTOM_BAR, Texture.class);
         manager.load(TILESHEET, Texture.class);
         manager.load(TILE_SELECTOR, Texture.class);
+
+        manager.load(EDITOR_THEME, Music.class);
     }
 
     public static void dispose() {

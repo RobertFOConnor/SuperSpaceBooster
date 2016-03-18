@@ -49,7 +49,7 @@ public class SplashScreen implements Screen {
             if (MainGame.TEST_MODE) {
                 ScreenManager.setScreen(new GameScreen(5));
             } else {
-                ScreenManager.setScreen(new TitleScreen());
+                ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen());
             }
         }
     }

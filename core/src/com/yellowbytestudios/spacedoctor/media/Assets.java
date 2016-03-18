@@ -59,6 +59,7 @@ public class Assets {
     public static final String BG = "background/stars.png";
     public static final String ASTEROIDS = "background/asteroids.png";
     public static final String ASTEROIDS2 = "background/asteroids2.png";
+    public static final String HILLS = "background/hills.png";
 
     //Game GUI.
     public static final String GUI_DISPLAY = "gui/gui_display.png";
@@ -69,6 +70,7 @@ public class Assets {
     //Sounds.
     public static final String JETPACK_SOUND = "sounds/jetpack.wav";
     public static final String GUN_SOUND = "sounds/blaster.wav";
+    public static final String GUN_SOUND_EMPTY = "sounds/blaster_empty.wav";
     public static final String FOOTSTEP_SOUND = "sounds/footstep.wav";
     public static final String FOOTSTEP2_SOUND = "sounds/footstep2.wav";
     public static final String FOOTSTEP3_SOUND = "sounds/footstep3.wav";
@@ -113,6 +115,7 @@ public class Assets {
         manager.load(BG, Texture.class);
         manager.load(ASTEROIDS, Texture.class);
         manager.load(ASTEROIDS2, Texture.class);
+        manager.load(HILLS, Texture.class);
         manager.load(BOX, Texture.class);
         manager.load(BULLET, Texture.class);
         manager.load(HOR_PLATFORM, Texture.class);
@@ -132,6 +135,7 @@ public class Assets {
 
         manager.load(JETPACK_SOUND, Sound.class);
         manager.load(GUN_SOUND, Sound.class);
+        manager.load(GUN_SOUND_EMPTY, Sound.class);
         manager.load(FOOTSTEP_SOUND, Sound.class);
         manager.load(FOOTSTEP2_SOUND, Sound.class);
         manager.load(FOOTSTEP3_SOUND, Sound.class);
