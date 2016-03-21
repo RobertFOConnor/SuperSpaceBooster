@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 public class CustomMapObject {
 
     private Vector2 pos;
-    private String id;
+    private int id;
 
-    public CustomMapObject(String id, Vector2 pos) {
+    public CustomMapObject(int id, Vector2 pos) {
         this.id = id;
         this.pos = pos;
     }
@@ -19,7 +19,7 @@ public class CustomMapObject {
         return pos;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 }

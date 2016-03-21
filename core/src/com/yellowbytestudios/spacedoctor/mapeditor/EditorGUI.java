@@ -94,7 +94,7 @@ public class EditorGUI {
                         } else if(sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
                             mapManager.addEnemy();
                         }  else if(sideMenu.state.equals(sideMenu.ITEM_STATE)) {
-                            mapManager.addItem("COIN");
+                            mapManager.addItem(itemID);
                         }
                     }
                 }
@@ -221,10 +221,10 @@ public class EditorGUI {
             sheet = MapEditorAssets.manager.get(MapEditorAssets.ITEM_SHEET, Texture.class);
             bottomY = 290;
             itemButtons = new Array<MenuButton>();
-            addMenuButton(itemButtons, sheet, 0, 0, 0);
-            addMenuButton(itemButtons, sheet, 100, 0, 1);
-            addMenuButton(itemButtons, sheet, 200, 0, 2);
-            addMenuButton(itemButtons, sheet, 300, 0, 3);
+            addMenuButton(itemButtons, sheet, 0, 0, IDs.GAS);
+            addMenuButton(itemButtons, sheet, 100, 0, IDs.AMMO);
+            addMenuButton(itemButtons, sheet, 200, 0, IDs.CLOCK);
+            addMenuButton(itemButtons, sheet, 300, 0, IDs.COIN);
 
             itemButtons.get(0).selected = true;
             itemID = itemButtons.get(0).id;
@@ -321,13 +321,13 @@ public class EditorGUI {
             this.showing = showing;
         }
 
-        private void addMenuButton(Array<MenuButton> array, Texture sheet, int sheetX, int sheetY, int tileID) {
+        private void addMenuButton(Array<MenuButton> array, Texture sheet, int sheetX, int sheetY, int id) {
 
             if (array.size % 2 == 0 && array.size != 0) {
                 bottomY += 120;
             }
 
-            array.add(new MenuButton(new TextureRegion(sheet, sheetX, sheetY, (int) Box2DVars.PPM, (int) Box2DVars.PPM), new Vector2(30 + (120 * (array.size % 2)), bottomY), tileID));
+            array.add(new MenuButton(new TextureRegion(sheet, sheetX, sheetY, (int) Box2DVars.PPM, (int) Box2DVars.PPM), new Vector2(30 + (120 * (array.size % 2)), bottomY), id));
         }
     }
 

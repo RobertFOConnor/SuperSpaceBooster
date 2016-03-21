@@ -12,14 +12,18 @@ public class DesktopLauncher {
         config.addIcon("icons/icon_64.png", FileType.Internal);
         config.addIcon("icons/icon_32.png", FileType.Internal);
 
-        config.vSyncEnabled=false;
+        config.vSyncEnabled=true;
 
-        config.width = 960;
-        config.height = 540;
+        boolean fullscreen = false;
 
-        /*config.width = 1920;
-        config.height = 1080;
-        config.fullscreen = true;*/
+        if(!fullscreen) {
+            config.width = 960;
+            config.height = 540;
+        } else {
+            config.width = 1920;
+            config.height = 1080;
+            config.fullscreen = true;
+        }
 
         config.title = "Super Space Booster";
 

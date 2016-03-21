@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
@@ -198,7 +199,16 @@ public class BodyFactory {
         if (GameScreen.customMap != null) {
             for (MapManager.DraggableObject mapObject : MapManager.itemList) {
                 Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
-                pickups.add(createPickUp(world, pos, null));
+                String type = "coin";
+                if(mapObject.getId() == IDs.GAS) {
+                    type = "gas";
+                } else if(mapObject.getId() == IDs.AMMO) {
+                    type = "ammo";
+                } else if(mapObject.getId() == IDs.CLOCK) {
+                    type = "time";
+                }
+
+                pickups.add(createPickUp(world, pos, type));
             }
         } else {
             if (ml != null) {

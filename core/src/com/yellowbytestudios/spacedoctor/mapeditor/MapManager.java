@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -100,7 +99,7 @@ public class MapManager {
 
         itemList = new Array<DraggableObject>();
         for (CustomMapObject item : savedMap.getItemArray()) {
-            itemList.add(new DraggableObject(item.getId(), MapEditorAssets.manager.get(MapEditorAssets.COIN_ICON, Texture.class), item.getPos().cpy()));
+            addItemWithId(item.getId(), item.getPos().cpy());
         }
     }
 
@@ -388,14 +387,27 @@ public class MapManager {
         }
     }
 
-    public void addItem(String itemID) { //will take item id.
+    public void addItem(int itemID) { //will take item id.
         if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
             if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
 
-                if(itemID.equals("COIN")) {
-                    itemList.add(new DraggableObject(itemID, MapEditorAssets.manager.get(MapEditorAssets.COIN_ICON, Texture.class), touch));
-                }
+                addItemWithId(itemID, touch);
             }
+        }
+    }
+
+    private void addItemWithId(int itemID, Vector2 pos) {
+
+        Texture itemSheet = MapEditorAssets.manager.get(MapEditorAssets.ITEM_SHEET, Texture.class);
+
+        if (itemID == IDs.COIN) {
+            itemList.add(new DraggableObject(itemID, MapEditorAssets.manager.get(MapEditorAssets.COIN_ICON, Texture.class), pos));
+        } else if (itemID == IDs.GAS) {
+            itemList.add(new DraggableObject(itemID, new TextureRegion(itemSheet, 0, 0, 100, 100), pos));
+        } else if (itemID == IDs.AMMO) {
+            itemList.add(new DraggableObject(itemID, new TextureRegion(itemSheet, 100, 0, 100, 100), pos));
+        } else if (itemID == IDs.CLOCK) {
+            itemList.add(new DraggableObject(itemID, new TextureRegion(itemSheet, 200, 0, 100, 100), pos));
         }
     }
 
@@ -413,7 +425,7 @@ public class MapManager {
 
         private boolean selected = false;
         private float boundX, boundY;
-        private String id = "";
+        private int id = -1;
 
         public DraggableObject(Texture texture, Vector2 pos) {
             super(texture);
@@ -421,7 +433,14 @@ public class MapManager {
             setPos(pos);
         }
 
-        public DraggableObject(String id, Texture texture, Vector2 pos) {
+        public DraggableObject(int id, Texture texture, Vector2 pos) {
+            super(texture);
+            this.id = id;
+            setBounds();
+            setPos(pos);
+        }
+
+        public DraggableObject(int id, TextureRegion texture, Vector2 pos) {
             super(texture);
             this.id = id;
             setBounds();
@@ -461,7 +480,7 @@ public class MapManager {
             return getBounds().contains(touch);
         }
 
-        public String getId() {
+        public int getId() {
             return id;
         }
     }
