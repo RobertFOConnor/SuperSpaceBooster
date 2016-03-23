@@ -40,6 +40,7 @@ public class PickUp extends Box2DSprite {
     }
 
     public void activate(SpacemanPlayer player) {
+
         if (type.equals("ammo")) {
             player.setCurrAmmo(10);
         } else if (type.equals("gas")) {

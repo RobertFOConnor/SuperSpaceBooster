@@ -16,8 +16,6 @@ public class Box2DContactListeners implements ContactListener {
 
     private Array<Fixture> bodiesToRemove;
     private Body enemy;
-
-    private boolean atExit = false;
     private Body Exit;
 
     public Box2DContactListeners() {
@@ -63,12 +61,10 @@ public class Box2DContactListeners implements ContactListener {
         if (fa.getUserData() != null && fa.getUserData().equals("door")) {
             Exit = fa.getBody();
             ((SpacemanPlayer) fb.getBody().getUserData()).setFinished(true);
-            atExit = true;
         }
         if (fb.getUserData() != null && fb.getUserData().equals("door")) {
             Exit = fb.getBody();
             ((SpacemanPlayer) fa.getBody().getUserData()).setFinished(true);
-            atExit = true;
         }
 
         if (fa.getUserData() != null && fa.getUserData().equals("pickup")) {
@@ -145,9 +141,6 @@ public class Box2DContactListeners implements ContactListener {
         return Exit;
     }
 
-    public boolean isAtExit() {
-        return atExit;
-    }
 
     private void playFootstep() {
         if ((int) (Math.random() * 3) == 2) {

@@ -246,12 +246,51 @@ public class GameScreen implements Screen {
             e.setHealth(e.getHealth() - 1);
 
             if (e.getHealth() <= 0) {
-                enemies.removeValue(e, true);
-                world.destroyBody(enemyBody);
+                killEnemy(e);
             }
             contactListener.nullifyEnemy();
         }
     }
+
+
+    private void killEnemy(final Enemy e) {
+
+        final Body enemyBody = contactListener.getEnemy();
+
+        if (!e.isDead()) {
+
+            Player.PlayerListener myListener = new Player.PlayerListener() {
+                @Override
+                public void animationFinished(Animation animation) {
+                    enemies.removeValue(e, true);
+                    world.destroyBody(enemyBody);
+                }
+
+                @Override
+                public void animationChanged(Animation oldAnim, Animation newAnim) {
+
+                }
+
+                @Override
+                public void preProcess(Player player) {
+
+                }
+
+                @Override
+                public void postProcess(Player player) {
+
+                }
+
+                @Override
+                public void mainlineKeyChanged(Mainline.Key prevKey, Mainline.Key newKey) {
+
+                }
+            };
+            e.startDeath(myListener);
+            e.setDead(true);
+        }
+    }
+
 
     public void addBullet(SpacemanPlayer player) {
 

@@ -38,28 +38,26 @@ public class SpriterManager {
     }
 
     public Player initDemon() {
-        Player player = new Player(data.getEntity("platty"));
+        Player player = new Player(data.getEntity("eyeball"));
         player.setScale(0.8f);
         player.setAnimation("walking");
         return player;
     }
 
     public Player initGasPickUp() {
-        Player player = new Player(data.getEntity("gas_pickup"));
-        player.setScale(0.85f);
-        player.setAnimation("default");
-        return player;
+        return getPickUp("gas_pickup");
     }
 
     public Player initAmmoPickUp() {
-        Player player = new Player(data.getEntity("ammo_pickup"));
-        player.setScale(0.85f);
-        player.setAnimation("default");
-        return player;
+        return getPickUp("ammo_pickup");
     }
 
     public Player initTimePickUp() {
-        Player player = new Player(data.getEntity("time_pickup"));
+        return getPickUp("time_pickup");
+    }
+
+    private Player getPickUp(String type) {
+        Player player = new Player(data.getEntity(type));
         player.setScale(0.85f);
         player.setAnimation("default");
         return player;

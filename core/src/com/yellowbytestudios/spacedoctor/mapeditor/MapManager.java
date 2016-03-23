@@ -94,7 +94,7 @@ public class MapManager {
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
         for (Vector2 enemy : savedMap.getEnemyArray()) {
-            enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), enemy.cpy()));
+            enemyList.add(new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), enemy.cpy()));
         }
 
         itemList = new Array<DraggableObject>();
@@ -123,8 +123,8 @@ public class MapManager {
     }
 
     private void setupPlayerAndExit() {
-        exit = new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.EXIT_SPAWN, Texture.class), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
-        playerSpawn = new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.PLAYER_SPAWN, Texture.class), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
+        exit = new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.EXIT_SPAWN, Texture.class), new Vector2(exitX * Box2DVars.PPM, exitY * Box2DVars.PPM));
+        playerSpawn = new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.PLAYER_SPAWN, Texture.class), new Vector2(startX * Box2DVars.PPM, startY * Box2DVars.PPM));
     }
 
 
@@ -382,7 +382,7 @@ public class MapManager {
     public void addEnemy() { // will take enemy id.
         if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
             if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
-                enemyList.add(new DraggableObject(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), touch));
+                enemyList.add(new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), touch));
             }
         }
     }
@@ -427,12 +427,6 @@ public class MapManager {
         private float boundX, boundY;
         private int id = -1;
 
-        public DraggableObject(Texture texture, Vector2 pos) {
-            super(texture);
-            setBounds();
-            setPos(pos);
-        }
-
         public DraggableObject(int id, Texture texture, Vector2 pos) {
             super(texture);
             this.id = id;
@@ -470,6 +464,10 @@ public class MapManager {
             } else if (getY() > boundY) {
                 setPosition(getX(), boundY);
             }
+        }
+
+        public Vector2 getCenter() {
+            return new Vector2(getX()+getWidth()/2, getY()+getHeight()/2);
         }
 
         public Rectangle getBounds() {

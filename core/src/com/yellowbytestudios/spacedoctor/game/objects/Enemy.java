@@ -3,6 +3,7 @@ package com.yellowbytestudios.spacedoctor.game.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
@@ -12,6 +13,7 @@ public class Enemy extends Box2DSprite {
 
     private String type = "";
     private int health = 3;
+    private boolean isDead = false;
 
     private float SPEED;
     private float ACCELERATION;
@@ -30,7 +32,7 @@ public class Enemy extends Box2DSprite {
     }
 
     private void setSpriterPos() {
-        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 75);
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM)-48);
     }
 
     public void render(SpriteBatch sb) {
@@ -87,10 +89,13 @@ public class Enemy extends Box2DSprite {
 
         assignVariables();
 
-        if(followsPlayer) {
-            followPlayer(player);
-        } else {
-            moveLeft();
+        if (!isDead) {
+
+            if (followsPlayer) {
+                followPlayer(player);
+            } else {
+                moveLeft();
+            }
         }
     }
 
@@ -109,8 +114,22 @@ public class Enemy extends Box2DSprite {
         if (velX > 0.5 || velX < -0.5) {
             spriter.setAnimation("walking");
         } else {
-            spriter.setAnimation("idle");
+            spriter.setAnimation("walking");
         }
+    }
+
+    public void startDeath(Player.PlayerListener listener) {
+        spriter.setAnimation("death");
+        spriter.addListener(listener);
+        isDead = true;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setDead(boolean isDead) {
+        this.isDead = isDead;
     }
 
     private boolean facingLeft() {

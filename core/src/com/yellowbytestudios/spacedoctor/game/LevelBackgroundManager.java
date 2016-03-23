@@ -20,12 +20,18 @@ public class LevelBackgroundManager {
     private BoundedCamera camera;
     private int width, height;
     private OrthoCamera windowCamera;
+    private Color skyTop, skyBot;
 
     public LevelBackgroundManager(BoundedCamera camera, int width, int height) {
         this.camera = camera;
         windowCamera = new OrthoCamera();
         windowCamera.resize();
 
+
+        int TColors[] = {212, 208, 128}; //TOP OF BG GRADIENT
+        int BColors[] = {40, 102, 83}; //BOTTOM OF BG GRADIENT
+        skyTop = new Color((float) (TColors[0] / 255), (float) TColors[1] / 255, (float) TColors[2] / 255, 1);
+        skyBot = new Color((float) (BColors[0] / 255), (float) BColors[1] / 255, (float) BColors[2] / 255, 1);
 
         this.width = width;
         this.height = height;
@@ -63,7 +69,8 @@ public class LevelBackgroundManager {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
-        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT, Color.BLUE, Color.BLUE, Color.BLACK, Color.BLACK);
+
+        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT, skyTop, skyTop, skyBot, skyBot);
         shapeRenderer.end();
 
         sb.end();

@@ -21,6 +21,10 @@ public class TileManager {
     private FixtureDef fdef;
     int wallCount = 0;
 
+    boolean shouldDrawVector = false;
+    boolean lineStarted = false;
+    int lineCountX = 0, lineCountY = 0;
+
     private void setMapWidthHeight(TiledMap tm) {
         if (tm.getProperties().get("width", Integer.class) != null) { //Check for Custom Map.
             tileMapWidth = tm.getProperties().get("width", Integer.class);
@@ -50,9 +54,8 @@ public class TileManager {
         Vector2 top_L = new Vector2(leftSide, rightSide);
         Vector2 top_R = new Vector2(rightSide, rightSide);
 
-        boolean shouldDrawVector = false;
-        Vector2 start;
-        Vector2 finish;
+        Vector2 start = new Vector2();
+        Vector2 finish = new Vector2();
 
         BodyDef bdef = new BodyDef();
         fdef = new FixtureDef();
@@ -63,70 +66,170 @@ public class TileManager {
 
                 //Get cell at (row, col) position.
                 TiledMapTileLayer.Cell cell = layer.getCell(col, row);
-
                 //Get cell above current cell.
                 TiledMapTileLayer.Cell above_cell = layer.getCell(col, row + 1);
-
-                start = top_L;
-                finish = top_R;
-
                 //Set the main cell to our current cell.
                 TiledMapTileLayer.Cell main_cell = cell;
 
 
+                shouldDrawVector = false;
+
                 //Check if cell is a tile.
                 if (cell != null) {
                     //If cell is a tile and there is nothing above it, we should draw.
-                    shouldDrawVector = (above_cell == null);
+
+                    if (above_cell == null) {
+                        if (!lineStarted) {
+                            start = top_L;
+                            finish = top_R;
+                        } else {
+                            finish = top_R.cpy().add(lineCountX, 0);
+                        }
+                        lineStarted = true;
+                        lineCountX++;
+
+                        if (getTileId(main_cell) == TileIDs.DOWN_SPIKE) {
+                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.1f, 0.01f), top_R.cpy().add(-0.1f, 0.01f), row, col);
+                        }
+
+                    } else {
+                        checkDrawVector();
+                    }
+
                 } else {
 
                     //If cell is empty but there is a tile above it, we should draw.
                     if (above_cell != null) {
-                        shouldDrawVector = true;
+                        if (!lineStarted) {
+                            start = top_L;
+                            finish = top_R;
+                        } else {
+                            finish = top_R.cpy().add(lineCountX, 0);
+                        }
+                        lineStarted = true;
+                        lineCountX++;
                         main_cell = above_cell;
+
+                        if (getTileId(main_cell) == TileIDs.UP_SPIKE) {
+                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.1f, -0.01f), top_R.cpy().add(-0.1f, -0.01f), row, col);
+                        }
                     } else {
-                        shouldDrawVector = false;
+                        checkDrawVector();
                     }
                 }
 
+
                 if (shouldDrawVector) {
                     drawVector(world, main_cell, start, finish, row, col);
+                    lineCountX = 0;
                 }
             }
         }
+        lineStarted = false;
+        lineCountX = 0;
 
-        for (int row = 0; row < layer.getHeight(); row++) {
-            for (int col = 0; col < layer.getWidth(); col++) {
+
+        for (int col = 0; col < layer.getWidth(); col++) {
+            for (int row = 0; row < layer.getHeight(); row++) {
 
                 TiledMapTileLayer.Cell cell = layer.getCell(col, row);
                 TiledMapTileLayer.Cell left_cell = layer.getCell(col - 1, row);
-
-                start = top_L;
-                finish = bot_L;
-
-
                 TiledMapTileLayer.Cell main_cell = cell;
+                shouldDrawVector = false;
 
 
                 if (cell != null) {
-                    shouldDrawVector = (left_cell == null);
-                } else {
-                    if (left_cell != null) {
-                        shouldDrawVector = true;
-                        main_cell = left_cell;
+                    if (left_cell == null) {
+                        if (!lineStarted) {
+                            start = top_L;
+                            finish = bot_L;
+                        } else {
+                            start = top_L.cpy().add(0, lineCountY);
+                        }
+                        lineStarted = true;
+                        lineCountY++;
+
+                        if (getTileId(main_cell) == TileIDs.LEFT_SPIKE) {
+                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(-0.01f, -0.1f), bot_L.cpy().add(-0.01f, 0.1f), row, col);
+                        }
                     } else {
-                        shouldDrawVector = false;
+                        checkDrawVector();
+                    }
+                } else {
+                    //If cell is empty but there is a tile above it, we should draw.
+                    if (left_cell != null) {
+                        if (!lineStarted) {
+                            start = top_L;
+                            finish = bot_L;
+                        } else {
+                            start = top_L.cpy().add(0, lineCountY);
+                        }
+                        lineStarted = true;
+                        lineCountY++;
+                        main_cell = left_cell;
+
+                        if (getTileId(main_cell) == TileIDs.RIGHT_SPIKE) {
+                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.01f, -0.1f), bot_L.cpy().add(0.01f, 0.1f), row, col);
+                        }
+
+                    } else {
+                        checkDrawVector();
                     }
                 }
 
                 if (shouldDrawVector) {
                     drawVector(world, main_cell, start, finish, row, col);
+                    lineCountY = 0;
                 }
             }
         }
     }
 
+    private int getTileId(TiledMapTileLayer.Cell cell) {
+        int id = cell.getTile().getId();
+
+        if (!GameScreen.isCustomMap) {
+            id--; //WHY? I DO NOT KNOW..
+        }
+        return id;
+    }
+
+    private void checkDrawVector() {
+        if (lineStarted) {
+            shouldDrawVector = true;
+            lineStarted = false;
+        }
+    }
+
     private void drawVector(World world, TiledMapTileLayer.Cell main_cell, Vector2 start, Vector2 finish, int row, int col) {
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set(((col - lineCountX) + 0.5f), ((row - lineCountY) + 0.5f));
+
+        ChainShape chainShape = new ChainShape();
+
+        Vector2[] v;
+        v = new Vector2[2];
+        v[0] = start;
+        v[1] = finish;
+
+
+        chainShape.createChain(v);
+        fdef.density = 1f;
+        fdef.shape = chainShape;
+        fdef.filter.categoryBits = Box2DVars.BIT_WALL;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+
+        world.createBody(bdef).createFixture(fdef).setUserData("ground");
+        chainShape.dispose();
+
+        wallCount++;
+        System.out.println(wallCount + ": WALL CREATED!");
+    }
+
+
+    private void drawSpikeHitBox(World world, TiledMapTileLayer.Cell main_cell, Vector2 start, Vector2 finish, int row, int col) {
+
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.StaticBody;
         bdef.position.set((col + 0.5f), (row + 0.5f));
@@ -142,32 +245,13 @@ public class TileManager {
         chainShape.createChain(v);
         fdef.density = 1f;
         fdef.shape = chainShape;
+        fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
-
-        setCollisionVariables(main_cell);
         world.createBody(bdef).createFixture(fdef).setUserData("ground");
         chainShape.dispose();
 
-        wallCount++;
-        System.out.println(wallCount + ": WALL CREATED!");
-    }
-
-    public void setCollisionVariables(TiledMapTileLayer.Cell main_cell) {
-        if (main_cell != null) {
-            int id = main_cell.getTile().getId();
-
-            if (!GameScreen.isCustomMap) {
-                id--; //WHY? I DO NOT KNOW..
-            }
-
-            if (id == TileIDs.DOWN_SPIKE || id == TileIDs.LEFT_SPIKE || id == TileIDs.RIGHT_SPIKE || id == TileIDs.UP_SPIKE) {
-                fdef.filter.categoryBits = Box2DVars.BIT_SPIKE;
-
-            } else {
-                fdef.filter.categoryBits = Box2DVars.BIT_WALL;
-            }
-        }
-        fdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+        System.out.println("SPIKES CREATED!");
     }
 
     public int getMapWidth() {

@@ -358,8 +358,8 @@ public class BodyFactory {
 
     private static Enemy createEnemy(World world, Vector2 pos) {
 
-        float width = 51 / PPM;
-        float height = 75 / PPM;
+        float width = 58 / PPM;
+        float height = 48 / PPM;
 
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.DynamicBody;

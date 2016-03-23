@@ -45,12 +45,12 @@ public class CustomMap extends TiledMap {
         exitPos = new Vector2(MapManager.exitX * Box2DVars.PPM, MapManager.exitY * Box2DVars.PPM);
         startPos = new Vector2(MapManager.startX * Box2DVars.PPM, MapManager.startY * Box2DVars.PPM);
 
-        for(MapManager.DraggableObject enemy : MapManager.enemyList) {
-            enemyArray.add(new Vector2(enemy.getX()+enemy.getWidth()/2, enemy.getY()+enemy.getHeight()/2));
+        for (MapManager.DraggableObject enemy : MapManager.enemyList) {
+            enemyArray.add(enemy.getCenter());
         }
 
-        for(MapManager.DraggableObject item : MapManager.itemList) {
-            itemArray.add(new CustomMapObject(item.getId(), new Vector2(item.getX()+item.getWidth()/2, item.getY()+item.getHeight()/2)));
+        for (MapManager.DraggableObject item : MapManager.itemList) {
+            itemArray.add(new CustomMapObject(item.getId(), item.getCenter()));
         }
     }
 
