@@ -18,15 +18,15 @@ public class Platform extends Box2DSprite {
 
 
         if (type.equals("horizontal")) {
-            horizontal = true;
-            startY = body.getPosition().x;
-            body.setLinearVelocity(speed, 0f);
-            texture = Assets.manager.get(Assets.VER_PLATFORM, Texture.class);
-        } else {
             horizontal = false;
             startY = body.getPosition().y;
             body.setLinearVelocity(0f, speed);
             texture = Assets.manager.get(Assets.HOR_PLATFORM, Texture.class);
+        } else {
+            horizontal = true;
+            startY = body.getPosition().x;
+            body.setLinearVelocity(speed, 0f);
+            texture = Assets.manager.get(Assets.VER_PLATFORM, Texture.class);
         }
 
         width = texture.getWidth();

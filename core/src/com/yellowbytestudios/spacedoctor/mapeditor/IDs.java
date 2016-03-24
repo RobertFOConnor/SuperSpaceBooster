@@ -14,4 +14,9 @@ public class IDs {
 
     //ENEMIES
     public static final int EYEGUY = 100;
+    public static final int PLATTY = 101;
+
+
+    //OBSTACLES
+    public static final int HORIZONTAL_SPIKER = 500;
 }

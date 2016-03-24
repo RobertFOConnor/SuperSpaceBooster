@@ -18,6 +18,7 @@ public class CustomMap extends TiledMap {
 
     private Array<CustomMapObject> enemyArray = new Array<CustomMapObject>();
     private Array<CustomMapObject> itemArray = new Array<CustomMapObject>();
+    private Array<CustomMapObject> obstacleArray = new Array<CustomMapObject>();
 
     public CustomMap() {
 
@@ -52,6 +53,10 @@ public class CustomMap extends TiledMap {
         for (MapManager.DraggableObject item : MapManager.itemList) {
             itemArray.add(new CustomMapObject(item.getId(), item.getCenter()));
         }
+
+        for (MapManager.DraggableObject obstacle : MapManager.obstacleList) {
+            obstacleArray.add(new CustomMapObject(obstacle.getId(), obstacle.getCenter()));
+        }
     }
 
     public String getName() {
@@ -78,5 +83,7 @@ public class CustomMap extends TiledMap {
         return itemArray;
     }
 
-
+    public Array<CustomMapObject> getObstacleArray() {
+        return obstacleArray;
+    }
 }

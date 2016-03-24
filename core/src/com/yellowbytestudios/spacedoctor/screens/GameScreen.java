@@ -80,6 +80,7 @@ public class GameScreen implements Screen {
     public GameScreen(int levelNo) {
         GameScreen.levelNo = levelNo;
         isCustomMap = false;
+        customMap = null;
     }
 
     public GameScreen(TiledMap customMap) {
@@ -151,7 +152,7 @@ public class GameScreen implements Screen {
 
         //TEMP PLAYER 2!
 
-        if(Controllers.getControllers().size > 1) {
+        if (Controllers.getControllers().size > 1) {
             players.add(BodyFactory.createPlayer(world, 1, 1));
             players.get(1).setPos(new Vector2(startX, startY));
         }
@@ -202,9 +203,9 @@ public class GameScreen implements Screen {
         }
 
         gui.update();
+        updateObjects();
         removeObjects();
         removeEnemies();
-        updateObjects();
     }
 
     private void updateObjects() {
@@ -247,6 +248,7 @@ public class GameScreen implements Screen {
 
             if (e.getHealth() <= 0) {
                 killEnemy(e);
+                world.destroyBody(enemyBody);
             }
             contactListener.nullifyEnemy();
         }
@@ -263,7 +265,6 @@ public class GameScreen implements Screen {
                 @Override
                 public void animationFinished(Animation animation) {
                     enemies.removeValue(e, true);
-                    world.destroyBody(enemyBody);
                 }
 
                 @Override
@@ -378,10 +379,10 @@ public class GameScreen implements Screen {
             targetX = ((playerPos.x * PPM) + (players.get(1).getPos().x * PPM)) / 2;
             targetY = ((playerPos.y * PPM) + (players.get(1).getPos().y * PPM)) / 2;
 
-            float distance = (float) Math.sqrt(Math.pow((players.get(1).getPos().x - players.get(0).getPos().x), 2)+Math.pow((players.get(1).getPos().y - players.get(0).getPos().y), 2));
+            float distance = (float) Math.sqrt(Math.pow((players.get(1).getPos().x - players.get(0).getPos().x), 2) + Math.pow((players.get(1).getPos().y - players.get(0).getPos().y), 2));
 
-            if(distance > 10) {
-                zoom = 1+((distance-10)/20);
+            if (distance > 10) {
+                zoom = 1 + ((distance - 10) / 20);
             }
         }
 
@@ -440,7 +441,7 @@ public class GameScreen implements Screen {
         }
 
         //Render Box2D world.
-        if (MainGame.TEST_MODE) {
+        if (!MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
     }

@@ -20,6 +20,8 @@ public class Enemy extends Box2DSprite {
     private float ACCELERATION;
     private float velX, velY;
 
+    private float enemySpeed;
+
     private com.brashmonkey.spriter.Player spriter;
     private boolean followsPlayer = true;
     private boolean movingLeft = true;
@@ -27,9 +29,14 @@ public class Enemy extends Box2DSprite {
     public Enemy(Body body, int id) {
         super(body);
 
-        if(id == IDs.EYEGUY) {
+        if (id == IDs.EYEGUY) {
             spriter = MainGame.spriterManager.getSpiter("eyeball", "walking", 0.8f);
             health = 1;
+            enemySpeed = 150f;
+        } else if (id == IDs.PLATTY) {
+            spriter = MainGame.spriterManager.getSpiter("platty", "walking", 0.8f);
+            health = 2;
+            enemySpeed = 300f;
         }
 
         assignVariables();
@@ -37,11 +44,14 @@ public class Enemy extends Box2DSprite {
     }
 
     private void setSpriterPos() {
-        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM)-48);
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 48);
     }
 
     public void render(SpriteBatch sb) {
-        setSpriterPos();
+
+        if (!isDead) {
+            setSpriterPos();
+        }
         spriter.update();
         MainGame.spriterManager.draw(spriter);
     }
@@ -81,7 +91,7 @@ public class Enemy extends Box2DSprite {
     private void assignVariables() {
 
         ACCELERATION = Gdx.graphics.getDeltaTime() * 2800f;
-        SPEED = Gdx.graphics.getDeltaTime() * 150f;
+        SPEED = Gdx.graphics.getDeltaTime() * enemySpeed;
 
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
@@ -119,7 +129,7 @@ public class Enemy extends Box2DSprite {
         if (velX > 0.5 || velX < -0.5) {
             spriter.setAnimation("walking");
         } else {
-            spriter.setAnimation("walking");
+            spriter.setAnimation("idle");
         }
     }
 

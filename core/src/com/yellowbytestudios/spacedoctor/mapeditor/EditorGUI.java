@@ -14,11 +14,9 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.game.Button;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
-
-import java.awt.Menu;
 
 public class EditorGUI {
 
@@ -32,6 +30,7 @@ public class EditorGUI {
     private int tileID = -1;
     private int enemyID = -1;
     private int itemID = -1;
+    private int obstacleID = -1;
 
     private ItemSideMenu sideMenu;
 
@@ -89,12 +88,14 @@ public class EditorGUI {
                     if (moveButton.isPressed()) {
                         mapManager.dragMap();
                     } else if (!eraseButton.isPressed()) {
-                        if(sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
+                        if (sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
                             mapManager.checkForTilePlacement(tileID);
-                        } else if(sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
+                        } else if (sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
                             mapManager.addEnemy(enemyID);
-                        }  else if(sideMenu.state.equals(sideMenu.ITEM_STATE)) {
+                        } else if (sideMenu.state.equals(sideMenu.ITEM_STATE)) {
                             mapManager.addItem(itemID);
+                        } else if (sideMenu.state.equals(sideMenu.OBSTACLE_STATE)) {
+                            mapManager.addObstacle(obstacleID);
                         }
                     }
                 }
@@ -178,14 +179,15 @@ public class EditorGUI {
         private final String BLOCK_STATE = "BLOCK_STATE";
         private final String ENEMY_STATE = "ENEMY_STATE";
         private final String ITEM_STATE = "ITEM_STATE";
+        private final String OBSTACLE_STATE = "OBSTACLE_STATE";
 
         private String state = BLOCK_STATE;
 
         private boolean showing = true;
 
-        private Button blockTab, enemyTab, itemTab;
+        private Button blockTab, enemyTab, itemTab, obstacleTab;
 
-        private Array<MenuButton> tileButtons, enemyButtons, itemButtons;
+        private Array<MenuButton> tileButtons, enemyButtons, itemButtons, obstacleButtons;
         private NinePatch sideMenuBG = new NinePatch(MapEditorAssets.manager.get(MapEditorAssets.SIDE_MENU, Texture.class), 10, 10, 10, 10);
 
         private float bottomY = 290;
@@ -196,6 +198,7 @@ public class EditorGUI {
             blockTab = new Button(MapEditorAssets.BLOCK_TAB, new Vector2(270, 830), true);
             enemyTab = new Button(MapEditorAssets.ENEMY_TAB, new Vector2(270, 710), true);
             itemTab = new Button(MapEditorAssets.ITEM_TAB, new Vector2(270, 590), true);
+            obstacleTab = new Button(MapEditorAssets.OBSTACLE_TAB, new Vector2(270, 470), true);
 
 
             tileButtons = new Array<MenuButton>();
@@ -217,7 +220,8 @@ public class EditorGUI {
             //Setup ENEMY menu.
             bottomY = 290;
             enemyButtons = new Array<MenuButton>();
-            addMenuButton(enemyButtons, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_ICON, Texture.class), 0, 0, IDs.EYEGUY);
+            addMenuButton(enemyButtons, MapEditorAssets.manager.get(MapEditorAssets.EYE_GUY_ICON, Texture.class), 0, 0, IDs.EYEGUY);
+            addMenuButton(enemyButtons, MapEditorAssets.manager.get(MapEditorAssets.PLATTY_ICON, Texture.class), 0, 0, IDs.PLATTY);
             enemyButtons.get(0).selected = true;
             enemyID = enemyButtons.get(0).id;
 
@@ -232,6 +236,13 @@ public class EditorGUI {
 
             itemButtons.get(0).selected = true;
             itemID = itemButtons.get(0).id;
+
+            bottomY = 290;
+            obstacleButtons = new Array<MenuButton>();
+            addMenuButton(obstacleButtons, MapEditorAssets.manager.get(MapEditorAssets.PLATFORM_ICON, Texture.class), 0, 0, IDs.HORIZONTAL_SPIKER);
+
+            obstacleButtons.get(0).selected = true;
+            obstacleID = obstacleButtons.get(0).id;
 
         }
 
@@ -248,26 +259,36 @@ public class EditorGUI {
                 } else if (itemTab.checkTouch(touch)) {
                     state = ITEM_STATE;
                     eraseButton.setPressed(false);
+                } else if(obstacleTab.checkTouch(touch)) {
+                    state = OBSTACLE_STATE;
+                    eraseButton.setPressed(false);
                 }
 
 
                 if (state.equals(BLOCK_STATE)) {
                     int id = getButtonSelectedId(tileButtons);
-                    if(id != -1) {
+                    if (id != -1) {
                         tileID = id;
                         return true;
                     }
                 } else if (state.equals(ENEMY_STATE)) {
                     int id = getButtonSelectedId(enemyButtons);
-                    if(id != -1) {
+                    if (id != -1) {
                         enemyID = id;
                         return true;
                     }
                 } else if (state.equals(ITEM_STATE)) {
 
                     int id = getButtonSelectedId(itemButtons);
-                    if(id != -1) {
+                    if (id != -1) {
                         itemID = id;
+                        return true;
+                    }
+                } else if (state.equals(OBSTACLE_STATE)) {
+
+                    int id = getButtonSelectedId(obstacleButtons);
+                    if (id != -1) {
+                        obstacleID = id;
                         return true;
                     }
                 }
@@ -298,6 +319,7 @@ public class EditorGUI {
                 blockTab.render(sb);
                 enemyTab.render(sb);
                 itemTab.render(sb);
+                obstacleTab.render(sb);
 
 
                 if (state.equals(BLOCK_STATE)) {
@@ -316,6 +338,12 @@ public class EditorGUI {
                     //DRAW ITEMS
                     for (MenuButton ib : itemButtons) {
                         ib.render(sb);
+                    }
+                } else if (state.equals(OBSTACLE_STATE)) {
+
+                    //DRAW ITEMS
+                    for (MenuButton ob : obstacleButtons) {
+                        ob.render(sb);
                     }
                 }
             }
@@ -337,20 +365,31 @@ public class EditorGUI {
 
     public class MyTextInputListener implements Input.TextInputListener {
         @Override
-        public void input (String text) {
+        public void input(String text) {
 
-            if(MainGame.saveData.getMyMaps().size < 12) {
-                MainGame.saveData.getMyMaps().add(new CustomMap(text, mapManager.getMap()));
-            } else {
-                MainGame.saveData.getMyMaps().set(11, new CustomMap(text, mapManager.getMap()));
+            if(!mapNameExists(text)) {
+                if (MainGame.saveData.getMyMaps().size < 12) {
+                    MainGame.saveData.getMyMaps().add(new CustomMap(text, mapManager.getMap()));
+                } else {
+                    MainGame.saveData.getMyMaps().set(11, new CustomMap(text, mapManager.getMap()));
+                }
             }
             MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-
             //MAP SAVED MESSAGE DISPLAY HERE!!!!
         }
 
         @Override
-        public void canceled () {
+        public void canceled() {
         }
+    }
+
+    private boolean mapNameExists(String mapName) {
+        for (int i = 0; i < MainGame.saveData.getMyMaps().size; i++) {
+            if (MainGame.saveData.getMyMaps().get(i).getName().equals(mapName)) {
+                MainGame.saveData.getMyMaps().set(i, new CustomMap(mapName, mapManager.getMap()));
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -257,41 +257,51 @@ public class BodyFactory {
         Array<Platform> platforms = new Array<Platform>();
 
         MapLayer ml = tm.getLayers().get("platforms");
-        if (ml == null) return new Array<Platform>();
 
+        if (GameScreen.customMap != null) {
 
-        for (MapObject mo : ml.getObjects()) {
+            for (MapManager.DraggableObject mapObject : MapManager.obstacleList) {
 
-            Rectangle rectangle = ((RectangleMapObject) mo).getRectangle();
+                platforms.add(createPlatform(world, new Vector2(mapObject.getX() / 100, mapObject.getY() / 100)));
+            }
 
-            String type = mo.getProperties().get("type", String.class);
-            float width = rectangle.width / PPM;
-            float height = rectangle.height / PPM;
+        } else {
 
-            BodyDef cdef = new BodyDef();
-            cdef.type = BodyDef.BodyType.KinematicBody;
-            Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x + (width / 2), pos.y + (height / 2));
+            if (ml == null) return new Array<Platform>();
 
-            Body body = world.createBody(cdef);
+            for (MapObject mo : ml.getObjects()) {
 
-            PolygonShape bodyShape = new PolygonShape();
-            bodyShape.setAsBox(width / 2, height / 2);
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.density = 1f;
-            fixtureDef.shape = bodyShape;
-            fixtureDef.filter.categoryBits = Box2DVars.BIT_SPIKE;
-            fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
+            }
 
-            body.createFixture(fixtureDef).setUserData("wall");
-            Platform p = new Platform(body, type);
-            p.setLimit(Float.parseFloat(mo.getProperties().get("distance", String.class)));
-            body.setUserData(p);
-            platforms.add(p);
-            bodyShape.dispose();
         }
-
         return platforms;
+    }
+
+    public static Platform createPlatform(World world, Vector2 pos) {
+        float width = 400 / PPM;
+        float height = 200 / PPM;
+
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.KinematicBody;
+        cdef.position.set(pos.x + (width / 2), pos.y + (height / 2));
+
+        Body body = world.createBody(cdef);
+
+        PolygonShape bodyShape = new PolygonShape();
+        bodyShape.setAsBox(width / 2, height / 2);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 1f;
+        fixtureDef.shape = bodyShape;
+        fixtureDef.filter.categoryBits = Box2DVars.BIT_SPIKE;
+        fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
+        body.createFixture(fixtureDef).setUserData("wall");
+        Platform p = new Platform(body, "horizontal");
+        p.setLimit(3);
+        body.setUserData(p);
+        bodyShape.dispose();
+
+        return p;
     }
 
 

@@ -52,11 +52,8 @@ public class MapManager {
     public static float startX = 3;
     public static float startY = 4;
 
-    //ENEMIES.
-    public static Array<DraggableObject> enemyList;
-
-    //ITEMS
-    public static Array<DraggableObject> itemList;
+    //ENEMIES, ITEMS & OBSTACLES.
+    public static Array<DraggableObject> enemyList, itemList, obstacleList;
 
 
     //Tile Types.
@@ -94,12 +91,17 @@ public class MapManager {
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
         for (CustomMapObject enemy : savedMap.getEnemyArray()) {
-            addItemWithId(enemy.getId(), enemy.getPos().cpy());
+            addEnemyWithId(enemy.getId(), enemy.getPos().cpy());
         }
 
         itemList = new Array<DraggableObject>();
         for (CustomMapObject item : savedMap.getItemArray()) {
             addItemWithId(item.getId(), item.getPos().cpy());
+        }
+
+        obstacleList = new Array<DraggableObject>();
+        for (CustomMapObject obstacle : savedMap.getObstacleArray()) {
+            addItemWithId(obstacle.getId(), obstacle.getPos().cpy());
         }
     }
 
@@ -202,6 +204,10 @@ public class MapManager {
                     item.selected = false;
                 }
 
+                for (DraggableObject obstacle : obstacleList) {
+                    obstacle.selected = false;
+                }
+
                 exit.selected = false;
                 playerSpawn.selected = false;
                 holdingObject = false;
@@ -231,6 +237,12 @@ public class MapManager {
                     for (DraggableObject item : itemList) {
                         if (item.checkTouch(touch)) {
                             setDraggableSelected(item);
+                        }
+                    }
+
+                    for (DraggableObject obstacle : obstacleList) {
+                        if (obstacle.checkTouch(touch)) {
+                            setDraggableSelected(obstacle);
                         }
                     }
 
@@ -320,6 +332,12 @@ public class MapManager {
                     itemList.removeValue(item, true);
                 }
             }
+
+            for (DraggableObject obstacle : obstacleList) {
+                if (obstacle.checkTouch(touch)) {
+                    obstacleList.removeValue(obstacle, true);
+                }
+            }
         }
     }
 
@@ -351,6 +369,7 @@ public class MapManager {
 
         drawDraggableObjects(itemList, sb);
         drawDraggableObjects(enemyList, sb);
+        drawDraggableObjects(obstacleList, sb);
 
         sb.end();
     }
@@ -376,28 +395,44 @@ public class MapManager {
     }
 
     public void addEnemy(int enemyID) { // will take enemy id.
-        if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
-            if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
-                addEnemyWithId(enemyID, touch);
-            }
+        if (touchWithinMapBounds()) {
+            addEnemyWithId(enemyID, touch);
         }
     }
 
     public void addItem(int itemID) { //will take item id.
+        if (touchWithinMapBounds()) {
+            addItemWithId(itemID, touch);
+        }
+    }
+
+    public void addObstacle(int obstacleID) { //will take obstacle id.
+        if (touchWithinMapBounds()) {
+            addObstacleWithId(obstacleID, touch);
+        }
+    }
+
+    private boolean touchWithinMapBounds() {
         if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
             if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
-
-                addItemWithId(itemID, touch);
+                return true;
             }
+        }
+        return false;
+    }
+
+    private void addObstacleWithId(int obstacleID, Vector2 pos) {
+
+        if (obstacleID == IDs.HORIZONTAL_SPIKER) {
+            obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.HOR_PLATFORM, Texture.class), pos));
         }
     }
 
     private void addEnemyWithId(int enemyID, Vector2 pos) {
-
-        Texture itemSheet = MapEditorAssets.manager.get(MapEditorAssets.ITEM_SHEET, Texture.class);
-
         if (enemyID == IDs.EYEGUY) {
-            enemyList.add(new DraggableObject(enemyID, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), pos));
+            enemyList.add(new DraggableObject(enemyID, MapEditorAssets.manager.get(MapEditorAssets.EYE_GUY_SPAWN, Texture.class), pos));
+        } else if (enemyID == IDs.PLATTY) {
+            enemyList.add(new DraggableObject(enemyID, MapEditorAssets.manager.get(MapEditorAssets.PLATTY_SPAWN, Texture.class), pos));
         }
     }
 
@@ -473,7 +508,7 @@ public class MapManager {
         }
 
         public Vector2 getCenter() {
-            return new Vector2(getX()+getWidth()/2, getY()+getHeight()/2);
+            return new Vector2(getX() + getWidth() / 2, getY() + getHeight() / 2);
         }
 
         public Rectangle getBounds() {
@@ -504,5 +539,6 @@ public class MapManager {
         startY = 4;
         enemyList = new Array<DraggableObject>();
         itemList = new Array<DraggableObject>();
+        obstacleList = new Array<DraggableObject>();
     }
 }
