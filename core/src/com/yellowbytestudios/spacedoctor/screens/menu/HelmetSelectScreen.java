@@ -69,7 +69,7 @@ public class HelmetSelectScreen implements Screen {
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
 
-        spriter = MainGame.spriterManager.initSelector();
+        spriter = MainGame.spriterManager.getSpiter("selector", "default", 1.6f);
     }
 
     private class HelmetButton extends SpriteButton {

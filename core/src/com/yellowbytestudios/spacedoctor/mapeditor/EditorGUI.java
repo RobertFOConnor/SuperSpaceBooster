@@ -92,7 +92,7 @@ public class EditorGUI {
                         if(sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
                             mapManager.checkForTilePlacement(tileID);
                         } else if(sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
-                            mapManager.addEnemy();
+                            mapManager.addEnemy(enemyID);
                         }  else if(sideMenu.state.equals(sideMenu.ITEM_STATE)) {
                             mapManager.addItem(itemID);
                         }
@@ -200,6 +200,7 @@ public class EditorGUI {
 
             tileButtons = new Array<MenuButton>();
 
+            //Setup TILES menu.
             Texture sheet = MapEditorAssets.manager.get(MapEditorAssets.TILESHEET, Texture.class);
             addMenuButton(tileButtons, sheet, 0, 0, TileIDs.LIGHT_PURPLE);
             addMenuButton(tileButtons, sheet, 200, 100, TileIDs.DARK_PURPLE);
@@ -212,12 +213,15 @@ public class EditorGUI {
             tileButtons.get(0).selected = true;
             tileID = tileButtons.get(0).id;
 
+
+            //Setup ENEMY menu.
+            bottomY = 290;
             enemyButtons = new Array<MenuButton>();
-            enemyButtons.add(new MenuButton(new TextureRegion(MapEditorAssets.manager.get(MapEditorAssets.ENEMY_ICON, Texture.class)), new Vector2(30, bottomY), 0));
+            addMenuButton(enemyButtons, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_ICON, Texture.class), 0, 0, IDs.EYEGUY);
             enemyButtons.get(0).selected = true;
             enemyID = enemyButtons.get(0).id;
 
-            //Setup Item menu.
+            //Setup PICK-UP menu.
             sheet = MapEditorAssets.manager.get(MapEditorAssets.ITEM_SHEET, Texture.class);
             bottomY = 290;
             itemButtons = new Array<MenuButton>();

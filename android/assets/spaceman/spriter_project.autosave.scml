@@ -1750,18 +1750,18 @@
             </mainline>
             <timeline id="0" name="eye_guy_1_000">
                 <key id="0" spin="0">
-                    <object folder="6" file="2" x="-91.702703" y="128.930502"/>
+                    <object folder="6" file="2" x="-91.702703" y="128.930502" angle="0"/>
                 </key>
                 <key id="1" time="389" spin="0">
-                    <object folder="6" file="2" x="-87.939794" y="128.930502" scale_x="0.954389"/>
+                    <object folder="6" file="2" x="-87.939794" y="128.930502" angle="0" scale_x="0.954389"/>
                 </key>
             </timeline>
             <timeline id="1" name="eye_guy_2_000">
                 <key id="0" spin="0">
-                    <object folder="6" file="3" x="-31.660232" y="46.718147"/>
+                    <object folder="6" file="3" x="-31.660232" y="46.718147" angle="0"/>
                 </key>
                 <key id="1" time="389" spin="0">
-                    <object folder="6" file="3" x="-28.716842" y="46.718147" scale_x="0.709172"/>
+                    <object folder="6" file="3" x="-28.716842" y="46.718147" angle="0" scale_x="0.709172"/>
                 </key>
             </timeline>
         </animation>

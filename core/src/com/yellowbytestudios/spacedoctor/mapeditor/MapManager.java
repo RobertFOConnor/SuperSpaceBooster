@@ -93,8 +93,8 @@ public class MapManager {
 
         setupPlayerAndExit();
         enemyList = new Array<DraggableObject>();
-        for (Vector2 enemy : savedMap.getEnemyArray()) {
-            enemyList.add(new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), enemy.cpy()));
+        for (CustomMapObject enemy : savedMap.getEnemyArray()) {
+            addItemWithId(enemy.getId(), enemy.getPos().cpy());
         }
 
         itemList = new Array<DraggableObject>();
@@ -166,8 +166,6 @@ public class MapManager {
             }
         }
         layers.add(layer1);
-
-
         tmr = new OrthogonalTiledMapRenderer(map);
     }
 
@@ -180,8 +178,6 @@ public class MapManager {
             }
         }
         layers.add(layer1);
-
-
         tmr = new OrthogonalTiledMapRenderer(map);
     }
 
@@ -379,10 +375,10 @@ public class MapManager {
         }
     }
 
-    public void addEnemy() { // will take enemy id.
+    public void addEnemy(int enemyID) { // will take enemy id.
         if (touch.x > 0 && touch.x < customMapWidth * Box2DVars.PPM) {
             if (touch.y > 0 && touch.y < customMapHeight * Box2DVars.PPM) {
-                enemyList.add(new DraggableObject(-1, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), touch));
+                addEnemyWithId(enemyID, touch);
             }
         }
     }
@@ -395,6 +391,16 @@ public class MapManager {
             }
         }
     }
+
+    private void addEnemyWithId(int enemyID, Vector2 pos) {
+
+        Texture itemSheet = MapEditorAssets.manager.get(MapEditorAssets.ITEM_SHEET, Texture.class);
+
+        if (enemyID == IDs.EYEGUY) {
+            enemyList.add(new DraggableObject(enemyID, MapEditorAssets.manager.get(MapEditorAssets.ENEMY_SPAWN, Texture.class), pos));
+        }
+    }
+
 
     private void addItemWithId(int itemID, Vector2 pos) {
 
@@ -500,4 +506,3 @@ public class MapManager {
         itemList = new Array<DraggableObject>();
     }
 }
-

@@ -7,6 +7,7 @@ import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 
 
 public class Enemy extends Box2DSprite {
@@ -23,9 +24,13 @@ public class Enemy extends Box2DSprite {
     private boolean followsPlayer = true;
     private boolean movingLeft = true;
 
-    public Enemy(Body body) {
+    public Enemy(Body body, int id) {
         super(body);
-        spriter = MainGame.spriterManager.initDemon();
+
+        if(id == IDs.EYEGUY) {
+            spriter = MainGame.spriterManager.getSpiter("eyeball", "walking", 0.8f);
+            health = 1;
+        }
 
         assignVariables();
         setSpriterPos();
@@ -75,8 +80,8 @@ public class Enemy extends Box2DSprite {
 
     private void assignVariables() {
 
-        ACCELERATION = Gdx.graphics.getDeltaTime() * 1800f;
-        SPEED = Gdx.graphics.getDeltaTime() * 250f;
+        ACCELERATION = Gdx.graphics.getDeltaTime() * 2800f;
+        SPEED = Gdx.graphics.getDeltaTime() * 150f;
 
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;

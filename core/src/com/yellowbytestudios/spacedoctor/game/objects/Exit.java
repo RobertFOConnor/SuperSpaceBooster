@@ -12,7 +12,7 @@ public class Exit extends Box2DSprite {
 
     public Exit(Body body) {
         super(body);
-        spriter = MainGame.spriterManager.initExit();
+        spriter = MainGame.spriterManager.getSpiter("exit", "default", 0.85f);
     }
 
     public void render(SpriteBatch sb) {

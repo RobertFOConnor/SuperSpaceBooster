@@ -344,19 +344,19 @@ public class BodyFactory {
         if (GameScreen.customMap != null) {
             for (MapManager.DraggableObject mapObject : MapManager.enemyList) {
                 Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
-                enemies.add(createEnemy(world, pos));
+                enemies.add(createEnemy(world, pos, mapObject.getId()));
             }
         } else {
             if (ml != null) {
                 for (MapObject mo : ml.getObjects()) {
-                    enemies.add(createEnemy(world, getMapObjectPos(mo)));
+                    enemies.add(createEnemy(world, getMapObjectPos(mo), IDs.EYEGUY));
                 }
             }
         }
         return enemies;
     }
 
-    private static Enemy createEnemy(World world, Vector2 pos) {
+    private static Enemy createEnemy(World world, Vector2 pos, int type) {
 
         float width = 58 / PPM;
         float height = 48 / PPM;
@@ -379,7 +379,7 @@ public class BodyFactory {
         body.createFixture(cfdef).setUserData("enemy");
         shape.dispose();
 
-        Enemy e = new Enemy(body);
+        Enemy e = new Enemy(body, type);
         body.setUserData(e);
         return e;
     }

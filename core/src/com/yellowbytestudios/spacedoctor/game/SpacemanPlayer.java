@@ -57,7 +57,7 @@ public class SpacemanPlayer {
         this.body = body;
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
-        spriter = MainGame.spriterManager.initPlayer();
+        spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.6f);
 
         WIDTH = 80;
         HEIGHT = 118;

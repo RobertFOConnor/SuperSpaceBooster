@@ -23,13 +23,13 @@ public class PickUp extends Box2DSprite {
         this.type = type;
 
         if (type.equals("gas")) {
-            spriter = MainGame.spriterManager.initGasPickUp();
+            spriter = MainGame.spriterManager.getSpiter("gas_pickup", "default", 0.85f);
         } else if (type.equals("ammo")) {
-            spriter = MainGame.spriterManager.initAmmoPickUp();
+            spriter = MainGame.spriterManager.getSpiter("ammo_pickup", "default", 0.85f);
         } else if (type.equals("time")) {
-            spriter = MainGame.spriterManager.initTimePickUp();
+            spriter = MainGame.spriterManager.getSpiter("time_pickup", "default", 0.85f);
         } else {
-            spriter = MainGame.spriterManager.initCoin();
+            spriter = MainGame.spriterManager.getSpiter("coin", "default", 0.8f);
         }
     }
 

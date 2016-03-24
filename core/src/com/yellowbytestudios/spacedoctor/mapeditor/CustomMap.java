@@ -16,7 +16,7 @@ public class CustomMap extends TiledMap {
     private Vector2 exitPos = new Vector2(15, 4);
     private Vector2 startPos = new Vector2(3, 4);
 
-    private Array<Vector2> enemyArray = new Array<Vector2>();
+    private Array<CustomMapObject> enemyArray = new Array<CustomMapObject>();
     private Array<CustomMapObject> itemArray = new Array<CustomMapObject>();
 
     public CustomMap() {
@@ -46,7 +46,7 @@ public class CustomMap extends TiledMap {
         startPos = new Vector2(MapManager.startX * Box2DVars.PPM, MapManager.startY * Box2DVars.PPM);
 
         for (MapManager.DraggableObject enemy : MapManager.enemyList) {
-            enemyArray.add(enemy.getCenter());
+            enemyArray.add(new CustomMapObject(enemy.getId(), enemy.getCenter()));
         }
 
         for (MapManager.DraggableObject item : MapManager.itemList) {
@@ -70,7 +70,7 @@ public class CustomMap extends TiledMap {
         return exitPos;
     }
 
-    public Array<Vector2> getEnemyArray() {
+    public Array<CustomMapObject> getEnemyArray() {
         return enemyArray;
     }
 
