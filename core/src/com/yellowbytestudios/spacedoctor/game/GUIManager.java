@@ -21,7 +21,7 @@ public class GUIManager {
     private long timeElapsed;
 
     private ShapeRenderer shapeRenderer;
-    private Texture gui_display;
+    private Texture gui_display, alpha;
 
     private boolean isTimed;
 
@@ -38,6 +38,7 @@ public class GUIManager {
 
         shapeRenderer = new ShapeRenderer();
         gui_display = Assets.manager.get(Assets.GUI_DISPLAY, Texture.class);
+        alpha = Assets.manager.get(Assets.ALPHA, Texture.class);
     }
 
     public void update() {
@@ -56,17 +57,20 @@ public class GUIManager {
         shapeRenderer.setColor(Color.RED);
 
         for(int i = 0; i < players.size; i++) {
-            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 105, (players.get(i).getCurrGas() / (players.get(i).getMaxGas()/100)) * 1.2f, 40);
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
+
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 55, (players.get(i).getCurrGas() / (players.get(i).getMaxGas()/100)) * 1.2f, 40);
         }
         shapeRenderer.end();
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-
+        sb.draw(alpha, 0, MainGame.HEIGHT, MainGame.WIDTH, -120);
         for(int i = 0; i < players.size; i++) {
 
-            sb.draw(gui_display, 100+(i*1425), MainGame.HEIGHT - 200);
-            Fonts.GUIFont.draw(sb, players.get(i).getMaxAmmo() + "/" + players.get(i).getCurrAmmo(), 225+(i*1425), MainGame.HEIGHT - 127);
+            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getCurrAmmo()), 225+(i*1425), MainGame.HEIGHT - 70);
 
             //Fonts.GUIFont.draw(sb, String.format("%07d", players.get(i).getCoins()), (MainGame.WIDTH - 250)+(i*1425), MainGame.HEIGHT - 70);
         }

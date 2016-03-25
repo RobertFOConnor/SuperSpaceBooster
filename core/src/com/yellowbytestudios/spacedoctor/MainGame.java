@@ -67,7 +67,7 @@ public class MainGame extends ApplicationAdapter {
         saveManager = new SaveManager(true);
         saveData = new PlayerSaveObject();
 
-        if(saveManager.loadDataValue("PLAYER", PlayerSaveObject.class) != null) {
+        if (saveManager.loadDataValue("PLAYER", PlayerSaveObject.class) != null) {
             saveData = saveManager.loadDataValue("PLAYER", PlayerSaveObject.class);
         } else {
             firstTime = true;
@@ -88,7 +88,7 @@ public class MainGame extends ApplicationAdapter {
             animationManager.update();
 
             Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            Gdx.gl20.glClearColor(1, 1, 1, 0);
+            Gdx.gl20.glClearColor(0, 0, 0, 0);
 
             ScreenManager.getCurrentScreen().update(STEP);
             ScreenManager.getCurrentScreen().render(sb);

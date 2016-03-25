@@ -297,7 +297,7 @@ public class BodyFactory {
 
         body.createFixture(fixtureDef).setUserData("wall");
         Platform p = new Platform(body, "horizontal");
-        p.setLimit(3);
+        p.setLimit(2);
         body.setUserData(p);
         bodyShape.dispose();
 

@@ -17,8 +17,8 @@ public class DesktopLauncher {
         boolean fullscreen = false;
 
         if(!fullscreen) {
-            config.width = 960;
-            config.height = 540;
+            config.width = 1400;
+            config.height = 787;
         } else {
             config.width = 1920;
             config.height = 1080;

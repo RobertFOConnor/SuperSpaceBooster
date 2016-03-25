@@ -9,11 +9,15 @@ public class Assets {
 
     public static AssetManager manager = new AssetManager();
 
+    public static final String LOADSCREEN = "loadscreen.png";
+    public static final String LOADWHEEL = "loadwheel.png";
+
     public static final String MENU_BG = "menu_bg.png";
     public static final String LEVEL_LOCKED = "levelLocked.png";
     public static final String LEVEL_COMPLETE = "levelComplete.png";
     public static final String LEVEL_BUTTON = "levelButton.png";
     public static final String LEVEL_BORDER = "levelBorder.png";
+    public static final String ALPHA = "alpha.png";
 
     //Android Controls
     public static final String LEFT = "android_controls/left.png";
@@ -69,14 +73,17 @@ public class Assets {
 
     //Sounds.
     public static final String JETPACK_SOUND = "sounds/jetpack.wav";
-    public static final String GUN_SOUND = "sounds/blaster.wav";
-    public static final String GUN_SOUND_EMPTY = "sounds/blaster_empty.wav";
+    public static final String GUN_SOUND_1 = "sounds/gun/blaster_1.wav";
+    public static final String GUN_SOUND_2 = "sounds/gun/blaster_2.wav";
+    public static final String GUN_SOUND_3 = "sounds/gun/blaster_3.wav";
+    public static final String GUN_SOUND_EMPTY = "sounds/gun/blaster_empty.wav";
     public static final String FOOTSTEP_SOUND = "sounds/footstep.wav";
     public static final String FOOTSTEP2_SOUND = "sounds/footstep2.wav";
     public static final String FOOTSTEP3_SOUND = "sounds/footstep3.wav";
     public static final String FINISHED_SOUND = "sounds/finished.wav";
     public static final String PICKUP_SOUND = "sounds/pickup.wav";
     public static final String DEATH_SOUND = "sounds/death.wav";
+    public static final String ENEMY_DEATH = "sounds/enemy_death.wav";
     public static final String TILE_PLACE = "sounds/tile_place.wav";
     public static final String TILE_ERASE = "sounds/tile_erase.wav";
 
@@ -88,6 +95,9 @@ public class Assets {
     public static void load() {// Loads Assets
 
         manager = new AssetManager();
+
+        manager.load(LOADSCREEN, Texture.class);
+        manager.load(LOADWHEEL, Texture.class);
 
         manager.load(MENU_BG, Texture.class);
         manager.load(LEVEL_LOCKED, Texture.class);
@@ -103,6 +113,7 @@ public class Assets {
         manager.load(EXIT, Texture.class);
         manager.load(SETTINGS, Texture.class);
         manager.load(STATS, Texture.class);
+        manager.load(ALPHA, Texture.class);
 
         manager.load(LEFT, Texture.class);
         manager.load(RIGHT, Texture.class);
@@ -134,7 +145,9 @@ public class Assets {
         manager.load(LOAD_MAP, Texture.class);
 
         manager.load(JETPACK_SOUND, Sound.class);
-        manager.load(GUN_SOUND, Sound.class);
+        manager.load(GUN_SOUND_1, Sound.class);
+        manager.load(GUN_SOUND_2, Sound.class);
+        manager.load(GUN_SOUND_3, Sound.class);
         manager.load(GUN_SOUND_EMPTY, Sound.class);
         manager.load(FOOTSTEP_SOUND, Sound.class);
         manager.load(FOOTSTEP2_SOUND, Sound.class);
@@ -142,6 +155,7 @@ public class Assets {
         manager.load(FINISHED_SOUND, Sound.class);
         manager.load(PICKUP_SOUND, Sound.class);
         manager.load(DEATH_SOUND, Sound.class);
+        manager.load(ENEMY_DEATH, Sound.class);
         manager.load(TILE_PLACE, Sound.class);
         manager.load(TILE_ERASE, Sound.class);
 

@@ -28,8 +28,15 @@ public class LevelBackgroundManager {
         windowCamera.resize();
 
 
+        //GREEN SKY
         int TColors[] = {212, 208, 128}; //TOP OF BG GRADIENT
         int BColors[] = {40, 102, 83}; //BOTTOM OF BG GRADIENT
+
+        //RED SKY
+        /*int TColors[] = {255, 45, 45}; //TOP OF BG GRADIENT
+        int BColors[] = {79 , 0, 0}; //BOTTOM OF BG GRADIENT*/
+
+
         skyTop = new Color((float) (TColors[0] / 255), (float) TColors[1] / 255, (float) TColors[2] / 255, 1);
         skyBot = new Color((float) (BColors[0] / 255), (float) BColors[1] / 255, (float) BColors[2] / 255, 1);
 

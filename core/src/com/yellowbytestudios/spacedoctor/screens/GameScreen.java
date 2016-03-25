@@ -133,6 +133,7 @@ public class GameScreen implements Screen {
         b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
         cam.setBounds(0, mapWidth, 0, mapHeight);
 
+        bgManager = new LevelBackgroundManager(cam, mapWidth, mapHeight);
 
         float startX;
         float startY;
@@ -158,8 +159,6 @@ public class GameScreen implements Screen {
         }
 
         bullets = new Array<Bullet>();
-
-        bgManager = new LevelBackgroundManager(cam, mapWidth, mapHeight);
 
         boxes = BodyFactory.createBoxes(world, tileMap);
         pickups = BodyFactory.createPickups(world, tileMap);
@@ -258,6 +257,7 @@ public class GameScreen implements Screen {
     private void killEnemy(final Enemy e) {
 
         final Body enemyBody = contactListener.getEnemy();
+        SoundManager.play(Assets.ENEMY_DEATH);
 
         if (!e.isDead()) {
 
@@ -441,7 +441,7 @@ public class GameScreen implements Screen {
         }
 
         //Render Box2D world.
-        if (!MainGame.TEST_MODE) {
+        if (MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
     }

@@ -49,6 +49,26 @@ public class AnimationManager {
                 .setCallbackTriggers(TweenCallback.END).start(tweenManager);
     }
 
+
+    public static void applyFadeAnimation(Sprite b) {
+        Tween.to(b, SpriteAccessor.OPACITY, 100f)
+                .target(1f).ease(TweenEquations.easeOutBack)
+                .start(tweenManager);
+    }
+
+    public static void applyExitFadeAnimation(Sprite b, final Screen s) {
+        TweenCallback myCallBack = new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                ScreenManager.setScreen(s);
+            }
+        };
+
+        Tween.to(b, SpriteAccessor.OPACITY, 100f)
+                .target(0f).ease(TweenEquations.easeOutBack).setCallback(myCallBack)
+                .setCallbackTriggers(TweenCallback.END).start(tweenManager);
+    }
+
     public static void startAnimation() {
         startTime = TimeUtils.millis();
     }

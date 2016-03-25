@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.brashmonkey.spriter.Player;
@@ -57,7 +58,7 @@ public class SpacemanPlayer {
         this.body = body;
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
-        spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.6f);
+        spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.58f);
 
         WIDTH = 80;
         HEIGHT = 118;
@@ -136,7 +137,15 @@ public class SpacemanPlayer {
         if (controller.shootPressed()) {
             if(currAmmo > 0) {
                 shooting = true;
-                SoundManager.play(Assets.GUN_SOUND);
+                int random = (int) (Math.random() * 3);
+                System.out.println(random);
+                if (random == 0) {
+                    SoundManager.play(Assets.GUN_SOUND_1);
+                } else if (random == 1) {
+                    SoundManager.play(Assets.GUN_SOUND_2);
+                } else {
+                    SoundManager.play(Assets.GUN_SOUND_3);
+                }
                 currAmmo--;
             } else {
                 SoundManager.play(Assets.GUN_SOUND_EMPTY);
@@ -156,7 +165,7 @@ public class SpacemanPlayer {
     }
 
     private void updateSpriterImages() {
-        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
+        spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 25));
         spriter.update();
         spriter.setObject("head", 1f, 4, headType);
     }
