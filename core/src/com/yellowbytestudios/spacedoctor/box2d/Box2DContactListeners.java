@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
@@ -37,6 +38,15 @@ public class Box2DContactListeners implements ContactListener {
         }
         if (fb.getUserData() != null && fb.getUserData().equals("foot")) {
             ((SpacemanPlayer) fb.getBody().getUserData()).addNumFootContacts(1);
+            playFootstep();
+        }
+
+        if (fa.getUserData() != null && fa.getUserData().equals("enemy_foot")) {
+            ((Enemy) fa.getBody().getUserData()).addNumFootContacts(1);
+            playFootstep();
+        }
+        if (fb.getUserData() != null && fb.getUserData().equals("enemy_foot")) {
+            ((Enemy) fb.getBody().getUserData()).addNumFootContacts(1);
             playFootstep();
         }
 
@@ -103,6 +113,14 @@ public class Box2DContactListeners implements ContactListener {
         if (fb.getUserData() != null && fb.getUserData().equals("foot")) {
             ((SpacemanPlayer) fb.getBody().getUserData()).addNumFootContacts(-1);
         }
+
+        if (fa.getUserData() != null && fa.getUserData().equals("enemy_foot")) {
+            ((Enemy) fa.getBody().getUserData()).addNumFootContacts(-1);
+        }
+        if (fb.getUserData() != null && fb.getUserData().equals("enemy_foot")) {
+            ((Enemy) fb.getBody().getUserData()).addNumFootContacts(-1);
+        }
+
 
         if (fa.getUserData() != null && fa.getUserData().equals("bullet")) {
             bodiesToRemove.removeValue(fa, true);

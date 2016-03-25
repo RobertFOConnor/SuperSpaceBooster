@@ -57,6 +57,7 @@
         <file id="1" name="eye_guy/death_chunk.png" width="43" height="28" pivot_x="0" pivot_y="1"/>
         <file id="2" name="eye_guy/eye_guy_1.png" width="82" height="130" pivot_x="0" pivot_y="1"/>
         <file id="3" name="eye_guy/eye_guy_2.png" width="138" height="48" pivot_x="0" pivot_y="1"/>
+        <file id="4" name="eye_guy/eye_guy_air.png" width="200" height="227" pivot_x="0" pivot_y="1"/>
     </folder>
     <entity id="0" name="player">
         <obj_info name="bone_000" type="bone" w="60.0162" h="10"/>
@@ -1938,6 +1939,24 @@
                 </key>
                 <key id="1" time="399" spin="0">
                     <object folder="6" file="3" x="-31.660232" y="52.884703" angle="0" scale_y="1.127145"/>
+                </key>
+            </timeline>
+        </animation>
+        <animation id="3" name="air" length="150" interval="100">
+            <mainline>
+                <key id="0">
+                    <object_ref id="0" timeline="0" key="0" z_index="0"/>
+                </key>
+                <key id="1" time="73">
+                    <object_ref id="0" timeline="0" key="1" z_index="0"/>
+                </key>
+            </mainline>
+            <timeline id="0" name="eye_guy_air">
+                <key id="0" spin="0">
+                    <object folder="6" file="4" x="-111.337715" y="137.87101" scale_x="0.731209" scale_y="0.606528"/>
+                </key>
+                <key id="1" time="73" spin="0">
+                    <object folder="6" file="4" x="-111.337715" y="170.579207" scale_x="0.731209" scale_y="0.7503"/>
                 </key>
             </timeline>
         </animation>

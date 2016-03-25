@@ -386,7 +386,21 @@ public class BodyFactory {
         cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
         cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
+
         body.createFixture(cfdef).setUserData("enemy");
+
+        // Create box for enemies foot.
+        shape = new PolygonShape();
+        shape.setAsBox(30 / PPM, 20 / PPM, new Vector2(0, -60 / PPM), 0);
+
+        // Create Fixture Definition for foot collision box.
+        cfdef.shape = shape;
+        cfdef.isSensor = true;
+        cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
+        cfdef.filter.maskBits = Box2DVars.BIT_ENEMY | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BULLET;
+
+        // create player foot fixture
+        body.createFixture(cfdef).setUserData("enemy_foot");
         shape.dispose();
 
         Enemy e = new Enemy(body, type);

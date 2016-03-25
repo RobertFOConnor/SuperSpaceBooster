@@ -25,6 +25,7 @@ public class Enemy extends Box2DSprite {
     private com.brashmonkey.spriter.Player spriter;
     private boolean followsPlayer = true;
     private boolean movingLeft = true;
+    private int numFootContacts = 0;
 
     public Enemy(Body body, int id) {
         super(body);
@@ -111,6 +112,10 @@ public class Enemy extends Box2DSprite {
             } else {
                 moveLeft();
             }
+
+            if(inAir()) {
+                spriter.setAnimation("air");
+            }
         }
     }
 
@@ -137,6 +142,14 @@ public class Enemy extends Box2DSprite {
         spriter.setAnimation("death");
         spriter.addListener(listener);
         isDead = true;
+    }
+
+    public void addNumFootContacts(int newContact) {
+        this.numFootContacts += newContact;
+    }
+
+    private boolean inAir() {
+        return numFootContacts == 0;
     }
 
     public boolean isDead() {
