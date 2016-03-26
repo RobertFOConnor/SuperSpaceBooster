@@ -32,6 +32,7 @@ import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
@@ -50,7 +51,7 @@ public class GameScreen implements Screen {
     private float PPM = 100;
 
     //Map Editor
-    public static TiledMap customMap;
+    public static CustomMap customMap;
     public static boolean isCustomMap = false;
 
     //Player objects.
@@ -83,7 +84,7 @@ public class GameScreen implements Screen {
         customMap = null;
     }
 
-    public GameScreen(TiledMap customMap) {
+    public GameScreen(CustomMap customMap) {
         GameScreen.customMap = customMap;
         isCustomMap = true;
     }
@@ -106,7 +107,7 @@ public class GameScreen implements Screen {
         if (!isCustomMap) {
             tileMap = new TmxMapLoader().load("maps/spaceship" + levelNo + ".tmx");
         } else {
-            tileMap = customMap;
+            tileMap = MapManager.setupMap(customMap.loadMap());
         }
 
         //Setup map renderer.
@@ -128,8 +129,17 @@ public class GameScreen implements Screen {
         tileManager.createWalls(world, tileMap);
 
         // Set camera boundries.
-        int mapWidth = tileManager.getMapWidth();
-        int mapHeight = tileManager.getMapHeight();
+        int mapWidth;
+        int mapHeight;
+
+        if(isCustomMap) {
+            mapWidth = customMap.getMapWidth();
+            mapHeight = customMap.getMapHeight();
+        } else {
+            mapWidth = tileManager.getMapWidth();
+            mapHeight = tileManager.getMapHeight();
+        }
+
         b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
         cam.setBounds(0, mapWidth, 0, mapHeight);
 
@@ -143,8 +153,8 @@ public class GameScreen implements Screen {
             startY = (Float.parseFloat(tileMap.getProperties().get("startY", String.class)));
 
         } else { // TEMP - Custom map will specify player spawn point.
-            startX = MapManager.startX;
-            startY = MapManager.startY;
+            startX = customMap.getStartPos().x;
+            startY = customMap.getStartPos().y;
         }
 
         players = new Array<SpacemanPlayer>();
@@ -176,6 +186,8 @@ public class GameScreen implements Screen {
         if (MainGame.DEVICE.equals("ANDROID")) {
             androidController.update();
         }
+
+        System.out.println("player pos: " + players.get(0).getPos().x + ", " + players.get(0).getPos().y);
 
         updateCameras();
 
@@ -256,7 +268,6 @@ public class GameScreen implements Screen {
 
     private void killEnemy(final Enemy e) {
 
-        final Body enemyBody = contactListener.getEnemy();
         SoundManager.play(Assets.ENEMY_DEATH);
 
         if (!e.isDead()) {
@@ -320,7 +331,7 @@ public class GameScreen implements Screen {
                 MainGame.saveData.unlockHead(levelNo);
                 MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-                ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen());
+                ScreenManager.setScreen(new LevelSelectScreen());
             } else {
                 ScreenManager.setScreen(new ResultsScreen());
             }

@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.mapeditor.CustomMapObject;
 import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
@@ -156,7 +157,7 @@ public class BodyFactory {
         Exit exit = null;
 
         if (ml == null) { //CUSTOM MAP - TEMP
-            exit = createExitBody(world, MapManager.exitX, MapManager.exitY, width, height);
+            exit = createExitBody(world, GameScreen.customMap.getExitPos().x, GameScreen.customMap.getExitPos().y, width, height);
         } else {
             for (MapObject mo : ml.getObjects()) {
                 Vector2 pos = getMapObjectPos(mo);
@@ -197,8 +198,8 @@ public class BodyFactory {
         Array<PickUp> pickups = new Array<PickUp>();
 
         if (GameScreen.customMap != null) {
-            for (MapManager.DraggableObject mapObject : MapManager.itemList) {
-                Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
+            for (CustomMapObject mapObject : GameScreen.customMap.getItemArray()) {
+                Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
                 String type = "coin";
                 if(mapObject.getId() == IDs.GAS) {
                     type = "gas";
@@ -260,18 +261,14 @@ public class BodyFactory {
 
         if (GameScreen.customMap != null) {
 
-            for (MapManager.DraggableObject mapObject : MapManager.obstacleList) {
+            for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
 
-                platforms.add(createPlatform(world, new Vector2(mapObject.getX() / 100, mapObject.getY() / 100)));
+                platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100)));
             }
 
         } else {
 
             if (ml == null) return new Array<Platform>();
-
-            for (MapObject mo : ml.getObjects()) {
-
-            }
 
         }
         return platforms;
@@ -352,8 +349,8 @@ public class BodyFactory {
         Array<Enemy> enemies = new Array<Enemy>();
 
         if (GameScreen.customMap != null) {
-            for (MapManager.DraggableObject mapObject : MapManager.enemyList) {
-                Vector2 pos = new Vector2(mapObject.getX() / 100, mapObject.getY() / 100);
+            for (CustomMapObject mapObject : GameScreen.customMap.getEnemyArray()) {
+                Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
                 enemies.add(createEnemy(world, pos, mapObject.getId()));
             }
         } else {

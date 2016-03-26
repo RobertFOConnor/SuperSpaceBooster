@@ -29,9 +29,6 @@ public class TileManager {
         if (tm.getProperties().get("width", Integer.class) != null) { //Check for Custom Map.
             tileMapWidth = tm.getProperties().get("width", Integer.class);
             tileMapHeight = tm.getProperties().get("height", Integer.class);
-        } else {
-            tileMapWidth = MapManager.customMapWidth;
-            tileMapHeight = MapManager.customMapHeight;
         }
     }
 

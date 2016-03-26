@@ -11,32 +11,28 @@ import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
-import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 
 public class MapEditorScreen implements Screen {
 
     private OrthoCamera camera;
     private MapManager mapManager;
-    private TiledMap myMap;
     private Color menu_bg;
     private EditorGUI gui;
     private ShapeRenderer shapeRenderer;
     private CustomMap savedMap;
-
+    private int width = 0;
+    private int height = 0;
 
     public MapEditorScreen(CustomMap savedMap) {
         this.savedMap = savedMap;
     }
 
-    public MapEditorScreen(TiledMap myMap) {
-        this.myMap = myMap;
-    }
-
-    public MapEditorScreen() {
-
-        MapManager.reset();
+    public MapEditorScreen(int width, int height) {
+        this.width = width;
+        this.height = height;
     }
 
 
@@ -45,16 +41,10 @@ public class MapEditorScreen implements Screen {
         camera = new OrthoCamera();
         camera.resize();
 
-        mapManager = new MapManager();
-
-        if (myMap != null) {
-            mapManager = new MapManager(myMap);
-
-        } else if (savedMap != null) {
+        if (savedMap != null) {
             mapManager = new MapManager(savedMap);
-
         } else {
-            mapManager = new MapManager();
+            mapManager = new MapManager(width, height);
         }
         SoundManager.switchEditorMusic(MapEditorAssets.EDITOR_THEME);
         gui = new EditorGUI(mapManager);

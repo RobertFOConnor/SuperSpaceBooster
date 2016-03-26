@@ -30,8 +30,8 @@ public class MapManager {
     private TiledMapTileLayer layer1;
     private OrthogonalTiledMapRenderer tmr;
 
-    public static int customMapWidth = 30;
-    public static int customMapHeight = 15;
+    private int customMapWidth = 30;
+    private int customMapHeight = 15;
     private static final int tileSize = 100;
 
     //Dragging / Navigating Map.
@@ -44,17 +44,17 @@ public class MapManager {
 
     //EXIT
     private DraggableObject exit;
-    public static float exitX = 15;
-    public static float exitY = 4;
+    private float exitX = 15;
+    private float exitY = 4;
 
     //PLAYER SPAWN
     private DraggableObject playerSpawn;
-    public static float startX = 3;
-    public static float startY = 4;
+    private float startX = 3;
+    private float startY = 4;
 
     //ENEMIES, ITEMS & OBSTACLES.
-    public static Array<DraggableObject> enemyList, itemList, obstacleList;
-
+    private Array<DraggableObject> enemyList, itemList, obstacleList;
+    private Array<Array<DraggableObject>> draggableLists;
 
     //Tile Types.
     private static final Array<Cell> CELLS = new Array<Cell>();
@@ -78,50 +78,52 @@ public class MapManager {
         customMapHeight = savedArray[0].length;
 
         initObjects();
-        setupMap(savedArray);
+        setupMapFromArray(savedArray);
+        tmr = new OrthogonalTiledMapRenderer(map);
 
         Vector2 exitPos = savedMap.getExitPos().cpy();
         Vector2 startPos = savedMap.getStartPos().cpy();
 
-        exitX = exitPos.x / 100;
-        exitY = exitPos.y / 100;
-        startX = startPos.x / 100;
-        startY = startPos.y / 100;
+        exitX = exitPos.x;
+        exitY = exitPos.y;
+        startX = startPos.x;
+        startY = startPos.y;
 
         setupPlayerAndExit();
-        enemyList = new Array<DraggableObject>();
+        initDraggableLists();
+
         for (CustomMapObject enemy : savedMap.getEnemyArray()) {
             addEnemyWithId(enemy.getId(), enemy.getPos().cpy());
         }
 
-        itemList = new Array<DraggableObject>();
         for (CustomMapObject item : savedMap.getItemArray()) {
             addItemWithId(item.getId(), item.getPos().cpy());
         }
 
-        obstacleList = new Array<DraggableObject>();
         for (CustomMapObject obstacle : savedMap.getObstacleArray()) {
-            addItemWithId(obstacle.getId(), obstacle.getPos().cpy());
+            addObstacleWithId(obstacle.getId(), obstacle.getPos().cpy());
         }
     }
 
+    private void initDraggableLists() {
+        enemyList = new Array<DraggableObject>();
+        itemList = new Array<DraggableObject>();
+        obstacleList = new Array<DraggableObject>();
+        draggableLists = new Array<Array<DraggableObject>>();
 
-    public MapManager() {
-        initObjects();
-        setupMap();
-        setupPlayerAndExit();
+        draggableLists.add(enemyList);
+        draggableLists.add(itemList);
+        draggableLists.add(obstacleList);
     }
 
-    public MapManager(TiledMap tm) {
-        initObjects();
 
+    public MapManager(int width, int height) {
+        customMapWidth = width;
+        customMapHeight = height;
+        initObjects();
         setupMap();
         setupPlayerAndExit();
-
-        this.map = tm;
-        layers = map.getLayers();
-        layer1 = (TiledMapTileLayer) layers.get(0);
-        tmr = new OrthogonalTiledMapRenderer(map);
+        initDraggableLists();
     }
 
     private void setupPlayerAndExit() {
@@ -171,48 +173,56 @@ public class MapManager {
         tmr = new OrthogonalTiledMapRenderer(map);
     }
 
-    private void setupMap(int[][] array) { //setup from saved map.
 
-        for (int row = 0; row < layer1.getHeight(); row++) {
-            for (int col = 0; col < layer1.getWidth(); col++) {
-
-                layer1.setCell(col, row, findCellById(array[col][row]));
-            }
-        }
+    private void setupMapFromArray(int[][] array) { //setup from saved map.
+        populateLayer(layer1, array);
         layers.add(layer1);
         tmr = new OrthogonalTiledMapRenderer(map);
     }
 
 
+    public static TiledMap setupMap(int[][] array) { //setup from saved map.
+        TiledMapTileLayer layer1 = new TiledMapTileLayer(array.length, array[0].length, tileSize, tileSize);
+        layer1.setName("main");
+        populateLayer(layer1, array);
+        TiledMap tiledMap = new TiledMap();
+        tiledMap.getLayers().add(layer1);
+        return tiledMap;
+    }
+
+    public static void populateLayer(TiledMapTileLayer layer1, int[][] array) {
+        for (int row = 0; row < layer1.getHeight(); row++) {
+            for (int col = 0; col < layer1.getWidth(); col++) {
+                layer1.setCell(col, row, findCellById(array[col][row]));
+            }
+        }
+    }
+
+    private void endInteraction() {
+        if (dragging) {
+            startTouch = null;
+            endTouch = null;
+            dragging = false;
+        }
+
+        if (holdingObject) {
+
+            for(Array<DraggableObject> draggableList : draggableLists) {
+                deselectDraggable(draggableList);
+            }
+
+            exit.selected = false;
+            playerSpawn.selected = false;
+            holdingObject = false;
+            currObject = null;
+        }
+    }
+
     public void update() {
 
         if (!Gdx.input.isTouched()) {
 
-            if (dragging) {
-                startTouch = null;
-                endTouch = null;
-                dragging = false;
-            }
-
-            if (holdingObject) {
-
-                for (DraggableObject enemy : enemyList) {
-                    enemy.selected = false;
-                }
-
-                for (DraggableObject item : itemList) {
-                    item.selected = false;
-                }
-
-                for (DraggableObject obstacle : obstacleList) {
-                    obstacle.selected = false;
-                }
-
-                exit.selected = false;
-                playerSpawn.selected = false;
-                holdingObject = false;
-                currObject = null;
-            }
+            endInteraction();
 
         } else {
             touch = cam.unprojectCoordinates(Gdx.input.getX(),
@@ -228,22 +238,8 @@ public class MapManager {
                         setDraggableSelected(exit);
                     }
 
-                    for (DraggableObject enemy : enemyList) {
-                        if (enemy.checkTouch(touch)) {
-                            setDraggableSelected(enemy);
-                        }
-                    }
-
-                    for (DraggableObject item : itemList) {
-                        if (item.checkTouch(touch)) {
-                            setDraggableSelected(item);
-                        }
-                    }
-
-                    for (DraggableObject obstacle : obstacleList) {
-                        if (obstacle.checkTouch(touch)) {
-                            setDraggableSelected(obstacle);
-                        }
+                    for(Array<DraggableObject> draggableList : draggableLists) {
+                        selectDraggable(draggableList);
                     }
 
                 } else {
@@ -262,6 +258,20 @@ public class MapManager {
         }
 
         cam.update();
+    }
+
+    private void deselectDraggable(Array<DraggableObject> list) {
+        for (DraggableObject obj : list) {
+            obj.selected = false;
+        }
+    }
+
+    private void selectDraggable(Array<DraggableObject> list) {
+        for (DraggableObject obj : list) {
+            if (obj.checkTouch(touch)) {
+                setDraggableSelected(obj);
+            }
+        }
     }
 
     private void setDraggableSelected(DraggableObject dragObj) {
@@ -290,7 +300,7 @@ public class MapManager {
         }
     }
 
-    private Cell findCellById(int tileID) {
+    public static Cell findCellById(int tileID) {
 
         for (Cell c : CELLS) {
             if (c.getTile().getId() == tileID) {
@@ -321,22 +331,16 @@ public class MapManager {
                 }
             }
 
-            for (DraggableObject enemy : enemyList) {
-                if (enemy.checkTouch(touch)) {
-                    enemyList.removeValue(enemy, true);
-                }
+            for(Array<DraggableObject> draggableList : draggableLists) {
+                removeDraggableObjects(draggableList);
             }
+        }
+    }
 
-            for (DraggableObject item : itemList) {
-                if (item.checkTouch(touch)) {
-                    itemList.removeValue(item, true);
-                }
-            }
-
-            for (DraggableObject obstacle : obstacleList) {
-                if (obstacle.checkTouch(touch)) {
-                    obstacleList.removeValue(obstacle, true);
-                }
+    private void removeDraggableObjects(Array<DraggableObject> list) {
+        for (DraggableObject dragObject : list) {
+            if (dragObject.checkTouch(touch)) {
+                obstacleList.removeValue(dragObject, true);
             }
         }
     }
@@ -367,10 +371,9 @@ public class MapManager {
         exit.draw(sb);
         playerSpawn.draw(sb);
 
-        drawDraggableObjects(itemList, sb);
-        drawDraggableObjects(enemyList, sb);
-        drawDraggableObjects(obstacleList, sb);
-
+        for(Array<DraggableObject> draggableList : draggableLists) {
+            drawDraggableObjects(draggableList, sb);
+        }
         sb.end();
     }
 
@@ -452,6 +455,9 @@ public class MapManager {
         }
     }
 
+    public CustomMap getCustomMap(String name) {
+        return new CustomMap(name, map, exit, playerSpawn, draggableLists);
+    }
 
     public TiledMap getMap() {
         return map;
@@ -530,15 +536,5 @@ public class MapManager {
 
     public boolean isHoldingObject() {
         return holdingObject;
-    }
-
-    public static void reset() {
-        exitX = 15;
-        exitY = 4;
-        startX = 3;
-        startY = 4;
-        enemyList = new Array<DraggableObject>();
-        itemList = new Array<DraggableObject>();
-        obstacleList = new Array<DraggableObject>();
     }
 }

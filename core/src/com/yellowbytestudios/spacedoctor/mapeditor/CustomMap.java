@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 
 
-public class CustomMap extends TiledMap {
+public class CustomMap {
 
     private String name;
 
@@ -25,7 +25,7 @@ public class CustomMap extends TiledMap {
     }
 
 
-    public CustomMap(String name, TiledMap tm) {
+    public CustomMap(String name, TiledMap tm, MapManager.DraggableObject exit, MapManager.DraggableObject playerSpawn, Array<Array<MapManager.DraggableObject>> draggableLists) {
         this.name = name;
 
         TiledMapTileLayer layer = (TiledMapTileLayer) tm.getLayers().get(0);
@@ -43,19 +43,17 @@ public class CustomMap extends TiledMap {
             }
         }
 
-        exitPos = new Vector2(MapManager.exitX * Box2DVars.PPM, MapManager.exitY * Box2DVars.PPM);
-        startPos = new Vector2(MapManager.startX * Box2DVars.PPM, MapManager.startY * Box2DVars.PPM);
+        exitPos = new Vector2(exit.getCenter().x / Box2DVars.PPM, exit.getCenter().y / Box2DVars.PPM);
+        startPos = new Vector2(playerSpawn.getCenter().x / Box2DVars.PPM, playerSpawn.getCenter().y / Box2DVars.PPM);
 
-        for (MapManager.DraggableObject enemy : MapManager.enemyList) {
-            enemyArray.add(new CustomMapObject(enemy.getId(), enemy.getCenter()));
-        }
+        draggableToMapObject(draggableLists.get(0), enemyArray);
+        draggableToMapObject(draggableLists.get(1), itemArray);
+        draggableToMapObject(draggableLists.get(2), obstacleArray);
+    }
 
-        for (MapManager.DraggableObject item : MapManager.itemList) {
-            itemArray.add(new CustomMapObject(item.getId(), item.getCenter()));
-        }
-
-        for (MapManager.DraggableObject obstacle : MapManager.obstacleList) {
-            obstacleArray.add(new CustomMapObject(obstacle.getId(), obstacle.getCenter()));
+    private void draggableToMapObject(Array<MapManager.DraggableObject> draggableList, Array<CustomMapObject> mapObjectList) {
+        for (MapManager.DraggableObject obj : draggableList) {
+            mapObjectList.add(new CustomMapObject(obj.getId(), obj.getCenter()));
         }
     }
 
@@ -85,5 +83,13 @@ public class CustomMap extends TiledMap {
 
     public Array<CustomMapObject> getObstacleArray() {
         return obstacleArray;
+    }
+
+    public int getMapWidth() {
+        return 100 * tileArray.length;
+    }
+
+    public int getMapHeight() {
+        return 100 * tileArray[0].length;
     }
 }

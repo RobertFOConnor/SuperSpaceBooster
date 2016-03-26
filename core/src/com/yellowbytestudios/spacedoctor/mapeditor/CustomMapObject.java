@@ -10,6 +10,10 @@ public class CustomMapObject {
     private Vector2 pos;
     private int id;
 
+
+    public CustomMapObject() {
+    }
+
     public CustomMapObject(int id, Vector2 pos) {
         this.id = id;
         this.pos = pos;

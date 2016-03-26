@@ -21,13 +21,14 @@ public class PickUp extends Box2DSprite {
     public PickUp(Body body, String type) {
         super(body);
         this.type = type;
+        float scale = 0.85f;
 
         if (type.equals("gas")) {
-            spriter = MainGame.spriterManager.getSpiter("gas_pickup", "default", 0.85f);
+            spriter = MainGame.spriterManager.getSpiter("gas_pickup", "default", scale);
         } else if (type.equals("ammo")) {
-            spriter = MainGame.spriterManager.getSpiter("ammo_pickup", "default", 0.85f);
+            spriter = MainGame.spriterManager.getSpiter("ammo_pickup", "default", scale);
         } else if (type.equals("time")) {
-            spriter = MainGame.spriterManager.getSpiter("time_pickup", "default", 0.85f);
+            spriter = MainGame.spriterManager.getSpiter("time_pickup", "default", scale);
         } else {
             spriter = MainGame.spriterManager.getSpiter("coin", "default", 0.8f);
         }
@@ -42,7 +43,7 @@ public class PickUp extends Box2DSprite {
     public void activate(SpacemanPlayer player) {
 
         if (type.equals("ammo")) {
-            player.setCurrAmmo(10);
+            player.setCurrAmmo(player.getCurrAmmo()+10);
         } else if (type.equals("gas")) {
             player.setCurrGas(player.getCurrGas() + 250);
         } else if (type.equals("time")) {

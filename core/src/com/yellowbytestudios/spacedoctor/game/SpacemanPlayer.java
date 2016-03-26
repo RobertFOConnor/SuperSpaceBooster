@@ -347,6 +347,10 @@ public class SpacemanPlayer {
         isDead = true;
     }
 
+    public boolean isJetpacking() {
+        return movingUp;
+    }
+
     public int getCoins() {
         return coins;
     }
@@ -381,6 +385,10 @@ public class SpacemanPlayer {
 
     private boolean inAir() {
         return numFootContacts == 0;
+    }
+
+    public int getHeadType() {
+        return headType;
     }
 
     public Body getBody() {

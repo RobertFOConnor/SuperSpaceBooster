@@ -60,20 +60,14 @@ public class SizeSelectScreen implements Screen {
                     Gdx.input.getY());
 
             if (smallButton.checkTouch(touch)) {
-                MapManager.customMapWidth = 25;
-                MapManager.customMapHeight = 15;
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(25, 15)));
             } else if(mediumButton.checkTouch(touch)) {
-                MapManager.customMapWidth = 40;
-                MapManager.customMapHeight = 20;
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(40, 20)));
             } else if(largeButton.checkTouch(touch)) {
-                MapManager.customMapWidth = 70;
-                MapManager.customMapHeight = 40;
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen()));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(70, 40)));
             } else if (backButton.checkTouch(touch)) {
                 goBack();
             }

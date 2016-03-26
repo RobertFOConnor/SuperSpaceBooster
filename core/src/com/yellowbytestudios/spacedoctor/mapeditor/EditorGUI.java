@@ -68,7 +68,7 @@ public class EditorGUI {
                 mapManager.zoomOut();
 
             } else if (playMap.checkTouch(touch)) { //TEST PLAY MAP
-                ScreenManager.setScreen(new GameScreen(mapManager.getMap()));
+                ScreenManager.setScreen(new GameScreen(mapManager.getCustomMap("test")));
 
             } else if (saveMap.checkTouch(touch) && Gdx.input.justTouched()) { //SAVE MAP
                 saveMap();
@@ -369,9 +369,9 @@ public class EditorGUI {
 
             if(!mapNameExists(text)) {
                 if (MainGame.saveData.getMyMaps().size < 12) {
-                    MainGame.saveData.getMyMaps().add(new CustomMap(text, mapManager.getMap()));
+                    MainGame.saveData.getMyMaps().add(mapManager.getCustomMap(text));
                 } else {
-                    MainGame.saveData.getMyMaps().set(11, new CustomMap(text, mapManager.getMap()));
+                    MainGame.saveData.getMyMaps().set(11, mapManager.getCustomMap(text));
                 }
             }
             MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
@@ -386,7 +386,7 @@ public class EditorGUI {
     private boolean mapNameExists(String mapName) {
         for (int i = 0; i < MainGame.saveData.getMyMaps().size; i++) {
             if (MainGame.saveData.getMyMaps().get(i).getName().equals(mapName)) {
-                MainGame.saveData.getMyMaps().set(i, new CustomMap(mapName, mapManager.getMap()));
+                MainGame.saveData.getMyMaps().set(i, mapManager.getCustomMap(mapName));
                 return true;
             }
         }

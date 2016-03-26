@@ -54,14 +54,19 @@ public class GUIManager {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
-        shapeRenderer.setColor(Color.RED);
 
         for(int i = 0; i < players.size; i++) {
-            shapeRenderer.setColor(Color.BLACK);
-            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
+            SpacemanPlayer player = players.get(i);
 
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(215+(i*1425), MainGame.HEIGHT - 55, (players.get(i).getCurrGas() / (players.get(i).getMaxGas()/100)) * 1.2f, 40);
+            shapeRenderer.setColor(Color.BLACK);
+            shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
+
+            if(player.isJetpacking()) {
+                shapeRenderer.setColor(Color.WHITE);
+            } else {
+                shapeRenderer.setColor(Color.RED);
+            }
+            shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
         }
         shapeRenderer.end();
 
