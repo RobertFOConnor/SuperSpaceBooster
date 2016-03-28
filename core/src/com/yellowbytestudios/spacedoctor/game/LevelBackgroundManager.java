@@ -11,6 +11,7 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 public class LevelBackgroundManager {
 
@@ -23,27 +24,13 @@ public class LevelBackgroundManager {
     private Color skyTop, skyBot;
 
     public LevelBackgroundManager(BoundedCamera camera, int width, int height) {
-        this.camera = camera;
-        windowCamera = new OrthoCamera();
-        windowCamera.resize();
-
-
-        //GREEN SKY
-        int TColors[] = {212, 208, 128}; //TOP OF BG GRADIENT
-        int BColors[] = {40, 102, 83}; //BOTTOM OF BG GRADIENT
-
-        //RED SKY
-        /*int TColors[] = {255, 45, 45}; //TOP OF BG GRADIENT
-        int BColors[] = {79 , 0, 0}; //BOTTOM OF BG GRADIENT*/
-
-
-        skyTop = new Color((float) (TColors[0] / 255), (float) TColors[1] / 255, (float) TColors[2] / 255, 1);
-        skyBot = new Color((float) (BColors[0] / 255), (float) BColors[1] / 255, (float) BColors[2] / 255, 1);
-
         this.width = width;
         this.height = height;
+        this.camera = camera;
         shapeRenderer = new ShapeRenderer();
-
+        windowCamera = new OrthoCamera();
+        windowCamera.resize();
+        setSkyColor();
 
         farLayer = new Array<BackgroundObject>();
 
@@ -77,7 +64,7 @@ public class LevelBackgroundManager {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
 
-        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT, skyTop, skyTop, skyBot, skyBot);
+        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT, skyBot, skyBot, skyTop, skyTop);
         shapeRenderer.end();
 
         sb.end();
@@ -92,6 +79,30 @@ public class LevelBackgroundManager {
             bo.render(sb);
         }
     }
+
+    private void setSkyColor() {
+        int TColors[];
+        int BColors[];
+
+        if(GameScreen.levelNo <= 2) {
+            //GREEN SKY
+            TColors = new int[]{40, 102, 83}; //TOP OF BG GRADIENT
+            BColors = new int[]{212, 208, 128}; //BOTTOM OF BG GRADIENT
+        } else if(GameScreen.levelNo <= 3) {
+
+            //BLUE SKY
+            TColors = new int[]{25 , 5, 74};
+            BColors = new int[]{145 , 9, 106};
+        } else {
+            //RED SKY
+            TColors = new int[]{79 , 0, 0};
+            BColors = new int[]{255, 45, 45};
+        }
+
+        skyTop = new Color( ((float)TColors[0] / 255), ((float)TColors[1] / 255), ((float)TColors[2] / 255), 1);
+        skyBot = new Color( ((float)BColors[0] / 255), ((float)BColors[1] / 255), ((float)BColors[2] / 255), 1);
+    }
+
 
     private class BackgroundObject {
 

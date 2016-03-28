@@ -69,7 +69,7 @@ public class LevelSelectScreen implements Screen {
 
         selectedLevel = levelButtons.get(currLevel - 1);
 
-        selLevel = currLevel;
+        selLevel = 1;
         //levelButtons.get(selLevel - 1).setSelected(true);
         SoundManager.stop(Assets.JETPACK_SOUND);
 
@@ -85,6 +85,7 @@ public class LevelSelectScreen implements Screen {
         private boolean selected = false;
         private Texture border;
         private NinePatch bg;
+        private Color color;
 
         public LevelButton(Vector2 pos, int levelNum) {
             super(Assets.BOX, pos);
@@ -92,15 +93,18 @@ public class LevelSelectScreen implements Screen {
             FileHandle loadFile = Gdx.files.internal("levels/level_"+levelNum+".json");
 
             this.bg = new NinePatch(getTexture(), 40, 40, 40, 40);
+            String img;
 
             if (loadFile.exists()) {
-                setTexture(Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class));
+                img = Assets.LEVEL_COMPLETE;
+                color = Color.WHITE;
                 unlocked = true;
             } else {
-                setTexture(Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class));
+                img = Assets.LEVEL_BUTTON;
+                color = Color.BLACK;
                 unlocked = false;
             }
-
+            setTexture(Assets.manager.get(img, Texture.class));
             this.levelNum = levelNum;
             border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
         }
@@ -109,12 +113,9 @@ public class LevelSelectScreen implements Screen {
         public void draw(Batch sb) {
             bg.draw(sb, getX(), getY(), 120, 80);
 
-            if(unlocked) {
-                Fonts.GUIFont.setColor(Color.WHITE);
-            } else {
-                Fonts.GUIFont.setColor(Color.BLACK);
-            }
+            Fonts.GUIFont.setColor(color);
             Fonts.GUIFont.draw(sb, ""+levelNum, getX() + 40, getY() + 40);
+            Fonts.GUIFont.setColor(Color.WHITE);
         }
     }
 

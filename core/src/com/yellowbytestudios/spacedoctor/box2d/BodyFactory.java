@@ -172,7 +172,7 @@ public class BodyFactory {
 
         FixtureDef cfdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(25 / PPM);
+        shape.setRadius(35 / PPM);
         cfdef.shape = shape;
         cfdef.isSensor = true;
         cfdef.filter.categoryBits = Box2DVars.BIT_EXIT;

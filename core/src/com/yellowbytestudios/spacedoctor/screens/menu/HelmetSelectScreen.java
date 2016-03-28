@@ -117,8 +117,9 @@ public class HelmetSelectScreen implements Screen {
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             goBack();
+        }
 
-        } else if (Gdx.input.justTouched()) {
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
