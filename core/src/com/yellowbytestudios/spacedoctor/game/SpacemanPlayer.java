@@ -12,6 +12,8 @@ import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.SecondKeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.game.objects.*;
+import com.yellowbytestudios.spacedoctor.game.objects.Character;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.HelmetSelectScreen;
@@ -19,15 +21,15 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 
 
-public class SpacemanPlayer {
+public class SpacemanPlayer extends Character {
 
     private BasicController controller;
-    private Player spriter;
     private Body body;
 
     //Physics variables.
     private float ACCELERATION;
     private float SPEED;
+    private float JETPACK_POWER;
     private float posX, posY;
     private float velX, velY;
     private boolean movingLeft, movingRight, movingUp = false;
@@ -43,7 +45,6 @@ public class SpacemanPlayer {
     private float currGas = maxGas;
 
     //Gun variables!
-    private boolean shooting = false;
     private int currAmmo = 10;
 
     //Spriter variables.
@@ -55,6 +56,7 @@ public class SpacemanPlayer {
 
 
     public SpacemanPlayer(Body body, int playerNum, int headType) {
+        super(body);
         this.body = body;
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
@@ -138,7 +140,6 @@ public class SpacemanPlayer {
             if(currAmmo > 0) {
                 shooting = true;
                 int random = (int) (Math.random() * 3);
-                System.out.println(random);
                 if (random == 0) {
                     SoundManager.play(Assets.GUN_SOUND_1);
                 } else if (random == 1) {
@@ -155,7 +156,7 @@ public class SpacemanPlayer {
 
     private void updatePaused() {
         if (controller.pausePressed()) {
-            if (!GameScreen.isCustomMap) {
+            if (GameScreen.coreMap) {
                 SoundManager.play(Assets.DEATH_SOUND);
                 ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
             } else {
@@ -175,9 +176,7 @@ public class SpacemanPlayer {
         MainGame.spriterManager.draw(spriter);
     }
 
-
     private void moveLeft() {
-
         if (velX > -SPEED) {
             body.applyForce(-ACCELERATION, 0, posX, posY, true);
         } else {
@@ -216,10 +215,10 @@ public class SpacemanPlayer {
 
 
     private void moveUp() {
-        if (velY < SPEED) {
+        if (velY < JETPACK_POWER) {
             body.applyForce(0, ACCELERATION * 0.66f, posX, posY, true);
         } else {
-            body.setLinearVelocity(velX, SPEED);
+            body.setLinearVelocity(velX, JETPACK_POWER);
         }
 
         if (!movingUp) {
@@ -227,7 +226,7 @@ public class SpacemanPlayer {
             movingUp = true;
         }
 
-        currGas--;
+        //currGas--;
 
         addSmoke();
         spriter.setAnimation("jump");
@@ -287,22 +286,13 @@ public class SpacemanPlayer {
 
         ACCELERATION = Gdx.graphics.getDeltaTime() * 1800f;
         SPEED = Gdx.graphics.getDeltaTime() * 450f;
+        JETPACK_POWER = Gdx.graphics.getDeltaTime() * 450f;
 
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
 
         posX = body.getPosition().x;
         posY = body.getPosition().y;
-    }
-
-
-    public boolean isShooting() {
-        return shooting;
-    }
-
-
-    public void setShooting(boolean shooting) {
-        this.shooting = shooting;
     }
 
     public float getMaxGas() {

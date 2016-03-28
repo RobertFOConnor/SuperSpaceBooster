@@ -96,8 +96,8 @@ public class BodyFactory {
         Body body = world.createBody(bdef);
 
         // create box shape for bullet.
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(50 / PPM, 1 / PPM);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(5 / PPM);
 
         // create fixturedef for bullet.
         FixtureDef cfdef = new FixtureDef();
@@ -158,11 +158,6 @@ public class BodyFactory {
 
         if (ml == null) { //CUSTOM MAP - TEMP
             exit = createExitBody(world, GameScreen.customMap.getExitPos().x, GameScreen.customMap.getExitPos().y, width, height);
-        } else {
-            for (MapObject mo : ml.getObjects()) {
-                Vector2 pos = getMapObjectPos(mo);
-                exit = createExitBody(world, pos.x + (width), pos.y + (height), width, height);
-            }
         }
         return exit;
     }
@@ -176,8 +171,8 @@ public class BodyFactory {
         Body body = world.createBody(cdef);
 
         FixtureDef cfdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
+        CircleShape shape = new CircleShape();
+        shape.setRadius(25 / PPM);
         cfdef.shape = shape;
         cfdef.isSensor = true;
         cfdef.filter.categoryBits = Box2DVars.BIT_EXIT;
@@ -210,12 +205,6 @@ public class BodyFactory {
                 }
 
                 pickups.add(createPickUp(world, pos, type));
-            }
-        } else {
-            if (ml != null) {
-                for (MapObject mo : ml.getObjects()) {
-                    pickups.add(createPickUp(world, getMapObjectPos(mo), mo.getProperties().get("type", String.class)));
-                }
             }
         }
         return pickups;
@@ -257,19 +246,12 @@ public class BodyFactory {
 
         Array<Platform> platforms = new Array<Platform>();
 
-        MapLayer ml = tm.getLayers().get("platforms");
-
         if (GameScreen.customMap != null) {
 
             for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
 
                 platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100)));
             }
-
-        } else {
-
-            if (ml == null) return new Array<Platform>();
-
         }
         return platforms;
     }
@@ -352,12 +334,6 @@ public class BodyFactory {
             for (CustomMapObject mapObject : GameScreen.customMap.getEnemyArray()) {
                 Vector2 pos = new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100);
                 enemies.add(createEnemy(world, pos, mapObject.getId()));
-            }
-        } else {
-            if (ml != null) {
-                for (MapObject mo : ml.getObjects()) {
-                    enemies.add(createEnemy(world, getMapObjectPos(mo), IDs.EYEGUY));
-                }
             }
         }
         return enemies;

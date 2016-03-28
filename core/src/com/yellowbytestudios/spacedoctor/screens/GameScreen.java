@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -26,16 +27,14 @@ import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.TileManager;
-import com.yellowbytestudios.spacedoctor.game.objects.Box;
-import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
-import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
-import com.yellowbytestudios.spacedoctor.game.objects.Exit;
-import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
-import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.game.objects.*;
+import com.yellowbytestudios.spacedoctor.game.objects.Character;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
+import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorSplashScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 
 public class GameScreen implements Screen {
@@ -52,7 +51,6 @@ public class GameScreen implements Screen {
 
     //Map Editor
     public static CustomMap customMap;
-    public static boolean isCustomMap = false;
 
     //Player objects.
     private Array<SpacemanPlayer> players;
@@ -77,16 +75,22 @@ public class GameScreen implements Screen {
     //ANDROID CONTROLLER
     public static AndroidController androidController;
 
+    public static boolean coreMap = false;
 
     public GameScreen(int levelNo) {
         GameScreen.levelNo = levelNo;
-        isCustomMap = false;
-        customMap = null;
+
+        //TEMP!!!!
+        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_"+levelNo+".json", true);
+        CustomMap customMap;
+        customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
+        GameScreen.customMap = customMap;
+        coreMap = true;
     }
 
     public GameScreen(CustomMap customMap) {
         GameScreen.customMap = customMap;
-        isCustomMap = true;
+        coreMap = false;
     }
 
     @Override
@@ -104,11 +108,7 @@ public class GameScreen implements Screen {
         }
 
         //Set tile map using Tiled map path.
-        if (!isCustomMap) {
-            tileMap = new TmxMapLoader().load("maps/spaceship" + levelNo + ".tmx");
-        } else {
-            tileMap = MapManager.setupMap(customMap.loadMap());
-        }
+        tileMap = MapManager.setupMap(customMap.loadMap());
 
         //Setup map renderer.
         tmr = new OrthogonalTiledMapRenderer(tileMap);
@@ -132,30 +132,17 @@ public class GameScreen implements Screen {
         int mapWidth;
         int mapHeight;
 
-        if(isCustomMap) {
-            mapWidth = customMap.getMapWidth();
-            mapHeight = customMap.getMapHeight();
-        } else {
-            mapWidth = tileManager.getMapWidth();
-            mapHeight = tileManager.getMapHeight();
-        }
+        mapWidth = customMap.getMapWidth();
+        mapHeight = customMap.getMapHeight();
 
         b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
         cam.setBounds(0, mapWidth, 0, mapHeight);
 
         bgManager = new LevelBackgroundManager(cam, mapWidth, mapHeight);
 
-        float startX;
-        float startY;
-
-        if (!isCustomMap) {
-            startX = (Float.parseFloat(tileMap.getProperties().get("startX", String.class)));
-            startY = (Float.parseFloat(tileMap.getProperties().get("startY", String.class)));
-
-        } else { // TEMP - Custom map will specify player spawn point.
-            startX = customMap.getStartPos().x;
-            startY = customMap.getStartPos().y;
-        }
+        //Custom map will specify player spawn point.
+        float startX = customMap.getStartPos().x;
+        float startY = customMap.getStartPos().y;
 
         players = new Array<SpacemanPlayer>();
         players.add(BodyFactory.createPlayer(world, 0, MainGame.saveData.getHead()));
@@ -187,7 +174,10 @@ public class GameScreen implements Screen {
             androidController.update();
         }
 
-        System.out.println("player pos: " + players.get(0).getPos().x + ", " + players.get(0).getPos().y);
+        if(Gdx.input.isKeyPressed(Input.Keys.M)) {
+            ScreenManager.setScreen(new MapEditorSplashScreen(new MapEditorScreen(customMap)));
+        }
+
 
         updateCameras();
 
@@ -232,6 +222,11 @@ public class GameScreen implements Screen {
         if (players.size != 0) {
             for (Enemy e : enemies) {
                 e.update(players.get(0));
+
+                if(e.isShooting()) {
+                    addBullet(e);
+                    e.setShooting(false);
+                }
             }
         }
     }
@@ -304,14 +299,14 @@ public class GameScreen implements Screen {
     }
 
 
-    public void addBullet(SpacemanPlayer player) {
+    public void addBullet(Character player) {
 
         Bullet bullet;
         int dir = 1;
         if (player.facingLeft()) {
             dir = -1;
         }
-        bullet = new Bullet(BodyFactory.createBullet(world), new Vector2(dir * 2200, 0));
+        bullet = new Bullet(BodyFactory.createBullet(world), new Vector2(0, dir * 2200));
         bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y, 0);
         bullets.add(bullet);
     }
@@ -321,12 +316,9 @@ public class GameScreen implements Screen {
         SoundManager.stop(Assets.JETPACK_SOUND);
         SoundManager.switchMusic(Assets.MAIN_THEME);
 
-        if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
+        if (!coreMap) { // RETURN TO MAP EDITOR.
             ScreenManager.setScreen(new MapEditorScreen(customMap));
         } else {
-
-            world.dispose();
-
             if (levelNo != 10) {
                 MainGame.saveData.unlockHead(levelNo);
                 MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
@@ -336,13 +328,13 @@ public class GameScreen implements Screen {
                 ScreenManager.setScreen(new ResultsScreen());
             }
         }
-        customMap = null;
+        world.dispose();
     }
 
     private void killPlayer(final SpacemanPlayer p) {
         if (!p.isDieing()) {
             SoundManager.stop(Assets.JETPACK_SOUND);
-            SoundManager.play(Assets.DEATH_SOUND);
+            SoundManager.play(Assets.ENEMY_DEATH);
 
             Player.PlayerListener myListener = new Player.PlayerListener() {
                 @Override
@@ -452,7 +444,7 @@ public class GameScreen implements Screen {
         }
 
         //Render Box2D world.
-        if (MainGame.TEST_MODE) {
+        if (!MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
     }
@@ -486,7 +478,7 @@ public class GameScreen implements Screen {
         SoundManager.stop(Assets.JETPACK_SOUND);
         world.dispose();
 
-        if (!isCustomMap) {
+        if (coreMap) {
             ScreenManager.setScreen(new LevelSelectScreen());
         } else {
             ScreenManager.setScreen(new MapEditorScreen(customMap));

@@ -11,7 +11,10 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.Button;
+import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
+import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
@@ -367,19 +370,38 @@ public class EditorGUI {
         @Override
         public void input(String text) {
 
-            if(!mapNameExists(text)) {
-                if (MainGame.saveData.getMyMaps().size < 12) {
-                    MainGame.saveData.getMyMaps().add(mapManager.getCustomMap(text));
-                } else {
-                    MainGame.saveData.getMyMaps().set(11, mapManager.getCustomMap(text));
+            if(text.startsWith("lvl_")) {
+                saveCoreLevel(text);
+            } else {
+
+                if (!mapNameExists(text)) {
+                    if (MainGame.saveData.getMyMaps().size < 12) {
+                        MainGame.saveData.getMyMaps().add(mapManager.getCustomMap(text));
+                    } else {
+                        MainGame.saveData.getMyMaps().set(11, mapManager.getCustomMap(text));
+                    }
                 }
+                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                //MAP SAVED MESSAGE DISPLAY HERE!!!!
             }
-            MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-            //MAP SAVED MESSAGE DISPLAY HERE!!!!
         }
 
         @Override
         public void canceled() {
+        }
+    }
+
+    private void saveCoreLevel(String text) {
+        //TEMP!!!!
+        CustomMap customMap = new CustomMap();
+        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_"+text.substring(4)+".json", true);
+        levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
+
+
+        if (levelSaver.loadDataValue("LEVEL", CustomMap.class) != null) {
+            customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
+        } else {
+            levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
         }
     }
 

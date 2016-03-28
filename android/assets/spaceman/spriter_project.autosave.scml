@@ -1953,10 +1953,10 @@
             </mainline>
             <timeline id="0" name="eye_guy_air">
                 <key id="0" spin="0">
-                    <object folder="6" file="4" x="-111.337715" y="137.87101" scale_x="0.731209" scale_y="0.606528"/>
+                    <object folder="6" file="4" x="-111.337715" y="137.87101" angle="0" scale_x="0.731209" scale_y="0.606528"/>
                 </key>
                 <key id="1" time="73" spin="0">
-                    <object folder="6" file="4" x="-111.337715" y="170.579207" scale_x="0.731209" scale_y="0.7503"/>
+                    <object folder="6" file="4" x="-111.337715" y="170.579207" angle="0" scale_x="0.731209" scale_y="0.7503"/>
                 </key>
             </timeline>
         </animation>

@@ -183,12 +183,7 @@ public class TileManager {
     }
 
     private int getTileId(TiledMapTileLayer.Cell cell) {
-        int id = cell.getTile().getId();
-
-        if (!GameScreen.isCustomMap) {
-            id--; //WHY? I DO NOT KNOW..
-        }
-        return id;
+        return cell.getTile().getId();
     }
 
     private void checkDrawVector() {

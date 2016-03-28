@@ -2,7 +2,11 @@ package com.yellowbytestudios.spacedoctor.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -45,13 +49,13 @@ public class LevelSelectScreen implements Screen {
         title.centerText();
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
 
-        float levelY = MainGame.HEIGHT / 2 + 50;
+        float levelY = MainGame.HEIGHT -230;
         int levelCount = 1;
 
         levelButtons = new Array<LevelButton>();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 5; j++) {
-                LevelButton lb = new LevelButton(new Vector2((MainGame.WIDTH / 4 - 200) * (j + 1), levelY-600), levelCount);
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 10; j++) {
+                LevelButton lb = new LevelButton(new Vector2(180+(160 * j), levelY-600), levelCount);
                 levelButtons.add(lb);
                 levelCount++;
 
@@ -60,7 +64,7 @@ public class LevelSelectScreen implements Screen {
                 }
                 AnimationManager.applyAnimation(lb, lb.getX(), levelY);
             }
-            levelY -= 300;
+            levelY -= 110;
         }
 
         selectedLevel = levelButtons.get(currLevel - 1);
@@ -80,19 +84,37 @@ public class LevelSelectScreen implements Screen {
         private boolean unlocked = false;
         private boolean selected = false;
         private Texture border;
+        private NinePatch bg;
 
         public LevelButton(Vector2 pos, int levelNum) {
-            super(Assets.LEVEL_LOCKED, pos);
-            if (currLevel > levelNum) {
+            super(Assets.BOX, pos);
+
+            FileHandle loadFile = Gdx.files.internal("levels/level_"+levelNum+".json");
+
+            this.bg = new NinePatch(getTexture(), 40, 40, 40, 40);
+
+            if (loadFile.exists()) {
                 setTexture(Assets.manager.get(Assets.LEVEL_COMPLETE, Texture.class));
                 unlocked = true;
-            } else if (currLevel == levelNum) {
+            } else {
                 setTexture(Assets.manager.get(Assets.LEVEL_BUTTON, Texture.class));
-                unlocked = true;
+                unlocked = false;
             }
 
             this.levelNum = levelNum;
             border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
+        }
+
+        @Override
+        public void draw(Batch sb) {
+            bg.draw(sb, getX(), getY(), 120, 80);
+
+            if(unlocked) {
+                Fonts.GUIFont.setColor(Color.WHITE);
+            } else {
+                Fonts.GUIFont.setColor(Color.BLACK);
+            }
+            Fonts.GUIFont.draw(sb, ""+levelNum, getX() + 40, getY() + 40);
         }
     }
 
@@ -111,7 +133,9 @@ public class LevelSelectScreen implements Screen {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             advanceScreen(selLevel);
 
-        } else if (Gdx.input.justTouched()) {
+        }
+
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 

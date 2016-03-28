@@ -10,7 +10,7 @@ import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 
 
-public class Enemy extends Box2DSprite {
+public class Enemy extends Character {
 
     private String type = "";
     private int health = 3;
@@ -22,13 +22,13 @@ public class Enemy extends Box2DSprite {
 
     private float enemySpeed;
 
-    private com.brashmonkey.spriter.Player spriter;
     private boolean followsPlayer = true;
     private boolean movingLeft = true;
     private int numFootContacts = 0;
 
     public Enemy(Body body, int id) {
         super(body);
+        name = "enemy";
 
         if (id == IDs.EYEGUY) {
             spriter = MainGame.spriterManager.getSpiter("eyeball", "walking", 0.8f);
@@ -64,7 +64,7 @@ public class Enemy extends Box2DSprite {
             body.setLinearVelocity(-SPEED, velY);
         }
 
-        if (facingLeft()) {
+        if (!facingLeft()) {
             flipSprite();
         }
     }
@@ -76,7 +76,7 @@ public class Enemy extends Box2DSprite {
             body.setLinearVelocity(SPEED, velY);
         }
 
-        if (!facingLeft()) {
+        if (facingLeft()) {
             flipSprite();
         }
     }
@@ -113,8 +113,16 @@ public class Enemy extends Box2DSprite {
                 moveLeft();
             }
 
-            if(inAir()) {
+            if (inAir()) {
                 spriter.setAnimation("air");
+            }
+        }
+
+        if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
+            int random = (int) (Math.random() * 40);
+
+            if (random == 0) {
+                shooting = true;
             }
         }
     }
@@ -158,10 +166,6 @@ public class Enemy extends Box2DSprite {
 
     public void setDead(boolean isDead) {
         this.isDead = isDead;
-    }
-
-    private boolean facingLeft() {
-        return spriter.flippedX() != 1;
     }
 
     private void flipSprite() {

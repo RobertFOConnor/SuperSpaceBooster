@@ -66,7 +66,7 @@ public class AndroidController implements BasicController {
         up.render(sb);
         shoot.render(sb);
 
-        if (GameScreen.isCustomMap) { // RETURN TO MAP EDITOR.
+        if (!GameScreen.coreMap) { // RETURN TO MAP EDITOR.
             if (mapEditor.checkTouch(touch1) || mapEditor.checkTouch(touch2)) {
                 ScreenManager.setScreen(new MapEditorScreen(GameScreen.customMap));
             }
