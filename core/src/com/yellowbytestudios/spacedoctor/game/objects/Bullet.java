@@ -15,10 +15,16 @@ public class Bullet extends Box2DSprite {
 
     private Vector2 dir;
 
-    public Bullet(Body body, Vector2 dir) {
+    public Bullet(Body body, Vector2 dir, int id) {
         super(body);
         body.setUserData(this);
-        texture = Assets.manager.get(Assets.BULLET, Texture.class);
+
+        if(id == 1) {
+            texture = Assets.manager.get(Assets.BULLET_ENEMY, Texture.class);
+        } else {
+            texture = Assets.manager.get(Assets.BULLET, Texture.class);
+        }
+
         width = texture.getWidth();
         height = texture.getHeight();
         this.dir = dir;

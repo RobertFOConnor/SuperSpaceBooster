@@ -59,6 +59,10 @@
         <file id="3" name="eye_guy/eye_guy_2.png" width="138" height="48" pivot_x="0" pivot_y="1"/>
         <file id="4" name="eye_guy/eye_guy_air.png" width="200" height="227" pivot_x="0" pivot_y="1"/>
     </folder>
+    <folder id="7" name="guns">
+        <file id="0" name="guns/blaster.png" width="186" height="63" pivot_x="0.94" pivot_y="0.51"/>
+        <file id="1" name="guns/drill_cannon.png" width="186" height="73" pivot_x="0.946237" pivot_y="0.424658"/>
+    </folder>
     <entity id="0" name="player">
         <obj_info name="bone_000" type="bone" w="60.0162" h="10"/>
         <obj_info name="bone_001" type="bone" w="38.6075" h="10"/>

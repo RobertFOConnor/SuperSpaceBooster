@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.utils.Array;
 import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
@@ -14,6 +15,7 @@ import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.objects.*;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
+import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.HelmetSelectScreen;
@@ -45,6 +47,8 @@ public class SpacemanPlayer extends Character {
     private float currGas = maxGas;
 
     //Gun variables!
+    private Array<Gun> guns;
+    private Gun currGun;
     private int currAmmo = 10;
 
     //Spriter variables.
@@ -61,6 +65,12 @@ public class SpacemanPlayer extends Character {
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
         spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.58f);
+
+        if(GameScreen.levelNo == 1) {
+            currGun = new Gun(Gun.BLASTER);
+        } else {
+            currGun = new Gun(Gun.DRILL_CANNON);
+        }
 
         WIDTH = 80;
         HEIGHT = 118;
@@ -139,14 +149,7 @@ public class SpacemanPlayer extends Character {
         if (controller.shootPressed()) {
             if(currAmmo > 0) {
                 shooting = true;
-                int random = (int) (Math.random() * 3);
-                if (random == 0) {
-                    SoundManager.play(Assets.GUN_SOUND_1);
-                } else if (random == 1) {
-                    SoundManager.play(Assets.GUN_SOUND_2);
-                } else {
-                    SoundManager.play(Assets.GUN_SOUND_3);
-                }
+                SoundManager.play(currGun.getShootSound());
                 currAmmo--;
             } else {
                 SoundManager.play(Assets.GUN_SOUND_EMPTY);
@@ -168,7 +171,8 @@ public class SpacemanPlayer extends Character {
     private void updateSpriterImages() {
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 25));
         spriter.update();
-        spriter.setObject("head", 1f, 4, headType);
+        spriter.setObject("head", 1f, IDs.HEAD_FOLDER, headType);
+        spriter.setObject("r_arm", 1f, IDs.GUN_FOLDER, currGun.getId());
     }
 
 
@@ -383,5 +387,9 @@ public class SpacemanPlayer extends Character {
 
     public Body getBody() {
         return body;
+    }
+
+    public Gun getGun() {
+        return currGun;
     }
 }

@@ -25,6 +25,17 @@ public class CoreLevelSaver {
         save = getSave();
     }
 
+
+    //Used for saving to external storage.
+    public CoreLevelSaver(FileHandle filePath, boolean encoded) {
+        saveFile = filePath;
+        loadFile = filePath;
+
+        this.encoded = encoded;
+        save = getSave();
+    }
+
+
     public static class Save {
         public ObjectMap<String, Object> data = new ObjectMap<String, Object>();
     }

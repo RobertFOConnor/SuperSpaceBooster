@@ -19,4 +19,10 @@ public class IDs {
 
     //OBSTACLES
     public static final int HORIZONTAL_SPIKER = 500;
+
+
+
+    //SPRITER
+    public static final int HEAD_FOLDER = 4;
+    public static final int GUN_FOLDER = 7;
 }

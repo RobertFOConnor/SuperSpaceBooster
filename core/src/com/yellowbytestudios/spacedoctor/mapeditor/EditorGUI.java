@@ -11,9 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.Button;
-import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
 import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
@@ -262,7 +260,7 @@ public class EditorGUI {
                 } else if (itemTab.checkTouch(touch)) {
                     state = ITEM_STATE;
                     eraseButton.setPressed(false);
-                } else if(obstacleTab.checkTouch(touch)) {
+                } else if (obstacleTab.checkTouch(touch)) {
                     state = OBSTACLE_STATE;
                     eraseButton.setPressed(false);
                 }
@@ -370,9 +368,15 @@ public class EditorGUI {
         @Override
         public void input(String text) {
 
-            if(text.startsWith("lvl_")) {
+            if (text.startsWith("lvl_")) {
                 saveCoreLevel(text);
             } else {
+
+                if (text.startsWith("export_")) { //Saves to external so core maps can be designed on android.
+                    //SAVE TO EXTERNAL STORAGE.
+                    CoreLevelSaver levelSaver = new CoreLevelSaver(Gdx.files.external("SSB_Maps/" + text + ".json"), true);
+                    levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
+                }
 
                 if (!mapNameExists(text)) {
                     if (MainGame.saveData.getMyMaps().size < 12) {
@@ -394,7 +398,7 @@ public class EditorGUI {
     private void saveCoreLevel(String text) {
         //TEMP!!!!
         CustomMap customMap = new CustomMap();
-        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_"+text.substring(4)+".json", true);
+        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_" + text.substring(4) + ".json", true);
         levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
 
 

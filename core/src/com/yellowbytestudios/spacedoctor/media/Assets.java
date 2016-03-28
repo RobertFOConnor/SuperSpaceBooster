@@ -56,6 +56,7 @@ public class Assets {
     //Game objects.
     public static final String BOX = "game_objects/box.png";
     public static final String BULLET = "game_objects/bullet.png";
+    public static final String BULLET_ENEMY = "game_objects/bullet_enemy.png";
     public static final String HOR_PLATFORM = "game_objects/hor_platform_medium.png";
     public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
 
@@ -129,6 +130,7 @@ public class Assets {
         manager.load(HILLS, Texture.class);
         manager.load(BOX, Texture.class);
         manager.load(BULLET, Texture.class);
+        manager.load(BULLET_ENEMY, Texture.class);
         manager.load(HOR_PLATFORM, Texture.class);
         manager.load(VER_PLATFORM, Texture.class);
         manager.load(LOCKED_HEAD, Texture.class);

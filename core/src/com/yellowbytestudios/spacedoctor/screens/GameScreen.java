@@ -178,14 +178,13 @@ public class GameScreen implements Screen {
             ScreenManager.setScreen(new MapEditorSplashScreen(new MapEditorScreen(customMap)));
         }
 
-
         updateCameras();
 
         for (SpacemanPlayer p : players) {
             p.update();
 
             if (p.isShooting()) {
-                addBullet(p);
+                addBullet(p, p.getGun().getBullet());
                 p.setShooting(false);
             }
 
@@ -224,7 +223,7 @@ public class GameScreen implements Screen {
                 e.update(players.get(0));
 
                 if(e.isShooting()) {
-                    addBullet(e);
+                    addBullet(e, 0);
                     e.setShooting(false);
                 }
             }
@@ -299,14 +298,14 @@ public class GameScreen implements Screen {
     }
 
 
-    public void addBullet(Character player) {
+    public void addBullet(Character player, int bulletId) {
 
         Bullet bullet;
         int dir = 1;
         if (player.facingLeft()) {
             dir = -1;
         }
-        bullet = new Bullet(BodyFactory.createBullet(world), new Vector2(0, dir * 2200));
+        bullet = new Bullet(BodyFactory.createBullet(world), new Vector2(dir * 2200, 0), bulletId);
         bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y, 0);
         bullets.add(bullet);
     }
@@ -444,7 +443,7 @@ public class GameScreen implements Screen {
         }
 
         //Render Box2D world.
-        if (!MainGame.TEST_MODE) {
+        if (MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
     }
