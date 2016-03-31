@@ -15,11 +15,14 @@ public class Exit extends Box2DSprite {
         spriter = MainGame.spriterManager.getSpiter("exit", "default", 0.85f);
     }
 
-    public void render(SpriteBatch sb) {
+    public void update() {
         posX = body.getPosition().x;
         posY = body.getPosition().y;
         spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM));
         spriter.update();
+    }
+
+    public void render(SpriteBatch sb) {
         MainGame.spriterManager.draw(spriter);
     }
 }

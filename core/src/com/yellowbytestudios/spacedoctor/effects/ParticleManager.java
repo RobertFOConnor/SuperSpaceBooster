@@ -40,10 +40,16 @@ public class ParticleManager {
         effects.add(effect);
     }
 
-    public void render(SpriteBatch sb) {
+    public void update() {
         for (int i = effects.size - 1; i >= 0; i--) {
             PooledEffect effect = effects.get(i);
             effect.update(Gdx.graphics.getDeltaTime());
+        }
+    }
+
+    public void render(SpriteBatch sb) {
+        for (int i = effects.size - 1; i >= 0; i--) {
+            PooledEffect effect = effects.get(i);
             if (effect.isComplete()) {
                 effect.free();
                 effects.removeIndex(i);

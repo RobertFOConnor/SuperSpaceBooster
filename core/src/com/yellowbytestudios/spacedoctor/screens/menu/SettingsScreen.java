@@ -40,16 +40,16 @@ public class SettingsScreen implements Screen {
             controller = Controllers.getControllers().get(0);
         }
 
-        title = new SpriteText("SETTINGS", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("SETTINGS").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         bg = new BackgroundManager();
         musicButton = new SwitchButton(new Vector2(1920, 650));
         soundFXButton = new SwitchButton(new Vector2(1920, 250));
 
-        music = new SpriteText("MUSIC", Fonts.GUIFont);
+        music = new SpriteText(MainGame.languageFile.get("MUSIC").toUpperCase(), Fonts.GUIFont);
         music.setPosition(-200, 720);
-        soundFX = new SpriteText("SOUND FX", Fonts.GUIFont);
+        soundFX = new SpriteText(MainGame.languageFile.get("SOUND_FX").toUpperCase(), Fonts.GUIFont);
         soundFX.setPosition(-200, 320);
 
         musicButton.switched_on = SoundManager.musicEnabled;

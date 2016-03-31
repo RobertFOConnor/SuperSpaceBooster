@@ -1,6 +1,5 @@
 package com.yellowbytestudios.spacedoctor.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
 /**
@@ -8,13 +7,15 @@ import com.yellowbytestudios.spacedoctor.media.Assets;
  */
 public class Gun {
 
-    public static int BLASTER = 0;
+    public static int BLASTER = 2;
     public static int DRILL_CANNON = 1;
 
     private String shootSound;
     private int startAmmo = 10;
     private int id;
     private String name;
+
+    //Buillet properties.
     private int bulletId = 1;
 
     public Gun(int id) {
@@ -24,7 +25,7 @@ public class Gun {
             shootSound = Assets.GUN_SOUND_1;
             bulletId = 1;
         } else {
-            shootSound = Assets.GUN_SOUND_1;
+            shootSound = Assets.GUN_SOUND_3;
             bulletId = 0;
         }
     }

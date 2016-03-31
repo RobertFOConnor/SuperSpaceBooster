@@ -31,7 +31,7 @@ public class LightManager {
 	}
 
 	public void update() {
-		playerLight.setPosition(player.getPos().x * Box2DVars.PPM + MainGame.WIDTH / 50, player.getPos().y * Box2DVars.PPM + MainGame.HEIGHT / 50);
+		playerLight.setPosition(player.getPos().x * Box2DVars.PPM, player.getPos().y * Box2DVars.PPM);
         System.out.println(player.getPos().x+" , "+ player.getPos().y);
         handler.update();
 	}

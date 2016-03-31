@@ -1,12 +1,14 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
@@ -36,7 +38,7 @@ public class SizeSelectScreen implements Screen {
         smallButton = new SpriteButton(Assets.SMALL_MAP, new Vector2(180, -500));
         mediumButton = new SpriteButton(Assets.MEDIUM_MAP, new Vector2(760, -500));
         largeButton = new SpriteButton(Assets.LARGE_MAP, new Vector2(1340, -500));
-        title = new SpriteText("SELECT A SIZE", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("SELECT_SIZE").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
@@ -59,7 +61,12 @@ public class SizeSelectScreen implements Screen {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            if (smallButton.checkTouch(touch)) {
+            if(touch.y < 100) {
+
+                MyTextInputListener listener = new MyTextInputListener();
+                Gdx.input.getTextInput(listener, "Specify map size", "", "Input map dimensions");
+
+            } else if (smallButton.checkTouch(touch)) {
 
                 advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(25, 15)));
             } else if(mediumButton.checkTouch(touch)) {
@@ -99,6 +106,20 @@ public class SizeSelectScreen implements Screen {
         largeButton.draw(sb);
         sb.end();
     }
+
+    public class MyTextInputListener implements Input.TextInputListener {
+        @Override
+        public void input(String text) {
+            int width = Integer.parseInt(text.substring(0, text.indexOf(",")));
+            int height = Integer.parseInt(text.substring(text.indexOf(",")+1, text.length()));
+            advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(width, height)));
+        }
+
+        @Override
+        public void canceled() {
+        }
+    }
+
 
     @Override
     public void resize(int width, int height) {

@@ -4,10 +4,13 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.I18NBundle;
 
 public class Assets {
 
     public static AssetManager manager = new AssetManager();
+
+    public static final String LANGUAGE_FILE = "i18n/MyBundle";
 
     public static final String LOADSCREEN = "loadscreen.png";
     public static final String LOADWHEEL = "loadwheel.png";
@@ -67,8 +70,6 @@ public class Assets {
     public static final String HILLS = "background/hills.png";
 
     //Game GUI.
-    public static final String GUI_DISPLAY = "gui/gui_display.png";
-    public static final String VICTORY = "victory.png";
     public static final String LOCKED_HEAD = "menu/locked_head.png";
 
 
@@ -138,8 +139,6 @@ public class Assets {
         manager.load(TITLE, Texture.class);
         manager.load(STARS1, Texture.class);
         manager.load(STARS2, Texture.class);
-        manager.load(GUI_DISPLAY, Texture.class);
-        manager.load(VICTORY, Texture.class);
         manager.load(SMALL_MAP, Texture.class);
         manager.load(MEDIUM_MAP, Texture.class);
         manager.load(LARGE_MAP, Texture.class);
@@ -163,6 +162,8 @@ public class Assets {
 
         manager.load(MAIN_THEME, Music.class);
         manager.load(LEVEL_THEME, Music.class);
+
+        manager.load(LANGUAGE_FILE, I18NBundle.class);
     }
 
     public static void dispose() {

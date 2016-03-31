@@ -31,11 +31,12 @@ public class LevelSelectScreen implements Screen {
     private SpriteText title;
     private BackgroundManager bg;
     private Array<LevelButton> levelButtons;
-    private LevelButton selectedLevel = null;
     private SpriteButton backButton;
+    private int worldNum = 1;
 
-    private int currLevel = MainGame.saveData.getCurrLevel();
-    private int selLevel = 1;
+    public LevelSelectScreen(int worldNum) {
+        this.worldNum = worldNum;
+    }
 
     @Override
     public void create() {
@@ -45,32 +46,20 @@ public class LevelSelectScreen implements Screen {
 
         bg = new BackgroundManager();
 
-        title = new SpriteText("SELECT A LEVEL", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("SELECT_LEVEL").toUpperCase(), Fonts.timerFont);
         title.centerText();
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
 
-        float levelY = MainGame.HEIGHT -230;
+        float levelY = (MainGame.HEIGHT/2)-40;
         int levelCount = 1;
 
         levelButtons = new Array<LevelButton>();
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 10; j++) {
-                LevelButton lb = new LevelButton(new Vector2(180+(160 * j), levelY-600), levelCount);
-                levelButtons.add(lb);
-                levelCount++;
-
-                if (levelCount == currLevel) {
-                    selectedLevel = levelButtons.get(levelButtons.size - 1);
-                }
-                AnimationManager.applyAnimation(lb, lb.getX(), levelY);
-            }
-            levelY -= 110;
+        for (int j = 0; j < 10; j++) {
+            LevelButton lb = new LevelButton(new Vector2(180 + (160 * j), levelY - 600), levelCount);
+            levelButtons.add(lb);
+            levelCount++;
+            AnimationManager.applyAnimation(lb, lb.getX(), levelY);
         }
-
-        selectedLevel = levelButtons.get(currLevel - 1);
-
-        selLevel = 1;
-        //levelButtons.get(selLevel - 1).setSelected(true);
         SoundManager.stop(Assets.JETPACK_SOUND);
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
@@ -82,15 +71,13 @@ public class LevelSelectScreen implements Screen {
 
         private int levelNum;
         private boolean unlocked = false;
-        private boolean selected = false;
-        private Texture border;
         private NinePatch bg;
         private Color color;
 
         public LevelButton(Vector2 pos, int levelNum) {
             super(Assets.BOX, pos);
 
-            FileHandle loadFile = Gdx.files.internal("levels/level_"+levelNum+".json");
+            FileHandle loadFile = Gdx.files.internal("levels/level_" + (((worldNum - 1) * 10) + levelNum) + ".json");
 
             this.bg = new NinePatch(getTexture(), 40, 40, 40, 40);
             String img;
@@ -106,7 +93,6 @@ public class LevelSelectScreen implements Screen {
             }
             setTexture(Assets.manager.get(img, Texture.class));
             this.levelNum = levelNum;
-            border = Assets.manager.get(Assets.LEVEL_BORDER, Texture.class);
         }
 
         @Override
@@ -114,7 +100,7 @@ public class LevelSelectScreen implements Screen {
             bg.draw(sb, getX(), getY(), 120, 80);
 
             Fonts.GUIFont.setColor(color);
-            Fonts.GUIFont.draw(sb, ""+levelNum, getX() + 40, getY() + 40);
+            Fonts.GUIFont.draw(sb, worldNum + "-" + levelNum, getX() + 40, getY() + 40);
             Fonts.GUIFont.setColor(Color.WHITE);
         }
     }
@@ -126,22 +112,21 @@ public class LevelSelectScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(selLevel);
+                advanceScreen(1);
             } else if (MainGame.controller.getButton(XBox360Pad.BUTTON_BACK)) {
                 goBack();
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(selLevel);
-
+            advanceScreen(1);
         }
 
         if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 
-            for(LevelButton lb : levelButtons) {
-                if(lb.checkTouch(touch) && lb.unlocked) {
+            for (LevelButton lb : levelButtons) {
+                if (lb.checkTouch(touch) && lb.unlocked) {
                     advanceScreen(lb.levelNum);
                 }
             }
@@ -153,7 +138,7 @@ public class LevelSelectScreen implements Screen {
     }
 
     private void advanceScreen(int levelNum) {
-        ScreenManager.setScreen(new GameScreen(levelNum));
+        ScreenManager.setScreen(new GameScreen(((worldNum - 1) * 10) + levelNum));
     }
 
     @Override
@@ -204,7 +189,7 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void goBack() {
-        for(LevelButton lb : levelButtons) {
+        for (LevelButton lb : levelButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
         }
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);

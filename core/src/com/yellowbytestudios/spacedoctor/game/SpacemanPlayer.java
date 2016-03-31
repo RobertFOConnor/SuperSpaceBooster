@@ -48,6 +48,7 @@ public class SpacemanPlayer extends Character {
 
     //Gun variables!
     private Array<Gun> guns;
+    private int gunIndex = 0;
     private Gun currGun;
     private int currAmmo = 10;
 
@@ -95,6 +96,13 @@ public class SpacemanPlayer extends Character {
         //Start player facing right.
         moveRight();
         spriter.setObject("head", 1f, 4, headType);
+
+
+        guns = new Array<Gun>();
+        guns.add(new Gun(Gun.BLASTER));
+        guns.add(new Gun(Gun.DRILL_CANNON));
+
+        currGun = guns.get(gunIndex);
     }
 
 
@@ -154,6 +162,16 @@ public class SpacemanPlayer extends Character {
             } else {
                 SoundManager.play(Assets.GUN_SOUND_EMPTY);
             }
+        }
+
+
+        //TEMP!!
+        if(controller.switchGunPressed()) {
+            gunIndex++;
+            if(gunIndex == guns.size) {
+                gunIndex = 0;
+            }
+            currGun = guns.get(gunIndex);
         }
     }
 
@@ -279,11 +297,13 @@ public class SpacemanPlayer extends Character {
 
 
     private void addSmoke() {
-        if (!facingLeft()) {
-            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2), (int) (posY * 100 - HEIGHT / 2), gasColor);
-        } else {
-            GameScreen.particleManager.addEffect((int) (posX * 100 - WIDTH / 2) + WIDTH, (int) (posY * 100 - HEIGHT / 2), gasColor);
+        int smokeX = (int) (posX * 100 - WIDTH / 2);
+        int smokeY = (int) (posY * 100 - HEIGHT / 2);
+
+        if (facingLeft()) {
+            smokeX+=WIDTH;
         }
+        GameScreen.particleManager.addEffect(smokeX, smokeY, gasColor);
     }
 
     private void assignVariables() {

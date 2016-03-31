@@ -1,10 +1,12 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
@@ -13,8 +15,11 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 public class MapEditorSplashScreen implements Screen {
 
     private OrthoCamera camera;
+    private Sprite loadScreen;
+    private Sprite loadWheel;
     private String percentage="";
     private Screen mapScreen;
+
 
     public MapEditorSplashScreen(Screen mapScreen) {
         camera = new OrthoCamera();
@@ -27,12 +32,16 @@ public class MapEditorSplashScreen implements Screen {
     public void create() {
         camera = new OrthoCamera();
         camera.resize();
+
+        loadScreen = new Sprite(Assets.manager.get(Assets.LOADSCREEN, Texture.class));
+        loadWheel = new Sprite(Assets.manager.get(Assets.LOADWHEEL, Texture.class));
+        loadWheel.setPosition(MainGame.WIDTH - 180, 100);
     }
 
     @Override
     public void update(float dt) {
         camera.update();
-        percentage = ("Loading Map Editor: "+(int) (MapEditorAssets.manager.getProgress() * 100) + "%");
+        percentage = ((int) (MapEditorAssets.manager.getProgress() * 100) + "%");
     }
 
     @Override
@@ -40,9 +49,11 @@ public class MapEditorSplashScreen implements Screen {
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        Fonts.GUIFont.setColor(Color.BLACK);
-        Fonts.GUIFont.draw(sb, percentage, MainGame.WIDTH / 2 - 30, MainGame.HEIGHT / 2);
+        loadScreen.draw(sb);
+        loadWheel.rotate(10f);
+        loadWheel.draw(sb);
         Fonts.GUIFont.setColor(Color.WHITE);
+        Fonts.GUIFont.draw(sb, percentage, MainGame.WIDTH - Fonts.getWidth(Fonts.GUIFont, percentage) - 250, 160);
         sb.end();
 
         if (MapEditorAssets.update()) { // DONE LOADING. SHOW EDITOR SCREEN.

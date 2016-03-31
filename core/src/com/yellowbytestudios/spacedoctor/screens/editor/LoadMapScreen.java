@@ -38,7 +38,7 @@ public class LoadMapScreen implements Screen {
         touch = new Vector2();
 
         bg = new BackgroundManager();
-        title = new SpriteText("SELECT A MAP TO LOAD", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("SELECT_MAP_TO_LOAD").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         setupMapButtons();

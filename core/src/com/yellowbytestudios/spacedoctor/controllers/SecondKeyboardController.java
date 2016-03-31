@@ -35,6 +35,11 @@ public class SecondKeyboardController implements BasicController {
 
     @Override
     public boolean pausePressed() {
-        return Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+        return Gdx.input.isKeyJustPressed(Input.Keys.R);
+    }
+
+    @Override
+    public boolean switchGunPressed() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_RIGHT);
     }
 }

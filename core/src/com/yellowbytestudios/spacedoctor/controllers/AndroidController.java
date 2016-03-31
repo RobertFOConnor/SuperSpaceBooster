@@ -73,7 +73,7 @@ public class AndroidController implements BasicController {
             mapEditor.render(sb);
         } else {
             if(exit.checkTouch(touch1) || exit.checkTouch(touch2)) {
-                ScreenManager.setScreen(new LevelSelectScreen());
+                ScreenManager.setScreen(new LevelSelectScreen((GameScreen.levelNo/10)+1));
             }
             exit.render(sb);
         }
@@ -128,6 +128,11 @@ public class AndroidController implements BasicController {
         } else {
             shoot.setPressed(false);
         }
+        return false;
+    }
+
+    @Override
+    public boolean switchGunPressed() {
         return false;
     }
 

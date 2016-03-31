@@ -1,14 +1,18 @@
 package com.yellowbytestudios.spacedoctor.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.media.Assets;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 public class GUIManager {
 
@@ -21,9 +25,10 @@ public class GUIManager {
     private long timeElapsed;
 
     private ShapeRenderer shapeRenderer;
-    private Texture gui_display, alpha;
+    private Texture alpha;
 
     private boolean isTimed;
+    private boolean paused = false;
 
 
     public GUIManager(Array<SpacemanPlayer> players, boolean isTimed) {
@@ -37,14 +42,18 @@ public class GUIManager {
         startTurnTime = System.nanoTime();
 
         shapeRenderer = new ShapeRenderer();
-        gui_display = Assets.manager.get(Assets.GUI_DISPLAY, Texture.class);
         alpha = Assets.manager.get(Assets.ALPHA, Texture.class);
     }
 
     public void update() {
 
-        if(isTimed) {
+        if (isTimed) {
             timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            paused = !paused;
+            SoundManager.stop(Assets.JETPACK_SOUND);
         }
     }
 
@@ -55,13 +64,13 @@ public class GUIManager {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
 
-        for(int i = 0; i < players.size; i++) {
+        for (int i = 0; i < players.size; i++) {
             SpacemanPlayer player = players.get(i);
 
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
 
-            if(player.isJetpacking()) {
+            if (player.isJetpacking()) {
                 shapeRenderer.setColor(Color.WHITE);
             } else {
                 shapeRenderer.setColor(Color.RED);
@@ -73,16 +82,18 @@ public class GUIManager {
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         sb.draw(alpha, 0, MainGame.HEIGHT, MainGame.WIDTH, -120);
-        for(int i = 0; i < players.size; i++) {
+        for (int i = 0; i < players.size; i++) {
 
-            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getCurrAmmo()), 225+(i*1425), MainGame.HEIGHT - 70);
+            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getCurrAmmo()), 225 + (i * 1425), MainGame.HEIGHT - 70);
 
             //Fonts.GUIFont.draw(sb, String.format("%07d", players.get(i).getCoins()), (MainGame.WIDTH - 250)+(i*1425), MainGame.HEIGHT - 70);
         }
 
-        if(isTimed) {
+        if (isTimed) {
             drawTimer(sb);
         }
+
+        Fonts.GUIFont.draw(sb, "World: " + GameScreen.worldNo + "-" + (GameScreen.levelNo - ((GameScreen.worldNo - 1) * 10)), 1500, MainGame.HEIGHT - 70);
 
         sb.end();
     }
@@ -104,5 +115,9 @@ public class GUIManager {
 
     public boolean timeIsUp() {
         return isTimed && timeElapsed < 0;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 }

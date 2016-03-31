@@ -20,7 +20,6 @@ public class ResultsScreen implements Screen {
     public void create() {
         camera = new OrthoCamera();
         camera.resize();
-        bg = Assets.manager.get(Assets.VICTORY, Texture.class);
         SoundManager.stop(Assets.JETPACK_SOUND);
     }
 

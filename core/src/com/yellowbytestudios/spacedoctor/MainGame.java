@@ -8,6 +8,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
@@ -44,6 +45,9 @@ public class MainGame extends ApplicationAdapter {
     public static boolean firstTime = false;
 
     public static final boolean TEST_MODE = false;
+
+    public static I18NBundle languageFile;
+
 
     FPSLogger fps;
 

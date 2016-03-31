@@ -13,16 +13,19 @@ import com.yellowbytestudios.spacedoctor.media.Assets;
  */
 public class Bullet extends Box2DSprite {
 
-    private Vector2 dir;
+    private int dir;
+    private Vector2 speed;
 
-    public Bullet(Body body, Vector2 dir, int id) {
+    public Bullet(Body body, int dir, int id) {
         super(body);
         body.setUserData(this);
 
-        if(id == 1) {
+        if (id == 1) {
             texture = Assets.manager.get(Assets.BULLET_ENEMY, Texture.class);
+            speed = new Vector2(2100*dir, 0);
         } else {
             texture = Assets.manager.get(Assets.BULLET, Texture.class);
+            speed = new Vector2(1200*dir, 0);
         }
 
         width = texture.getWidth();
@@ -31,7 +34,7 @@ public class Bullet extends Box2DSprite {
     }
 
     public void update() {
-        body.setLinearVelocity(dir.x * Gdx.graphics.getDeltaTime(), dir.y * Gdx.graphics.getDeltaTime());
+        body.setLinearVelocity(speed.x * Gdx.graphics.getDeltaTime(), speed.y * Gdx.graphics.getDeltaTime());
     }
 
     public void render(SpriteBatch sb) {

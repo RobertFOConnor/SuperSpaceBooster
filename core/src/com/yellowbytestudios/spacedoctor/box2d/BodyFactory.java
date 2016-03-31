@@ -22,7 +22,6 @@ import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMapObject;
 import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
-import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 public class BodyFactory {
@@ -262,7 +261,7 @@ public class BodyFactory {
 
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.KinematicBody;
-        cdef.position.set(pos.x + (width / 2), pos.y + (height / 2));
+        cdef.position.set(pos.x, pos.y);
 
         Body body = world.createBody(cdef);
 
@@ -271,8 +270,16 @@ public class BodyFactory {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1f;
         fixtureDef.shape = bodyShape;
+        fixtureDef.filter.categoryBits = Box2DVars.BIT_WALL;
+        fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
+        body.createFixture(fixtureDef).setUserData("wall");
+
+        bodyShape.setAsBox((width / 2)-0.2f, (height / 2)+0.05f);
+        fixtureDef.shape = bodyShape;
+        fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Box2DVars.BIT_SPIKE;
         fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
+
 
         body.createFixture(fixtureDef).setUserData("wall");
         Platform p = new Platform(body, "horizontal");

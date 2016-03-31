@@ -37,7 +37,7 @@ public class MainMenuScreen implements Screen {
         editorButton = new SpriteButton(Assets.LEVEL_BUILDER, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 850));
         statButton = new SpriteButton(Assets.STATS, new Vector2(-600, MainGame.HEIGHT - 850));
         settings = new SpriteButton(Assets.SETTINGS, new Vector2(MainGame.WIDTH, MainGame.HEIGHT - 130));
-        title = new SpriteText("MAIN MENU", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("MAIN_MENU").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
@@ -56,7 +56,7 @@ public class MainMenuScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(new LevelSelectScreen());
+                advanceScreen(new WorldSelectScreen());
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -69,7 +69,7 @@ public class MainMenuScreen implements Screen {
                     Gdx.input.getY());
 
             if (playButton.checkTouch(touch)) {
-                advanceScreen(new LevelSelectScreen());
+                advanceScreen(new WorldSelectScreen());
             } else if (editorButton.checkTouch(touch)) {
                 advanceScreen(new NewLoadScreen());
             } else if (statButton.checkTouch(touch)) {

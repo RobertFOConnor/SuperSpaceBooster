@@ -4,11 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
 public class SplashScreen implements Screen {
@@ -66,19 +68,14 @@ public class SplashScreen implements Screen {
             loadWheel.draw(sb);
             Fonts.GUIFont.setColor(Color.WHITE);
             Fonts.GUIFont.draw(sb, percentage, MainGame.WIDTH - Fonts.getWidth(Fonts.GUIFont, percentage) - 250, 160);
-            Fonts.GUIFont.setColor(Color.WHITE);
             sb.end();
         }
 
         if (Assets.update()) { // DONE LOADING. SHOW TITLE SCREEN.
 
             SoundManager.setMusic(Assets.MAIN_THEME);
-
-            if (MainGame.TEST_MODE) {
-                ScreenManager.setScreen(new GameScreen(5));
-            } else {
-                ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen());
-            }
+            MainGame.languageFile = Assets.manager.get(Assets.LANGUAGE_FILE, I18NBundle.class);
+            ScreenManager.setScreen(new TitleScreen());
         }
     }
 

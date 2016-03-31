@@ -62,6 +62,7 @@
     <folder id="7" name="guns">
         <file id="0" name="guns/blaster.png" width="186" height="63" pivot_x="0.94" pivot_y="0.51"/>
         <file id="1" name="guns/drill_cannon.png" width="186" height="73" pivot_x="0.946237" pivot_y="0.424658"/>
+        <file id="2" name="guns/plasma_rifle.png" width="215" height="73" pivot_x="0.948837" pivot_y="0.438356"/>
     </folder>
     <entity id="0" name="player">
         <obj_info name="bone_000" type="bone" w="60.0162" h="10"/>
@@ -231,7 +232,7 @@
                     <bone x="63.496024" y="-44.260227" angle="227.104725"/>
                 </key>
                 <key id="1" time="250" spin="0">
-                    <bone x="108.548448" y="2179.737932" angle="227.104725"/>
+                    <bone x="133.728128" y="3424.772076" angle="227.104725"/>
                 </key>
             </timeline>
             <timeline id="7" obj="3" name="bone_005" object_type="bone">
@@ -239,7 +240,7 @@
                     <bone x="79.696138" y="0.00757" angle="1.452947"/>
                 </key>
                 <key id="1" time="250" spin="0">
-                    <bone x="1542.383713" y="-42.725066" angle="1.452947"/>
+                    <bone x="2379.962127" y="-62.203636" angle="1.452947"/>
                 </key>
             </timeline>
             <timeline id="8" obj="4" name="bone_006" object_type="bone">

@@ -35,7 +35,7 @@ public class NewLoadScreen implements Screen {
         bg = new BackgroundManager();
         newMapButton = new SpriteButton(Assets.NEW_MAP, new Vector2(-600, buttonY));
         loadMapButton = new SpriteButton(Assets.LOAD_MAP, new Vector2(MainGame.WIDTH, buttonY));
-        title = new SpriteText("PLEASE SELECT AN OPTION", Fonts.timerFont);
+        title = new SpriteText(MainGame.languageFile.get("SELECT_OPTION").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));

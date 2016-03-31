@@ -36,7 +36,7 @@ public class TitleScreen implements Screen {
 
         character = new SpriteButton(Assets.CHARACTER, charStartPos);
         title = new SpriteButton(Assets.TITLE, new Vector2(-1100, 350));
-        continueMessage = new SpriteText("TOUCH TO CONTINUE", Fonts.timerFont);
+        continueMessage = new SpriteText(MainGame.languageFile.get("TOUCH_TO_CONTINUE").toUpperCase(), Fonts.timerFont);
         continueMessage.setPosition(400, -100);
 
         AnimationManager.applyAnimation(continueMessage, 400, 90);
