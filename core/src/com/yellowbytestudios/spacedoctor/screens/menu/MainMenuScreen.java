@@ -9,7 +9,8 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
-import com.yellowbytestudios.spacedoctor.screens.*;
+import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
+import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.editor.NewLoadScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
@@ -61,6 +62,9 @@ public class MainMenuScreen implements Screen {
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             advanceScreen(new SettingsScreen());
+
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
 
         }
 

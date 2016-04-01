@@ -4,8 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -13,6 +21,12 @@ import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
+
+import java.awt.Font;
+
+import sun.applet.Main;
 
 public class GUIManager {
 
@@ -30,6 +44,8 @@ public class GUIManager {
     private boolean isTimed;
     private boolean paused = false;
 
+    private PauseMenu pauseMenu;
+
 
     public GUIManager(Array<SpacemanPlayer> players, boolean isTimed) {
         camera = new OrthoCamera();
@@ -43,6 +59,8 @@ public class GUIManager {
 
         shapeRenderer = new ShapeRenderer();
         alpha = Assets.manager.get(Assets.ALPHA, Texture.class);
+
+        pauseMenu = new PauseMenu();
     }
 
     public void update() {
@@ -70,11 +88,7 @@ public class GUIManager {
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
 
-            if (player.isJetpacking()) {
-                shapeRenderer.setColor(Color.WHITE);
-            } else {
-                shapeRenderer.setColor(Color.RED);
-            }
+            shapeRenderer.setColor(Color.RED);
             shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
         }
         shapeRenderer.end();
@@ -93,9 +107,12 @@ public class GUIManager {
             drawTimer(sb);
         }
 
-        Fonts.GUIFont.draw(sb, "World: " + GameScreen.worldNo + "-" + (GameScreen.levelNo - ((GameScreen.worldNo - 1) * 10)), 1500, MainGame.HEIGHT - 70);
-
+        Fonts.GUIFont.draw(sb, "World: " + GameScreen.worldNo + "-" + (GameScreen.levelNo - ((GameScreen.worldNo - 1) * 10)), 1500, MainGame.HEIGHT - 55);
         sb.end();
+
+        if(paused) {
+            pauseMenu.render(sb);
+        }
     }
 
     private void drawTimer(SpriteBatch sb) {
@@ -119,5 +136,75 @@ public class GUIManager {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    private class PauseMenu {
+
+        private Skin skin;
+        private Stage stage;
+
+        public PauseMenu() {
+            skin = Assets.manager.get(Assets.SKIN, Skin.class);
+            skin.add("menuFont", Fonts.GUIFont, BitmapFont.class);
+            stage = new Stage();
+
+            TextButton.TextButtonStyle tbs = skin.get("default", TextButton.TextButtonStyle.class);
+            tbs.font = Fonts.GUIFont;
+
+            final TextButton resumeButton = new TextButton("Resume Game", skin, "default");
+            final TextButton restartButton = new TextButton("Restart Level", skin, "default");
+            final TextButton exitButton = new TextButton("Exit Game", skin, "default");
+
+            resumeButton.setWidth(500);
+            resumeButton.setHeight(100);
+            resumeButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, Gdx.graphics.getHeight() - 200);
+
+            restartButton.setWidth(500);
+            restartButton.setHeight(100);
+            restartButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, Gdx.graphics.getHeight() / 2 - 50);
+
+            exitButton.setWidth(500);
+            exitButton.setHeight(100);
+            exitButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, 100);
+
+            resumeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    paused = false;
+                }
+            });
+
+            restartButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    for(SpacemanPlayer p : players) {
+                        p.setDead(true);
+                        paused = false;
+                    }
+                }
+            });
+
+            exitButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    ScreenManager.setScreen(new MainMenuScreen());
+                }
+            });
+
+            stage.addActor(resumeButton);
+            stage.addActor(restartButton);
+            stage.addActor(exitButton);
+            Gdx.input.setInputProcessor(stage);
+        }
+
+        public void render(SpriteBatch sb) {
+            sb.begin();
+            sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, MainGame.WIDTH, MainGame.HEIGHT);
+            sb.end();
+
+            sb.begin();
+            stage.draw();
+            sb.end();
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.I18NBundle;
 
 public class Assets {
@@ -11,6 +12,7 @@ public class Assets {
     public static AssetManager manager = new AssetManager();
 
     public static final String LANGUAGE_FILE = "i18n/MyBundle";
+    public static final String SKIN = "ui/uiskin.json";
 
     public static final String LOADSCREEN = "loadscreen.png";
     public static final String LOADWHEEL = "loadwheel.png";
@@ -163,6 +165,7 @@ public class Assets {
         manager.load(MAIN_THEME, Music.class);
         manager.load(LEVEL_THEME, Music.class);
 
+        manager.load(SKIN, Skin.class);
         manager.load(LANGUAGE_FILE, I18NBundle.class);
     }
 

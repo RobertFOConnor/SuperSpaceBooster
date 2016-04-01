@@ -19,7 +19,7 @@ public class Fonts {
         parameter.size = 60;
         timerFont = generator.generateFont(parameter);
 
-        parameter.size = 90;
+        parameter.size = 80;
         largeFont = generator.generateFont(parameter);
     }
 

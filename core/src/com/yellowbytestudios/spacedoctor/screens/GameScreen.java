@@ -412,12 +412,6 @@ public class GameScreen implements Screen {
         if (MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
-
-        if(gui.isPaused()) {
-            sb.begin();
-            sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, MainGame.WIDTH, MainGame.HEIGHT);
-            sb.end();
-        }
     }
 
     private void renderObjects(SpriteBatch sb) {
