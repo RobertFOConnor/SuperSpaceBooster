@@ -87,6 +87,7 @@ public class Assets {
     public static final String FINISHED_SOUND = "sounds/finished.wav";
     public static final String PICKUP_SOUND = "sounds/pickup.wav";
     public static final String DEATH_SOUND = "sounds/death.wav";
+    public static final String BUTTON_CLICK = "sounds/button_click.wav";
     public static final String ENEMY_DEATH = "sounds/enemy_death.wav";
     public static final String TILE_PLACE = "sounds/tile_place.wav";
     public static final String TILE_ERASE = "sounds/tile_erase.wav";
@@ -158,6 +159,7 @@ public class Assets {
         manager.load(FINISHED_SOUND, Sound.class);
         manager.load(PICKUP_SOUND, Sound.class);
         manager.load(DEATH_SOUND, Sound.class);
+        manager.load(BUTTON_CLICK, Sound.class);
         manager.load(ENEMY_DEATH, Sound.class);
         manager.load(TILE_PLACE, Sound.class);
         manager.load(TILE_ERASE, Sound.class);

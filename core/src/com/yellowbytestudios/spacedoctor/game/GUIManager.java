@@ -155,17 +155,16 @@ public class GUIManager {
             final TextButton restartButton = new TextButton("Restart Level", skin, "default");
             final TextButton exitButton = new TextButton("Exit Game", skin, "default");
 
-            resumeButton.setWidth(500);
-            resumeButton.setHeight(100);
-            resumeButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, Gdx.graphics.getHeight() - 200);
+            float buttonX = Gdx.graphics.getWidth() / 2 - 250f;
 
-            restartButton.setWidth(500);
-            restartButton.setHeight(100);
-            restartButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, Gdx.graphics.getHeight() / 2 - 50);
+            setButtonSize(resumeButton);
+            resumeButton.setPosition(buttonX, Gdx.graphics.getHeight() - 200);
 
-            exitButton.setWidth(500);
-            exitButton.setHeight(100);
-            exitButton.setPosition(Gdx.graphics.getWidth() / 2 - 250f, 100);
+            setButtonSize(restartButton);
+            restartButton.setPosition(buttonX, Gdx.graphics.getHeight() / 2 - 50);
+
+            setButtonSize(exitButton);
+            exitButton.setPosition(buttonX, 100);
 
             resumeButton.addListener(new ClickListener() {
                 @Override
@@ -189,6 +188,8 @@ public class GUIManager {
                 public void clicked(InputEvent event, float x, float y) {
 
                     GameScreen.exit();
+                    stage.dispose();
+                    paused = false;
                 }
             });
 
@@ -206,6 +207,13 @@ public class GUIManager {
             sb.begin();
             stage.draw();
             sb.end();
+        }
+
+        private void setButtonSize(TextButton button) {
+            float buttonWidth = Gdx.graphics.getWidth()*0.26f;
+
+            button.setWidth(buttonWidth);
+            button.setHeight(100);
         }
     }
 }

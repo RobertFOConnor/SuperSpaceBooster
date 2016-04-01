@@ -11,6 +11,7 @@ import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.*;
@@ -127,6 +128,7 @@ public class HelmetSelectScreen implements Screen {
                 if (lb.checkTouch(touch) && lb.unlocked) {
                     MainGame.saveData.setHead(lb.headNum);
                     MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                    SoundManager.play(Assets.BUTTON_CLICK);
                 }
             }
 
@@ -191,5 +193,6 @@ public class HelmetSelectScreen implements Screen {
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 }

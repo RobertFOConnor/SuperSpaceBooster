@@ -81,15 +81,18 @@ public class SettingsScreen implements Screen {
                 SoundManager.toggleMusic();
                 MainGame.saveData.setMusicEnabled(SoundManager.musicEnabled);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                SoundManager.play(Assets.BUTTON_CLICK);
 
             } else if (soundFXButton.checkTouch(touch)) {
                 soundFXButton.toggle();
                 SoundManager.soundFXEnabled = soundFXButton.switched_on;
                 MainGame.saveData.setSoundFXEnabled(SoundManager.soundFXEnabled);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                SoundManager.play(Assets.BUTTON_CLICK);
 
             } else if (backButton.checkTouch(touch)) {
                 goBack();
+                SoundManager.play(Assets.BUTTON_CLICK);
             }
 
         }

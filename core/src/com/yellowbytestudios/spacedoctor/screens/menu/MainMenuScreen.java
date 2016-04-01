@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
@@ -92,8 +93,9 @@ public class MainMenuScreen implements Screen {
         AnimationManager.applyAnimation(editorButton, MainGame.WIDTH, MainGame.HEIGHT - 850);
         AnimationManager.applyAnimation(statButton, -600, MainGame.HEIGHT - 850);
         AnimationManager.applyExitAnimation(settings, MainGame.WIDTH, MainGame.HEIGHT - 130, s);
-
         AnimationManager.startAnimation();
+
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override

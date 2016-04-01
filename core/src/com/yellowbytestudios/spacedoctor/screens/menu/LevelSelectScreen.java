@@ -139,6 +139,7 @@ public class LevelSelectScreen implements Screen {
 
     private void advanceScreen(int levelNum) {
         ScreenManager.setScreen(new GameScreen(((worldNum - 1) * 10) + levelNum));
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override
@@ -195,5 +196,6 @@ public class LevelSelectScreen implements Screen {
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 }

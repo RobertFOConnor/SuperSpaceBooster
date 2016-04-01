@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
@@ -70,6 +71,8 @@ public class TitleScreen implements Screen {
             AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
             AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
             AnimationManager.startAnimation();
+
+            SoundManager.play(Assets.BUTTON_CLICK);
             advancing = true;
         }
     }

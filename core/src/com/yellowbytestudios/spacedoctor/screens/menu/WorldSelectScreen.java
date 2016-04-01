@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
@@ -116,6 +117,7 @@ public class WorldSelectScreen implements Screen {
 
     private void advanceScreen(int worldNum) {
         ScreenManager.setScreen(new LevelSelectScreen(worldNum));
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override
@@ -171,5 +173,6 @@ public class WorldSelectScreen implements Screen {
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 }

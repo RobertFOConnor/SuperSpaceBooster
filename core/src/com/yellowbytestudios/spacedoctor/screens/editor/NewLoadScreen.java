@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
@@ -76,8 +77,9 @@ public class NewLoadScreen implements Screen {
         AnimationManager.applyAnimation(newMapButton, -600, buttonY);
         AnimationManager.applyAnimation(loadMapButton, MainGame.WIDTH, buttonY);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), s);
-
         AnimationManager.startAnimation();
+
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override

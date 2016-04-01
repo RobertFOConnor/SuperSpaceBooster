@@ -31,7 +31,7 @@ public class AnimationManager {
     }
 
     public static void applyAnimation(Sprite b, float x, float y) {
-        Tween.to(b, SpriteAccessor.POS_XY, 30f)
+        Tween.to(b, SpriteAccessor.POS_XY, 20f)
                 .target(x, y).ease(TweenEquations.easeOutBack)
                 .start(tweenManager);
     }
@@ -44,7 +44,7 @@ public class AnimationManager {
             }
         };
 
-        Tween.to(b, SpriteAccessor.POS_XY, 30f)
+        Tween.to(b, SpriteAccessor.POS_XY, 20f)
                 .target(x, y).ease(TweenEquations.easeOutBack).setCallback(myCallBack)
                 .setCallbackTriggers(TweenCallback.END).start(tweenManager);
     }

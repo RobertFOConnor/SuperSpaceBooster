@@ -5,8 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
@@ -19,6 +21,8 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
+
+import sun.applet.Main;
 
 
 public class MainGame extends ApplicationAdapter {
@@ -43,13 +47,12 @@ public class MainGame extends ApplicationAdapter {
     public static String DEVICE;
     private boolean backPressed = false;
     public static boolean firstTime = false;
-
     public static final boolean TEST_MODE = false;
-
+    public static final boolean QUICK_BOOT = false; //Boots straight into first level.
     public static I18NBundle languageFile;
+    public static Cursor cursor;
+    private FPSLogger fps;
 
-
-    FPSLogger fps;
 
     public MainGame(String device) {
         DEVICE = device;
@@ -83,6 +86,14 @@ public class MainGame extends ApplicationAdapter {
         MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
         fps = new FPSLogger();
+
+
+        //Setup cursor.
+        Gdx.input.setCursorCatched(false);
+        Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
+        cursor = Gdx.graphics.newCursor(pm, 0, 0);
+        Gdx.graphics.setCursor(cursor);
+        pm.dispose();
     }
 
     @Override
@@ -129,6 +140,7 @@ public class MainGame extends ApplicationAdapter {
         Assets.manager = null;
 
         Fonts.dispose();
+        cursor.dispose();
     }
 
 

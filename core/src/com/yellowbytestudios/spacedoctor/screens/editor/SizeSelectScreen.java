@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
@@ -89,8 +90,9 @@ public class SizeSelectScreen implements Screen {
         AnimationManager.applyAnimation(mediumButton, 760, -500);
         AnimationManager.applyAnimation(largeButton, 1340, -500);
         AnimationManager.applyExitAnimation(backButton, -150, 900, s);
-
         AnimationManager.startAnimation();
+
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override

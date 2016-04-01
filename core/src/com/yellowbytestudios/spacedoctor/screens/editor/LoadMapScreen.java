@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
@@ -111,8 +112,9 @@ public class LoadMapScreen implements Screen {
         }
 
         AnimationManager.applyExitAnimation(backButton, -150, 900, s);
-
         AnimationManager.startAnimation();
+
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override
