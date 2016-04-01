@@ -43,7 +43,7 @@ public class MapEditorAssets {
     public static final String HOR_PLATFORM = "game_objects/hor_platform_medium.png";
 
 
-    public static final String EDITOR_THEME = "music/editor_theme.mp3";
+    //public static final String EDITOR_THEME = "music/editor_theme.mp3";
 
 
     public static void load() {
@@ -80,7 +80,7 @@ public class MapEditorAssets {
         manager.load(TILESHEET, Texture.class);
         manager.load(TILE_SELECTOR, Texture.class);
 
-        manager.load(EDITOR_THEME, Music.class);
+        //manager.load(EDITOR_THEME, Music.class);
     }
 
     public static void dispose() {

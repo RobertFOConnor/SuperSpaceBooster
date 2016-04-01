@@ -9,7 +9,8 @@ import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
-import com.yellowbytestudios.spacedoctor.screens.*;
+import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
+import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
@@ -23,6 +24,7 @@ public class TitleScreen implements Screen {
     private BackgroundManager bg;
     private SpriteButton character, title;
     private SpriteText continueMessage;
+    private boolean advancing = false;
 
     private final Vector2 charStartPos = new Vector2(2000, -800);
 
@@ -63,10 +65,13 @@ public class TitleScreen implements Screen {
     }
 
     private void advanceScreen() {
-        AnimationManager.applyAnimation(continueMessage, 400, -100);
-        AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
-        AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
-        AnimationManager.startAnimation();
+        if (!advancing) {
+            AnimationManager.applyAnimation(continueMessage, 400, -100);
+            AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
+            AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
+            AnimationManager.startAnimation();
+            advancing = true;
+        }
     }
 
     @Override

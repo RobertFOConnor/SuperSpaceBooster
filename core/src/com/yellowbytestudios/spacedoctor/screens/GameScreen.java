@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
     public static int worldNo = 1;
     public static int levelNo = 1;
     private BoundedCamera cam, b2dCam;
-    private World world;
+    private static World world;
     private TiledMap tileMap;
     private Box2DDebugRenderer b2dr; //DEBUG
     private OrthogonalTiledMapRenderer tmr;
@@ -101,7 +101,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void create() {
-        SoundManager.switchMusic(Assets.LEVEL_THEME);
+        //SoundManager.switchMusic(Assets.LEVEL_THEME);
         b2dCam = new BoundedCamera();
         b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
         cam = new BoundedCamera();
@@ -299,9 +299,10 @@ public class GameScreen implements Screen {
     }
 
     private void exitLevel() {
+        world.dispose();
         SoundManager.play(Assets.FINISHED_SOUND);
         SoundManager.stop(Assets.JETPACK_SOUND);
-        SoundManager.switchMusic(Assets.MAIN_THEME);
+        //SoundManager.switchMusic(Assets.MAIN_THEME);
 
         if (!coreMap) { // RETURN TO MAP EDITOR.
             ScreenManager.setScreen(new MapEditorScreen(customMap));
@@ -315,7 +316,6 @@ public class GameScreen implements Screen {
                 ScreenManager.setScreen(new ResultsScreen());
             }
         }
-        world.dispose();
     }
 
     private void killPlayer(final SpacemanPlayer p) {
@@ -436,10 +436,8 @@ public class GameScreen implements Screen {
         }
     }
 
-    @Override
-    public void goBack() {
-
-        SoundManager.switchMusic(Assets.MAIN_THEME);
+    public static void exit() {
+        //SoundManager.switchMusic(Assets.MAIN_THEME);
         SoundManager.stop(Assets.JETPACK_SOUND);
         world.dispose();
 
@@ -449,6 +447,14 @@ public class GameScreen implements Screen {
             ScreenManager.setScreen(new MapEditorScreen(customMap));
         }
         customMap = null;
+    }
+
+    @Override
+    public void goBack() {
+
+        if(!gui.isPaused()) {
+            gui.setPaused(true);
+        }
     }
 
     @Override

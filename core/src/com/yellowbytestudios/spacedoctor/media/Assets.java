@@ -92,8 +92,8 @@ public class Assets {
     public static final String TILE_ERASE = "sounds/tile_erase.wav";
 
 
-    public static final String MAIN_THEME = "music/main_theme.mp3";
-    public static final String LEVEL_THEME = "music/level_theme.mp3";
+    //public static final String MAIN_THEME = "music/main_theme.mp3";
+    //public static final String LEVEL_THEME = "music/level_theme.mp3";
 
 
     public static void load() {// Loads Assets
@@ -162,8 +162,8 @@ public class Assets {
         manager.load(TILE_PLACE, Sound.class);
         manager.load(TILE_ERASE, Sound.class);
 
-        manager.load(MAIN_THEME, Music.class);
-        manager.load(LEVEL_THEME, Music.class);
+        //manager.load(MAIN_THEME, Music.class);
+        //manager.load(LEVEL_THEME, Music.class);
 
         manager.load(SKIN, Skin.class);
         manager.load(LANGUAGE_FILE, I18NBundle.class);

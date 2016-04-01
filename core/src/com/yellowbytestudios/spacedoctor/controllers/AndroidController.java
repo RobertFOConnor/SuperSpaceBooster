@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.game.Button;
+import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -73,7 +74,7 @@ public class AndroidController implements BasicController {
             mapEditor.render(sb);
         } else {
             if(exit.checkTouch(touch1) || exit.checkTouch(touch2)) {
-                ScreenManager.setScreen(new LevelSelectScreen((GameScreen.levelNo/10)+1));
+                GUIManager.paused = true;
             }
             exit.render(sb);
         }

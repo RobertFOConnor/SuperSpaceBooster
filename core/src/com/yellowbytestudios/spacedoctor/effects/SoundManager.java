@@ -8,7 +8,7 @@ import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 public class SoundManager {
 
     public static boolean soundFXEnabled = true;
-    public static boolean musicEnabled = true;
+    public static boolean musicEnabled = false;
     public static Music GAME_MUSIC;
 
     public static void play(String s) {

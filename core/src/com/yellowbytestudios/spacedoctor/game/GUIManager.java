@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -22,11 +20,8 @@ import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
-import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
-
-import java.awt.Font;
-
-import sun.applet.Main;
+import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
+import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 
 public class GUIManager {
 
@@ -42,7 +37,7 @@ public class GUIManager {
     private Texture alpha;
 
     private boolean isTimed;
-    private boolean paused = false;
+    public static boolean paused = false;
 
     private PauseMenu pauseMenu;
 
@@ -61,6 +56,7 @@ public class GUIManager {
         alpha = Assets.manager.get(Assets.ALPHA, Texture.class);
 
         pauseMenu = new PauseMenu();
+        paused = false;
     }
 
     public void update() {
@@ -69,7 +65,7 @@ public class GUIManager {
             timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             paused = !paused;
             SoundManager.stop(Assets.JETPACK_SOUND);
         }
@@ -110,7 +106,7 @@ public class GUIManager {
         Fonts.GUIFont.draw(sb, "World: " + GameScreen.worldNo + "-" + (GameScreen.levelNo - ((GameScreen.worldNo - 1) * 10)), 1500, MainGame.HEIGHT - 55);
         sb.end();
 
-        if(paused) {
+        if (paused) {
             pauseMenu.render(sb);
         }
     }
@@ -136,6 +132,10 @@ public class GUIManager {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 
     private class PauseMenu {
@@ -177,7 +177,7 @@ public class GUIManager {
             restartButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    for(SpacemanPlayer p : players) {
+                    for (SpacemanPlayer p : players) {
                         p.setDead(true);
                         paused = false;
                     }
@@ -187,7 +187,8 @@ public class GUIManager {
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    ScreenManager.setScreen(new MainMenuScreen());
+
+                    GameScreen.exit();
                 }
             });
 

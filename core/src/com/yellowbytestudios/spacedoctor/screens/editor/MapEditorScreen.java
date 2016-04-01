@@ -3,7 +3,6 @@ package com.yellowbytestudios.spacedoctor.screens.editor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
@@ -46,7 +45,7 @@ public class MapEditorScreen implements Screen {
         } else {
             mapManager = new MapManager(width, height);
         }
-        SoundManager.switchEditorMusic(MapEditorAssets.EDITOR_THEME);
+        //SoundManager.switchEditorMusic(MapEditorAssets.EDITOR_THEME);
         gui = new EditorGUI(mapManager);
         shapeRenderer = new ShapeRenderer();
 

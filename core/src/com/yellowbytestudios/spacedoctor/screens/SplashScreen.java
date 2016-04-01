@@ -73,7 +73,7 @@ public class SplashScreen implements Screen {
 
         if (Assets.update()) { // DONE LOADING. SHOW TITLE SCREEN.
 
-            SoundManager.setMusic(Assets.MAIN_THEME);
+            //SoundManager.setMusic(Assets.MAIN_THEME);
             MainGame.languageFile = Assets.manager.get(Assets.LANGUAGE_FILE, I18NBundle.class);
             ScreenManager.setScreen(new TitleScreen());
         }
