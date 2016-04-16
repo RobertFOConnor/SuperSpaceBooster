@@ -249,7 +249,7 @@ public class BodyFactory {
 
             for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
 
-                platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, mapObject.getPos().y / 100)));
+                platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, (mapObject.getPos().y / 100)-2)));
             }
         }
         return platforms;

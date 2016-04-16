@@ -2,8 +2,13 @@ package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -76,6 +81,14 @@ public class SplashScreen implements Screen {
             //SoundManager.setMusic(Assets.MAIN_THEME);
             MainGame.languageFile = Assets.manager.get(Assets.LANGUAGE_FILE, I18NBundle.class);
 
+
+            //Setup skin (scene2d)
+            Skin skin = Assets.manager.get(Assets.SKIN, Skin.class);
+            TextField.TextFieldStyle tfs = skin.get("default", TextField.TextFieldStyle.class);
+            TextButton.TextButtonStyle tbs = skin.get("default", TextButton.TextButtonStyle.class);
+            tfs.font = Fonts.GUIFont;
+            tfs.fontColor = Color.BLACK;
+            tbs.font = Fonts.GUIFont;
 
             if(MainGame.QUICK_BOOT) {
                 ScreenManager.setScreen(new GameScreen(1));

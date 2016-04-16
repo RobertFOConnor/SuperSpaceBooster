@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,7 +17,6 @@ import com.badlogic.gdx.utils.Array;
 import com.brashmonkey.spriter.Animation;
 import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
 import com.yellowbytestudios.spacedoctor.box2d.BodyFactory;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
@@ -27,8 +27,13 @@ import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.TileManager;
-import com.yellowbytestudios.spacedoctor.game.objects.*;
+import com.yellowbytestudios.spacedoctor.game.objects.Box;
+import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
+import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.objects.Exit;
+import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
+import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -36,6 +41,8 @@ import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorSplashScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
+import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
+import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
 public class GameScreen implements Screen {
 
@@ -49,6 +56,8 @@ public class GameScreen implements Screen {
     private Box2DDebugRenderer b2dr; //DEBUG
     private OrthogonalTiledMapRenderer tmr;
     private float PPM = 100;
+
+    private Sprite transition;
 
     //Map Editor
     public static CustomMap customMap;
@@ -71,6 +80,7 @@ public class GameScreen implements Screen {
     private LevelBackgroundManager bgManager;
     public static ParticleManager particleManager;
     private GUIManager gui;
+    private boolean transitioning = true;
 
 
     //ANDROID CONTROLLER
@@ -84,10 +94,10 @@ public class GameScreen implements Screen {
 
     public GameScreen(int levelNo) {
         GameScreen.levelNo = levelNo;
-        GameScreen.worldNo = (levelNo/10)+1;
+        GameScreen.worldNo = (levelNo / 10) + 1;
 
         //TEMP!!!!
-        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_"+levelNo+".json", true);
+        CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_" + levelNo + ".json", true);
         CustomMap customMap;
         customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
         GameScreen.customMap = customMap;
@@ -121,6 +131,11 @@ public class GameScreen implements Screen {
         setupMap();
 
         bgManager = new LevelBackgroundManager(cam, mapWidth, mapHeight);
+
+        transition = new Sprite(new Texture(Gdx.files.internal("black.png")));
+        transition.setPosition(0, 0);
+        AnimationManager.applyLevelStartAnimation(transition, MainGame.WIDTH, 0);
+        AnimationManager.startAnimation();
     }
 
 
@@ -171,18 +186,15 @@ public class GameScreen implements Screen {
     @Override
     public void update(float step) {
 
-        if(!gui.isPaused()) {
+        if (!gui.isPaused()) {
 
             world.step(step, 8, 3);
-
             if (MainGame.DEVICE.equals("ANDROID")) {
                 androidController.update();
             }
-
             if (Gdx.input.isKeyPressed(Input.Keys.M)) {
                 ScreenManager.setScreen(new MapEditorSplashScreen(new MapEditorScreen(customMap)));
             }
-
             updateCameras();
             bgManager.update();
 
@@ -230,7 +242,7 @@ public class GameScreen implements Screen {
             for (Enemy e : enemies) {
                 e.update(players.get(0));
 
-                if(e.isShooting()) {
+                if (e.isShooting()) {
                     addBullet(e, 0);
                     e.setShooting(false);
                 }
@@ -294,12 +306,11 @@ public class GameScreen implements Screen {
             dir = -1;
         }
         bullet = new Bullet(BodyFactory.createBullet(world), dir, bulletId);
-        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y-0.1f, 0);
+        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y - 0.1f, 0);
         bullets.add(bullet);
     }
 
     private void exitLevel() {
-        world.dispose();
         SoundManager.play(Assets.FINISHED_SOUND);
         SoundManager.stop(Assets.JETPACK_SOUND);
         //SoundManager.switchMusic(Assets.MAIN_THEME);
@@ -311,7 +322,10 @@ public class GameScreen implements Screen {
                 MainGame.saveData.unlockHead(levelNo);
                 MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-                ScreenManager.setScreen(new GameScreen(levelNo+1));
+
+                transition.setPosition(0, MainGame.HEIGHT);
+                AnimationManager.applyLevelEndAnimation(transition, 0, 0, new GameScreen(levelNo + 1), world);
+                AnimationManager.startAnimation();
             } else {
                 ScreenManager.setScreen(new ResultsScreen());
             }
@@ -339,32 +353,35 @@ public class GameScreen implements Screen {
         float zoom = 1f;
         float targetX;
         float targetY;
-        Vector2 playerPos = players.get(0).getPos();
 
-        if (players.size == 1) { // (1P) Center camera on player.
-            targetX = playerPos.x * PPM + MainGame.WIDTH / 50;
-            targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
+        if (players.size > 0) {
+            Vector2 playerPos = players.get(0).getPos();
 
-        } else { // (2P) Center camera on mid-point between players.
-            targetX = ((playerPos.x * PPM) + (players.get(1).getPos().x * PPM)) / 2;
-            targetY = ((playerPos.y * PPM) + (players.get(1).getPos().y * PPM)) / 2;
+            if (players.size == 1) { // (1P) Center camera on player.
+                targetX = playerPos.x * PPM + MainGame.WIDTH / 50;
+                targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
 
-            float distance = (float) Math.sqrt(Math.pow((players.get(1).getPos().x - players.get(0).getPos().x), 2) + Math.pow((players.get(1).getPos().y - players.get(0).getPos().y), 2));
+            } else { // (2P) Center camera on mid-point between players.
+                targetX = ((playerPos.x * PPM) + (players.get(1).getPos().x * PPM)) / 2;
+                targetY = ((playerPos.y * PPM) + (players.get(1).getPos().y * PPM)) / 2;
 
-            if (distance > 10) {
-                zoom = 1 + ((distance - 10) / 20);
+                float distance = (float) Math.sqrt(Math.pow((players.get(1).getPos().x - players.get(0).getPos().x), 2) + Math.pow((players.get(1).getPos().y - players.get(0).getPos().y), 2));
+
+                if (distance > 10) {
+                    zoom = 1 + ((distance - 10) / 20);
+                }
             }
+
+            float SPEEDX = Gdx.graphics.getDeltaTime() * (Math.abs(targetX - cam.position.x) * 1.8f);
+            float SPEEDY = Gdx.graphics.getDeltaTime() * (Math.abs(targetY - cam.position.y) * 3);
+            float newX = newCamPos(cam.position.x, targetX, SPEEDX);
+            float newY = newCamPos(cam.position.y, targetY, SPEEDY);
+
+            cam.setPosition(newX, newY);
+            b2dCam.setPosition(newX / PPM, newY / PPM);
+            //cam.zoom = zoom;
+            //b2dCam.zoom = zoom;
         }
-
-        float SPEEDX = Gdx.graphics.getDeltaTime() * (Math.abs(targetX - cam.position.x) * 1.8f);
-        float SPEEDY = Gdx.graphics.getDeltaTime() * (Math.abs(targetY - cam.position.y) * 3);
-        float newX = newCamPos(cam.position.x, targetX, SPEEDX);
-        float newY = newCamPos(cam.position.y, targetY, SPEEDY);
-
-        cam.setPosition(newX, newY);
-        b2dCam.setPosition(newX / PPM, newY / PPM);
-        //cam.zoom = zoom;
-        //b2dCam.zoom = zoom;
         b2dCam.update();
         cam.update();
     }
@@ -412,6 +429,10 @@ public class GameScreen implements Screen {
         if (MainGame.TEST_MODE) {
             b2dr.render(world, b2dCam.combined);
         }
+
+        sb.begin();
+        sb.draw(transition, transition.getX(), transition.getY(), MainGame.WIDTH, MainGame.HEIGHT + 100);
+        sb.end();
     }
 
     private void renderObjects(SpriteBatch sb) {
@@ -442,7 +463,7 @@ public class GameScreen implements Screen {
         world.dispose();
 
         if (coreMap) {
-            ScreenManager.setScreen(new LevelSelectScreen((levelNo/10)+1));
+            ScreenManager.setScreen(new LevelSelectScreen((levelNo / 10) + 1));
         } else {
             ScreenManager.setScreen(new MapEditorScreen(customMap));
         }
@@ -452,7 +473,7 @@ public class GameScreen implements Screen {
     @Override
     public void goBack() {
 
-        if(!gui.isPaused()) {
+        if (!gui.isPaused()) {
             gui.setPaused(true);
         }
     }

@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -50,6 +51,7 @@ public class MapEditorScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
 
         menu_bg = new Color(0.42f, 0.53f, 0.71f, 1);
+        Gdx.input.setCursorCatched(false);
     }
 
     @Override

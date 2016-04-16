@@ -13,7 +13,7 @@ public class Fonts {
     public static void load() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/basic_font.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 45;
+        parameter.size = 35;
         GUIFont = generator.generateFont(parameter);
 
         parameter.size = 60;

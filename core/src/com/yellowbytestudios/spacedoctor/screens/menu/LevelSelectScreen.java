@@ -65,6 +65,7 @@ public class LevelSelectScreen implements Screen {
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
+        Gdx.input.setCursorCatched(false);
     }
 
     private class LevelButton extends SpriteButton {

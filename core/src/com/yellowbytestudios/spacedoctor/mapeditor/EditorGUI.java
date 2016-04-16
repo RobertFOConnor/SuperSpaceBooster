@@ -2,17 +2,28 @@ package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.Button;
+import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
+import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
@@ -34,6 +45,7 @@ public class EditorGUI {
     private int obstacleID = -1;
 
     private ItemSideMenu sideMenu;
+    private MapNameInput mapNameInput;
 
     public EditorGUI(MapManager mapManager) {
         this.mapManager = mapManager;
@@ -55,85 +67,93 @@ public class EditorGUI {
 
 
         sideMenu = new ItemSideMenu();
+
+        mapNameInput = new MapNameInput();
     }
 
     public void update(float step) {
-        if (Gdx.input.isTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+        if (!mapNameInput.isShowing()) {
 
-            if (zoomIn.checkTouch(touch)) { //ZOOM IN
-                mapManager.zoomIn();
+            if (Gdx.input.isTouched()) {
+                touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                        Gdx.input.getY());
 
-            } else if (zoomOut.checkTouch(touch)) { //ZOOM OUT
-                mapManager.zoomOut();
+                if (zoomIn.checkTouch(touch)) { //ZOOM IN
+                    mapManager.zoomIn();
 
-            } else if (playMap.checkTouch(touch)) { //TEST PLAY MAP
-                ScreenManager.setScreen(new GameScreen(mapManager.getCustomMap("test")));
+                } else if (zoomOut.checkTouch(touch)) { //ZOOM OUT
+                    mapManager.zoomOut();
 
-            } else if (saveMap.checkTouch(touch) && Gdx.input.justTouched()) { //SAVE MAP
-                saveMap();
+                } else if (playMap.checkTouch(touch)) { //TEST PLAY MAP
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    ScreenManager.setScreen(new GameScreen(mapManager.getCustomMap("test")));
 
-            } else if (exitButton.checkTouch(touch)) { //EXIT EDITOR
-                ScreenManager.setScreen(new MainMenuScreen());
-                MapEditorAssets.dispose();
+                } else if (saveMap.checkTouch(touch) && Gdx.input.justTouched()) { //SAVE MAP
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    saveMap();
 
-            } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 160)) {
-                //CHECK MAP FOR INTERACTION.
+                } else if (exitButton.checkTouch(touch)) { //EXIT EDITOR
+                    ScreenManager.setScreen(new MainMenuScreen());
+                    MapEditorAssets.dispose();
 
-                if (eraseButton.isPressed()) {
-                    mapManager.eraseTiles();
-                }
+                } else if (!moveButton.checkTouch(touch) && (!sideMenu.checkTouch() && touch.y > 160)) {
+                    //CHECK MAP FOR INTERACTION.
 
-                if (!mapManager.isHoldingObject()) {
-                    if (moveButton.isPressed()) {
-                        mapManager.dragMap();
-                    } else if (!eraseButton.isPressed()) {
-                        if (sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
-                            mapManager.checkForTilePlacement(tileID);
-                        } else if (sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
-                            mapManager.addEnemy(enemyID);
-                        } else if (sideMenu.state.equals(sideMenu.ITEM_STATE)) {
-                            mapManager.addItem(itemID);
-                        } else if (sideMenu.state.equals(sideMenu.OBSTACLE_STATE)) {
-                            mapManager.addObstacle(obstacleID);
+                    if (eraseButton.isPressed()) {
+                        mapManager.eraseTiles();
+                    }
+
+                    if (!mapManager.isHoldingObject()) {
+                        if (moveButton.isPressed()) {
+                            mapManager.dragMap();
+                        } else if (!eraseButton.isPressed()) {
+                            if (sideMenu.state.equals(sideMenu.BLOCK_STATE)) {
+                                mapManager.checkForTilePlacement(tileID);
+                            } else if (sideMenu.state.equals(sideMenu.ENEMY_STATE)) {
+                                mapManager.addEnemy(enemyID);
+                            } else if (sideMenu.state.equals(sideMenu.ITEM_STATE)) {
+                                mapManager.addItem(itemID);
+                            } else if (sideMenu.state.equals(sideMenu.OBSTACLE_STATE)) {
+                                mapManager.addObstacle(obstacleID);
+                            }
                         }
                     }
                 }
             }
-        }
 
 
-        if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            if (Gdx.input.justTouched()) {
+                touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                        Gdx.input.getY());
 
-            if (moveButton.checkTouch(touch)) {
-                if (moveButton.isPressed()) {
-                    moveButton.setPressed(false);
-                    sideMenu.setShowing(true);
-                } else {
-                    moveButton.setPressed(true);
-                    eraseButton.setPressed(false);
-                    sideMenu.setShowing(false);
+                if (moveButton.checkTouch(touch)) {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    if (moveButton.isPressed()) {
+                        moveButton.setPressed(false);
+                        sideMenu.setShowing(true);
+                    } else {
+                        moveButton.setPressed(true);
+                        eraseButton.setPressed(false);
+                        sideMenu.setShowing(false);
+                    }
                 }
-            }
 
-            if (eraseButton.checkTouch(touch)) {
-                if (eraseButton.isPressed()) {
-                    eraseButton.setPressed(false);
-                } else {
-                    eraseButton.setPressed(true);
-                    moveButton.setPressed(false);
-                    sideMenu.setShowing(true);
+                if (eraseButton.checkTouch(touch)) {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    if (eraseButton.isPressed()) {
+                        eraseButton.setPressed(false);
+                    } else {
+                        eraseButton.setPressed(true);
+                        moveButton.setPressed(false);
+                        sideMenu.setShowing(true);
+                    }
                 }
             }
         }
     }
 
     private void saveMap() {
-        MyTextInputListener listener = new MyTextInputListener();
-        Gdx.input.getTextInput(listener, "Save Map", "", "Enter Map Name");
+        mapNameInput.setShowing(true);
     }
 
     public void render(SpriteBatch sb) {
@@ -147,6 +167,79 @@ public class EditorGUI {
         playMap.render(sb);
         saveMap.render(sb);
         exitButton.render(sb);
+        mapNameInput.render(sb);
+    }
+
+    private class MapNameInput {
+
+        private Skin skin;
+        private Stage stage;
+        private boolean showing = false;
+
+        public MapNameInput() {
+            skin = Assets.manager.get(Assets.SKIN, Skin.class);
+            stage = new Stage();
+
+            final TextField mapName = new TextField("", skin);
+            mapName.setWidth(500f);
+            mapName.setHeight(100f);
+            mapName.setMaxLength(30);
+            mapName.setMessageText("Enter Map Name");
+            mapName.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getHeight() / 2);
+            stage.addActor(mapName);
+
+            final TextButton saveButton = new TextButton("Save", skin, "default");
+            saveButton.setWidth(200f);
+            saveButton.setHeight(100f);
+            saveButton.setPosition(Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getHeight() / 2 - 120);
+
+            saveButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    saveMap(mapName.getText());
+                    setShowing(false);
+                }
+            });
+            stage.addActor(saveButton);
+
+            final TextButton cancelButton = new TextButton("Cancel", skin, "default");
+            cancelButton.setWidth(200f);
+            cancelButton.setHeight(100f);
+            cancelButton.setPosition(Gdx.graphics.getWidth() / 2 + 50, Gdx.graphics.getHeight() / 2 - 120);
+
+            cancelButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    setShowing(false);
+                }
+            });
+            stage.addActor(cancelButton);
+        }
+
+        public void render(SpriteBatch sb) {
+            if (showing) {
+                sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, MainGame.WIDTH, MainGame.HEIGHT);
+                sb.end();
+                sb.begin();
+                stage.draw();
+            }
+        }
+
+        public boolean isShowing() {
+            return showing;
+        }
+
+        public void setShowing(boolean showing) {
+            this.showing = showing;
+
+            if (showing) {
+                Gdx.input.setInputProcessor(stage);
+            } else {
+                Gdx.input.setInputProcessor(null);
+            }
+        }
     }
 
 
@@ -364,34 +457,28 @@ public class EditorGUI {
         }
     }
 
-    public class MyTextInputListener implements Input.TextInputListener {
-        @Override
-        public void input(String text) {
+    private void saveMap(String text) {
+        if (text.startsWith("lvl")) {
+            saveCoreLevel(text);
+            CoreLevelSaver levelSaver = new CoreLevelSaver(Gdx.files.external("SSB_Maps/" + text + ".json"), true);
+            levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
+        } else {
 
-            if (text.startsWith("lvl_")) {
-                saveCoreLevel(text);
-            } else {
-
-                if (text.startsWith("export_")) { //Saves to external so core maps can be designed on android.
-                    //SAVE TO EXTERNAL STORAGE.
-                    CoreLevelSaver levelSaver = new CoreLevelSaver(Gdx.files.external("SSB_Maps/" + text + ".json"), true);
-                    levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
-                }
-
-                if (!mapNameExists(text)) {
-                    if (MainGame.saveData.getMyMaps().size < 12) {
-                        MainGame.saveData.getMyMaps().add(mapManager.getCustomMap(text));
-                    } else {
-                        MainGame.saveData.getMyMaps().set(11, mapManager.getCustomMap(text));
-                    }
-                }
-                MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
-                //MAP SAVED MESSAGE DISPLAY HERE!!!!
+            if (text.startsWith("export_")) { //Saves to external so core maps can be designed on android.
+                //SAVE TO EXTERNAL STORAGE.
+                CoreLevelSaver levelSaver = new CoreLevelSaver(Gdx.files.external("SSB_Maps/" + text + ".json"), true);
+                levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
             }
-        }
 
-        @Override
-        public void canceled() {
+            if (!mapNameExists(text)) {
+                if (MainGame.saveData.getMyMaps().size < 12) {
+                    MainGame.saveData.getMyMaps().add(mapManager.getCustomMap(text));
+                } else {
+                    MainGame.saveData.getMyMaps().set(11, mapManager.getCustomMap(text));
+                }
+            }
+            MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+            //MAP SAVED MESSAGE DISPLAY HERE!!!!
         }
     }
 

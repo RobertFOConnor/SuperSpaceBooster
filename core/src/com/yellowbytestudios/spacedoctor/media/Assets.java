@@ -66,7 +66,6 @@ public class Assets {
     public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
 
     //Background.
-    public static final String BG = "background/stars.png";
     public static final String ASTEROIDS = "background/asteroids.png";
     public static final String ASTEROIDS2 = "background/asteroids2.png";
     public static final String HILLS = "background/hills.png";
@@ -128,7 +127,6 @@ public class Assets {
         manager.load(RIGHT_PRESSED, Texture.class);
         manager.load(UP_PRESSED, Texture.class);
         manager.load(SHOOT_PRESSED, Texture.class);
-        manager.load(BG, Texture.class);
         manager.load(ASTEROIDS, Texture.class);
         manager.load(ASTEROIDS2, Texture.class);
         manager.load(HILLS, Texture.class);

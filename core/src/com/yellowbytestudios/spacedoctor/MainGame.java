@@ -2,6 +2,7 @@ package com.yellowbytestudios.spacedoctor;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
@@ -21,8 +22,6 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.SplashScreen;
 import com.yellowbytestudios.spacedoctor.spriter.SpriterManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
-
-import sun.applet.Main;
 
 
 public class MainGame extends ApplicationAdapter {
@@ -61,7 +60,7 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void create() {
-        //Gdx.graphics.setDisplayMode(Gdx.graphics.getDesktopDisplayMode().width, Gdx.graphics.getDesktopDisplayMode().height, true);
+
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
         spriterManager = new SpriterManager(sb);
@@ -138,9 +137,6 @@ public class MainGame extends ApplicationAdapter {
 
         Assets.manager.dispose();
         Assets.manager = null;
-
-        Fonts.dispose();
-        cursor.dispose();
     }
 
 

@@ -1,20 +1,21 @@
 package com.yellowbytestudios.spacedoctor.desktop;
 
-import com.badlogic.gdx.Files.FileType;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.yellowbytestudios.spacedoctor.MainGame;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
-        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.addIcon("icons/icon_256.png", FileType.Internal);
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("Super Space Booster");
+        config.setWindowedMode(1600, 900);
+        config.setResizable(false);
+        config.useVsync(true);
+        config.disableAudio(false);
+
+        /*config.addIcon("icons/icon_256.png", FileType.Internal);
         config.addIcon("icons/icon_64.png", FileType.Internal);
         config.addIcon("icons/icon_32.png", FileType.Internal);
-
-        config.vSyncEnabled=true;
-
-        boolean fullscreen = false;
 
         if(!fullscreen) {
             //config.width = 1400;
@@ -26,10 +27,8 @@ public class DesktopLauncher {
             config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
             config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
             config.fullscreen = true;
-        }
+        }*/
 
-        config.title = "Super Space Booster";
-
-        new LwjglApplication(new MainGame("DESKTOP"), config);
+        new Lwjgl3Application(new MainGame("DESKTOP"), config);
     }
 }

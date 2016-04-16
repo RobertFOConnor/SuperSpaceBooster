@@ -238,13 +238,13 @@ public class SpacemanPlayer extends Character {
 
     private void moveUp() {
         if (velY < JETPACK_POWER) {
-            body.applyForce(0, ACCELERATION * 0.66f, posX, posY, true);
+            body.applyForce(0, ACCELERATION * 0.56f, posX, posY, true);
         } else {
             body.setLinearVelocity(velX, JETPACK_POWER);
         }
 
         if (!movingUp) {
-            SoundManager.play(Assets.JETPACK_SOUND);
+            SoundManager.loop(Assets.JETPACK_SOUND);
             movingUp = true;
         }
 

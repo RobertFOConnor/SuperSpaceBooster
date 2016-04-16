@@ -23,9 +23,9 @@ public class SoundManager {
         }
     }
 
-    public static void loop(Sound s) {
+    public static void loop(String s) {
         if (soundFXEnabled) {
-            s.loop();
+            Assets.manager.get(s, Sound.class).loop();
         }
     }
 
