@@ -2,6 +2,7 @@ package com.yellowbytestudios.spacedoctor.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -54,7 +55,7 @@ public class HelmetSelectScreen implements Screen {
         for (int i = 0; i < 8; i++) {
             MainGame.saveData.unlockHead(i);
         }
-
+        Fonts.GUIFont.setColor(Color.WHITE);
         helmetButtons = new Array<HelmetButton>();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {

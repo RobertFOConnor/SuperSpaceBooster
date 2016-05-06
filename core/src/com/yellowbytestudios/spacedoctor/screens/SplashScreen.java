@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen;
@@ -77,7 +78,7 @@ public class SplashScreen implements Screen {
 
         if (Assets.update()) { // DONE LOADING. SHOW TITLE SCREEN.
 
-            //SoundManager.setMusic(Assets.MAIN_THEME);
+            SoundManager.setMusic(Assets.MAIN_THEME);
             MainGame.languageFile = Assets.manager.get(Assets.LANGUAGE_FILE, I18NBundle.class);
 
 

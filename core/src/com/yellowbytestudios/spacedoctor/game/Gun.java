@@ -16,7 +16,7 @@ public class Gun {
     public static int DRILL_CANNON = 1;
 
     private String shootSound;
-    private int ammo = 100;
+    private int ammo = 10;
     private int id;
     private String name;
 

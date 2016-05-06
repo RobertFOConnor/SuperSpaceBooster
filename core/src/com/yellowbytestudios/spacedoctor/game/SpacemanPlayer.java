@@ -216,7 +216,9 @@ public class SpacemanPlayer extends Character {
             movingUp = true;
         }
 
-        //currGas--;
+        if(!MainGame.UNLIM_JETPACK) {
+            currGas--;
+        }
 
         addSmoke();
         spriter.setAnimation("jump");

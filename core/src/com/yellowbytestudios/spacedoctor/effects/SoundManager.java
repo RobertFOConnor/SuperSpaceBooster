@@ -54,7 +54,7 @@ public class SoundManager {
 
 
     public static void setMusic(String music) {
-            GAME_MUSIC = Assets.manager.get(music, Music.class);
+        GAME_MUSIC = Assets.manager.get(music, Music.class);
         if (musicEnabled) {
             GAME_MUSIC.setLooping(true);
             GAME_MUSIC.play();
@@ -67,7 +67,9 @@ public class SoundManager {
             GAME_MUSIC.setLooping(true);
             GAME_MUSIC.play();
         } else {
-            GAME_MUSIC.stop();
+            if (GAME_MUSIC.isPlaying()) {
+                GAME_MUSIC.stop();
+            }
         }
     }
 }

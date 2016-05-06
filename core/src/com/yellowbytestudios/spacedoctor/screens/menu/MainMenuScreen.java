@@ -48,6 +48,8 @@ public class MainMenuScreen implements Screen {
         AnimationManager.applyAnimation(statButton, 160, MainGame.HEIGHT - 850);
         AnimationManager.applyAnimation(settings, MainGame.WIDTH - 130, MainGame.HEIGHT - 130);
         AnimationManager.startAnimation();
+
+        Gdx.input.setCursorCatched(false);
     }
 
 
@@ -58,7 +60,7 @@ public class MainMenuScreen implements Screen {
 
         if (MainGame.hasControllers) {
             if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(new WorldSelectScreen());
+                advanceScreen(new LevelSelectScreen(1));
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -74,7 +76,7 @@ public class MainMenuScreen implements Screen {
                     Gdx.input.getY());
 
             if (playButton.checkTouch(touch)) {
-                advanceScreen(new WorldSelectScreen());
+                advanceScreen(new LevelSelectScreen(1));
             } else if (editorButton.checkTouch(touch)) {
                 advanceScreen(new NewLoadScreen());
             } else if (statButton.checkTouch(touch)) {

@@ -340,7 +340,7 @@ public class MapManager {
     private void removeDraggableObjects(Array<DraggableObject> list) {
         for (DraggableObject dragObject : list) {
             if (dragObject.checkTouch(touch)) {
-                obstacleList.removeValue(dragObject, true);
+                list.removeValue(dragObject, true);
             }
         }
     }

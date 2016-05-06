@@ -46,6 +46,7 @@ public class MainGame extends ApplicationAdapter {
     public static String DEVICE;
     private boolean backPressed = false;
     public static boolean firstTime = false;
+    public static final boolean UNLIM_JETPACK = false;
     public static final boolean TEST_MODE = false;
     public static final boolean DUNGEON_MODE = false;
     public static final boolean QUICK_BOOT = false; //Boots straight into first level.

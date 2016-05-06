@@ -50,7 +50,7 @@ public class LevelSelectScreen implements Screen {
         title.centerText();
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
 
-        float levelY = (MainGame.HEIGHT/2)-40;
+        float levelY = (MainGame.HEIGHT / 2) - 40;
         int levelCount = 1;
 
         levelButtons = new Array<LevelButton>();
@@ -72,6 +72,7 @@ public class LevelSelectScreen implements Screen {
 
         private int levelNum;
         private boolean unlocked = false;
+        private String text;
         private NinePatch bg;
         private Color color;
 
@@ -94,6 +95,7 @@ public class LevelSelectScreen implements Screen {
             }
             setTexture(Assets.manager.get(img, Texture.class));
             this.levelNum = levelNum;
+            text = worldNum + "-" + levelNum;
         }
 
         @Override
@@ -101,7 +103,7 @@ public class LevelSelectScreen implements Screen {
             bg.draw(sb, getX(), getY(), 120, 80);
 
             Fonts.GUIFont.setColor(color);
-            Fonts.GUIFont.draw(sb, worldNum + "-" + levelNum, getX() + 40, getY() + 40);
+            Fonts.GUIFont.draw(sb, text, getX() + Fonts.getWidth(Fonts.GUIFont, text) / 2, getY() + 40);
             Fonts.GUIFont.setColor(Color.WHITE);
         }
     }

@@ -130,7 +130,6 @@ public class GUIManager {
     }
 
     private void drawTimer(SpriteBatch sb) {
-        Fonts.timerFont.draw(sb, "TIME", MainGame.WIDTH / 2 - 60, MainGame.HEIGHT - 30);
 
         String seconds;
         if ((timeElapsed / 1000) < 10) {
@@ -140,7 +139,8 @@ public class GUIManager {
             seconds = (timeElapsed / 1000) + "";
         }
 
-        Fonts.timerFont.draw(sb, seconds + ":" + ((timeElapsed % 1000) / 10), MainGame.WIDTH / 2 - 80, MainGame.HEIGHT - 100);
+        String time = seconds + "." + ((timeElapsed % 1000) / 10);
+        Fonts.timerFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.timerFont, time)/2), MainGame.HEIGHT - 30);
         Fonts.timerFont.setColor(Color.WHITE);
     }
 

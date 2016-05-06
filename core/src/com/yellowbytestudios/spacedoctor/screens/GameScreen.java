@@ -42,6 +42,7 @@ import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorSplashScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
@@ -190,7 +191,7 @@ public class GameScreen implements Screen {
         platforms = BodyFactory.createPlatforms(world, tileMap);
         exit = BodyFactory.createExits(world, tileMap);
 
-        gui = new GUIManager(players, false);
+        gui = new GUIManager(players, true);
 
         lightManager = new LightManager(world, players, exit, b2dCam);
         tileManager.createLights(lightManager, tileMap);
@@ -342,8 +343,7 @@ public class GameScreen implements Screen {
         if (!coreMap) { // RETURN TO MAP EDITOR.
             ScreenManager.setScreen(new MapEditorScreen(customMap));
         } else {
-            if (levelNo != 10) {
-                MainGame.saveData.unlockHead(levelNo);
+            if (levelNo < 10) {
                 MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
@@ -351,7 +351,7 @@ public class GameScreen implements Screen {
                 AnimationManager.applyLevelEndAnimation(transition, 0, 0, new GameScreen(levelNo + 1), world);
                 AnimationManager.startAnimation();
             } else {
-                ScreenManager.setScreen(new ResultsScreen());
+                ScreenManager.setScreen(new MainMenuScreen());
             }
         }
     }
