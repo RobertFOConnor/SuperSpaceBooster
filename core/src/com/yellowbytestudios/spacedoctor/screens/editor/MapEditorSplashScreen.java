@@ -33,7 +33,9 @@ public class MapEditorSplashScreen implements Screen {
         camera = new OrthoCamera();
         camera.resize();
 
-        loadScreen = new Sprite(Assets.manager.get(Assets.LOADSCREEN, Texture.class));
+        Texture texture = Assets.manager.get(Assets.LOADSCREEN, Texture.class);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        loadScreen = new Sprite(texture);
         loadWheel = new Sprite(Assets.manager.get(Assets.LOADWHEEL, Texture.class));
         loadWheel.setPosition(MainGame.WIDTH - 180, 100);
     }

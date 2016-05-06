@@ -27,6 +27,7 @@ public class MapEditorAssets {
     public static final String ERASE = "mapeditor/erase.png";
     public static final String ERASE_SEL = "mapeditor/erase_selected.png";
     public static final String BOTTOM_BAR = "mapeditor/bottom_bar.png";
+    public static final String BOX = "game_objects/box.png";
 
     public static final String PLAYER_SPAWN = "mapeditor/player_spawn.png";
     public static final String EXIT_SPAWN = "mapeditor/exit_icon.png";
@@ -35,12 +36,14 @@ public class MapEditorAssets {
     public static final String EYE_GUY_SPAWN = "mapeditor/eye_guy_spawn.png";
     public static final String EYE_GUY_ICON = "mapeditor/eye_guy_icon.png";
     public static final String PLATFORM_ICON = "mapeditor/platform_icon.png";
+    public static final String PLATFORM_ICON_VER = "mapeditor/platform_icon_ver.png";
     public static final String ITEM_SHEET = "mapeditor/item_sheet.png";
     public static final String TILESHEET = "maps/tileset.png";
     public static final String COIN_ICON = "mapeditor/coin_icon.png";
     public static final String TILE_SELECTOR = "mapeditor/tile_buttons_selector.png";
 
     public static final String HOR_PLATFORM = "game_objects/hor_platform_medium.png";
+    public static final String VER_PLATFORM = "game_objects/ver_platform_medium.png";
 
 
     //public static final String EDITOR_THEME = "music/editor_theme.mp3";
@@ -71,7 +74,10 @@ public class MapEditorAssets {
         manager.load(ITEM_TAB, Texture.class);
         manager.load(OBSTACLE_TAB, Texture.class);
         manager.load(HOR_PLATFORM, Texture.class);
+        manager.load(VER_PLATFORM, Texture.class);
         manager.load(PLATFORM_ICON, Texture.class);
+        manager.load(PLATFORM_ICON_VER, Texture.class);
+        manager.load(BOX, Texture.class);
 
 
         manager.load(EXIT_EDITOR, Texture.class);

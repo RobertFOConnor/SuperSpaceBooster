@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
@@ -13,15 +12,11 @@ import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.SecondKeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
-import com.yellowbytestudios.spacedoctor.game.objects.*;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
 import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.HelmetSelectScreen;
-import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
-import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
-
 
 public class SpacemanPlayer extends Character {
 
@@ -50,14 +45,13 @@ public class SpacemanPlayer extends Character {
     private Array<Gun> guns;
     private int gunIndex = 0;
     private Gun currGun;
-    private int currAmmo = 10;
 
     //Spriter variables.
     private int headType;
     private float[] gasColor;
 
     //Coins
-    private static int coins = 0;
+    private int coins = 0;
 
 
     public SpacemanPlayer(Body body, int playerNum, int headType) {
@@ -66,12 +60,6 @@ public class SpacemanPlayer extends Character {
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
         spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.58f);
-
-        if(GameScreen.levelNo == 1) {
-            currGun = new Gun(Gun.BLASTER);
-        } else {
-            currGun = new Gun(Gun.DRILL_CANNON);
-        }
 
         WIDTH = 80;
         HEIGHT = 118;
@@ -83,12 +71,13 @@ public class SpacemanPlayer extends Character {
         } else if (MainGame.hasControllers) {
             controller = new XBoxController(playerNum);
         } else {
-            controller = new KeyboardController();
-        }
 
-        /*if(playerNum == 1) {
-            controller = new SecondKeyboardController();
-        }*/
+            if (playerNum == 1) {
+                controller = new SecondKeyboardController();
+            } else {
+                controller = new KeyboardController();
+            }
+        }
 
         assignVariables();
         spriter.setPosition((int) (posX * Box2DVars.PPM), (int) (posY * Box2DVars.PPM - 22));
@@ -109,12 +98,8 @@ public class SpacemanPlayer extends Character {
     public void update() {
 
         if (!isDead) {
-
             updateMovement();
-
             updateGun();
-
-            updatePaused();
         } else {
             body.setLinearVelocity(0, 0);
         }
@@ -133,7 +118,7 @@ public class SpacemanPlayer extends Character {
             idle();
         }
 
-        if (controller.upPressed()) { // UP | DOWN MOVEMENT
+        if (controller.upPressed()) { // UP MOVEMENT
 
             if (currGas > 0) {
                 moveUp();
@@ -146,44 +131,20 @@ public class SpacemanPlayer extends Character {
         }
     }
 
-    private void stopJetpack() {
-        if (movingUp) {
-            movingUp = false;
-            SoundManager.stop(Assets.JETPACK_SOUND);
-        }
-    }
-
     private void updateGun() {
         if (controller.shootPressed()) {
-            if(currAmmo > 0) {
-                shooting = true;
-                SoundManager.play(currGun.getShootSound());
-                currAmmo--;
-            } else {
-                SoundManager.play(Assets.GUN_SOUND_EMPTY);
-            }
-        }
-
-
-        //TEMP!!
-        if(controller.switchGunPressed()) {
-            gunIndex++;
-            if(gunIndex == guns.size) {
-                gunIndex = 0;
-            }
-            currGun = guns.get(gunIndex);
+            shooting = currGun.shoot(); //Attempt to fire weapon.
+        } else if (controller.switchGunPressed()) {
+            switchGuns(); //Switch weapons.
         }
     }
 
-    private void updatePaused() {
-        if (controller.pausePressed()) {
-            if (GameScreen.coreMap) {
-                SoundManager.play(Assets.DEATH_SOUND);
-                ScreenManager.setScreen(new GameScreen(GameScreen.levelNo));
-            } else {
-                ScreenManager.setScreen(new MapEditorScreen(GameScreen.customMap));
-            }
+    private void switchGuns() {
+        gunIndex++;
+        if (gunIndex == guns.size) {
+            gunIndex = 0;
         }
+        currGun = guns.get(gunIndex);
     }
 
     private void updateSpriterImages() {
@@ -198,12 +159,15 @@ public class SpacemanPlayer extends Character {
         MainGame.spriterManager.draw(spriter);
     }
 
-    private void moveLeft() {
-        if (velX > -SPEED) {
-            body.applyForce(-ACCELERATION, 0, posX, posY, true);
-        } else {
-            body.setLinearVelocity(-SPEED, velY);
+    private void stopJetpack() {
+        if (movingUp) {
+            movingUp = false;
+            SoundManager.stop(Assets.JETPACK_SOUND);
         }
+    }
+
+    private void moveLeft() {
+        walk(-1);
 
         if (!movingLeft) {
             movingLeft = true;
@@ -218,11 +182,7 @@ public class SpacemanPlayer extends Character {
 
 
     private void moveRight() {
-        if (velX < SPEED) {
-            body.applyForce(ACCELERATION, 0, posX, posY, true);
-        } else {
-            body.setLinearVelocity(SPEED, velY);
-        }
+        walk(1);
 
         if (!movingRight) {
             movingRight = true;
@@ -233,6 +193,14 @@ public class SpacemanPlayer extends Character {
             flipSprite();
         }
         setMovingHorImage();
+    }
+
+    private void walk(int right) {
+        if (Math.abs(velX) < SPEED) {
+            body.applyForce(ACCELERATION * right, 0, posX, posY, true);
+        } else {
+            body.setLinearVelocity(SPEED * right, velY);
+        }
     }
 
 
@@ -269,11 +237,6 @@ public class SpacemanPlayer extends Character {
     }
 
 
-    public boolean facingLeft() {
-        return spriter.flippedX() == 1;
-    }
-
-
     private void flipSprite() {
         spriter.flip(true, false);
     }
@@ -287,10 +250,6 @@ public class SpacemanPlayer extends Character {
         }
     }
 
-    public Vector2 getPos() {
-        return body.getPosition();
-    }
-
     public void setPos(Vector2 pos) {
         body.setTransform(pos, 0);
     }
@@ -301,16 +260,16 @@ public class SpacemanPlayer extends Character {
         int smokeY = (int) (posY * 100 - HEIGHT / 2);
 
         if (facingLeft()) {
-            smokeX+=WIDTH;
+            smokeX += WIDTH;
         }
         GameScreen.particleManager.addEffect(smokeX, smokeY, gasColor);
     }
 
     private void assignVariables() {
 
-        ACCELERATION = Gdx.graphics.getDeltaTime() * 1800f;
-        SPEED = Gdx.graphics.getDeltaTime() * 450f;
-        JETPACK_POWER = Gdx.graphics.getDeltaTime() * 450f;
+        ACCELERATION = Gdx.graphics.getDeltaTime() * 2000f;
+        SPEED = Gdx.graphics.getDeltaTime() * 500f;
+        JETPACK_POWER = Gdx.graphics.getDeltaTime() * 600f;
 
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;
@@ -335,18 +294,6 @@ public class SpacemanPlayer extends Character {
         }
     }
 
-    public int getMaxAmmo() {
-        return 10;
-    }
-
-    public int getCurrAmmo() {
-        return currAmmo;
-    }
-
-    public void setCurrAmmo(int currAmmo) {
-        this.currAmmo = currAmmo;
-    }
-
     public boolean isDead() {
         return isDead;
     }
@@ -361,16 +308,12 @@ public class SpacemanPlayer extends Character {
         isDead = true;
     }
 
-    public boolean isJetpacking() {
-        return movingUp;
-    }
-
     public int getCoins() {
         return coins;
     }
 
     public void setCoins(int coins) {
-        SpacemanPlayer.coins = coins;
+        this.coins = coins;
     }
 
     public void setController(BasicController controller) {
@@ -401,8 +344,8 @@ public class SpacemanPlayer extends Character {
         return numFootContacts == 0;
     }
 
-    public int getHeadType() {
-        return headType;
+    public BasicController getController() {
+        return controller;
     }
 
     public Body getBody() {
@@ -412,4 +355,5 @@ public class SpacemanPlayer extends Character {
     public Gun getGun() {
         return currGun;
     }
+
 }

@@ -29,6 +29,7 @@ public class HelmetSelectScreen implements Screen {
     private SpriteText title;
     private BackgroundManager bg;
     private Array<HelmetButton> helmetButtons;
+    private HelmetButton selectedHelmet;
     private SpriteButton backButton;
 
     private Player spriter;
@@ -71,6 +72,7 @@ public class HelmetSelectScreen implements Screen {
         AnimationManager.startAnimation();
 
         spriter = MainGame.spriterManager.getSpiter("selector", "default", 1.6f);
+        selectedHelmet = helmetButtons.get(MainGame.saveData.getHead());
     }
 
     private class HelmetButton extends SpriteButton {
@@ -89,7 +91,10 @@ public class HelmetSelectScreen implements Screen {
             if (MainGame.saveData.isUnlocked(headNum)) {
                 unlocked = true;
                 headName = HELMET_NAMES[headNum];
-                setTexture(new Texture(Gdx.files.internal("spaceman/heads/head_" + headNum + ".png")));
+
+                Texture texture = new Texture(Gdx.files.internal("spaceman/heads/head_" + headNum + ".png"));
+                texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                setTexture(texture);
             }
             labelX = Fonts.getWidth(Fonts.GUIFont, headName) - 90;
         }
@@ -106,8 +111,7 @@ public class HelmetSelectScreen implements Screen {
         camera.update();
         bg.update();
 
-        HelmetButton hb = helmetButtons.get(MainGame.saveData.getHead());
-        spriter.setPosition(hb.getX() + 90, hb.getY() + 90);
+        spriter.setPosition(selectedHelmet.getX() + 90, selectedHelmet.getY() + 90);
         spriter.update();
 
 
@@ -126,8 +130,7 @@ public class HelmetSelectScreen implements Screen {
 
             for (HelmetButton lb : helmetButtons) {
                 if (lb.checkTouch(touch) && lb.unlocked) {
-                    MainGame.saveData.setHead(lb.headNum);
-                    MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+                    selectedHelmet = lb;
                     SoundManager.play(Assets.BUTTON_CLICK);
                 }
             }
@@ -193,6 +196,10 @@ public class HelmetSelectScreen implements Screen {
         AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
+
+        MainGame.saveData.setHead(selectedHelmet.headNum);
+        MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
+
         SoundManager.play(Assets.BUTTON_CLICK);
     }
 }

@@ -334,10 +334,12 @@ public class EditorGUI {
             bottomY = 290;
             obstacleButtons = new Array<MenuButton>();
             addMenuButton(obstacleButtons, MapEditorAssets.manager.get(MapEditorAssets.PLATFORM_ICON, Texture.class), 0, 0, IDs.HORIZONTAL_SPIKER);
+            addMenuButton(obstacleButtons, MapEditorAssets.manager.get(MapEditorAssets.PLATFORM_ICON_VER, Texture.class), 0, 0, IDs.VERTICAL_SPIKER);
+            addMenuButton(obstacleButtons, MapEditorAssets.manager.get(MapEditorAssets.BOX, Texture.class), 0, 0, IDs.BOX);
+
 
             obstacleButtons.get(0).selected = true;
             obstacleID = obstacleButtons.get(0).id;
-
         }
 
         public boolean checkTouch() {

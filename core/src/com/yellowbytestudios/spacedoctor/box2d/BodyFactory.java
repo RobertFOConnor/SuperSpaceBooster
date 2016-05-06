@@ -110,41 +110,46 @@ public class BodyFactory {
         return body;
     }
 
-    public static Array<Box> createBoxes(World world, TiledMap tm) {
-
-        MapLayer ml = tm.getLayers().get("boxes");
+    public static Array<Box> createBoxes(World world) {
         Array<Box> boxes = new Array<Box>();
+        if (GameScreen.customMap != null) {
+            for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
+                if(mapObject.getId() == IDs.BOX) {
+                    Box b = createBox(world, new Vector2(mapObject.getPos().x / 100, (mapObject.getPos().y / 100)));
+                    boxes.add(b);
+                }
+            }
+        }
+        return boxes;
+    }
 
-        if (ml == null) return new Array<Box>();
-
+    public static Box createBox(World world, Vector2 pos) {
         float width = 48 / PPM;
         float height = 48 / PPM;
 
-        for (MapObject mo : ml.getObjects()) {
+        BodyDef cdef = new BodyDef();
+        cdef.type = BodyDef.BodyType.DynamicBody;
+        cdef.position.set(pos.x + width, pos.y + height);
 
-            BodyDef cdef = new BodyDef();
-            cdef.type = BodyDef.BodyType.DynamicBody;
-            Vector2 pos = getMapObjectPos(mo);
-            cdef.position.set(pos.x + width, pos.y + height);
+        Body body = world.createBody(cdef);
 
-            Body body = world.createBody(cdef);
+        FixtureDef cfdef = new FixtureDef();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width, height);
+        cfdef.shape = shape;
+        cfdef.density = 0.1f;
+        cfdef.filter.categoryBits = Box2DVars.BIT_BOX;
+        cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
 
-            FixtureDef cfdef = new FixtureDef();
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(width, height);
-            cfdef.shape = shape;
-            cfdef.density = 0.1f;
-            cfdef.filter.categoryBits = Box2DVars.BIT_BOX;
-            cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
+        body.createFixture(cfdef).setUserData("box");
+        shape.dispose();
 
-            body.createFixture(cfdef).setUserData("box");
-            shape.dispose();
+        Box b = new Box(body);
+        body.setUserData(b);
 
-            Box b = new Box(body);
-            boxes.add(b);
-            body.setUserData(b);
-        }
-        return boxes;
+        System.out.println("BOX CREATED");
+
+        return b;
     }
 
 
@@ -249,15 +254,28 @@ public class BodyFactory {
 
             for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
 
-                platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, (mapObject.getPos().y / 100)-2)));
+                if(mapObject.getId() == IDs.HORIZONTAL_SPIKER) {
+                    platforms.add(createPlatform(world, new Vector2(mapObject.getPos().x / 100, (mapObject.getPos().y / 100) - 2), "horizontal"));
+                } else if(mapObject.getId() == IDs.VERTICAL_SPIKER) {
+                    platforms.add(createPlatform(world, new Vector2((mapObject.getPos().x / 100)-2, mapObject.getPos().y / 100), "vertical"));
+                }
             }
         }
         return platforms;
     }
 
-    public static Platform createPlatform(World world, Vector2 pos) {
+    public static Platform createPlatform(World world, Vector2 pos, String type) {
         float width = 400 / PPM;
         float height = 200 / PPM;
+        float xOffset = -0.2f;
+        float yOffset = 0.05f;
+
+        if(type.equals("vertical")) {
+            width = 200 / PPM;
+            height = 400 / PPM;
+            xOffset = 0.05f;
+            yOffset = -0.2f;
+        }
 
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.KinematicBody;
@@ -274,7 +292,7 @@ public class BodyFactory {
         fixtureDef.filter.maskBits = Box2DVars.BIT_PLAYER;
         body.createFixture(fixtureDef).setUserData("wall");
 
-        bodyShape.setAsBox((width / 2)-0.2f, (height / 2)+0.05f);
+        bodyShape.setAsBox((width / 2)+xOffset, (height / 2)+yOffset);
         fixtureDef.shape = bodyShape;
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = Box2DVars.BIT_SPIKE;
@@ -282,7 +300,7 @@ public class BodyFactory {
 
 
         body.createFixture(fixtureDef).setUserData("wall");
-        Platform p = new Platform(body, "horizontal");
+        Platform p = new Platform(body, type);
         p.setLimit(2);
         body.setUserData(p);
         bodyShape.dispose();
@@ -371,7 +389,7 @@ public class BodyFactory {
 
         // Create box for enemies foot.
         shape = new PolygonShape();
-        shape.setAsBox(30 / PPM, 20 / PPM, new Vector2(0, -60 / PPM), 0);
+        shape.setAsBox(56 / PPM, 10 / PPM, new Vector2(0, -48 / PPM), 0);
 
         // Create Fixture Definition for foot collision box.
         cfdef.shape = shape;

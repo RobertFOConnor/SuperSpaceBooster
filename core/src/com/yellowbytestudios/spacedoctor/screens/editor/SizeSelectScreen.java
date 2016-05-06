@@ -69,13 +69,13 @@ public class SizeSelectScreen implements Screen {
 
             } else if (smallButton.checkTouch(touch)) {
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(25, 15)));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(25, 25)));
             } else if(mediumButton.checkTouch(touch)) {
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(40, 20)));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(40, 40)));
             } else if(largeButton.checkTouch(touch)) {
 
-                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(70, 40)));
+                advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(70, 70)));
             } else if (backButton.checkTouch(touch)) {
                 goBack();
             }

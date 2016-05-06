@@ -57,7 +57,7 @@ public class MapManager {
     private Array<Array<DraggableObject>> draggableLists;
 
     //Tile Types.
-    private static final Array<Cell> CELLS = new Array<Cell>();
+    public static final Array<Cell> CELLS = new Array<Cell>();
 
     public static void initCells() {
         CELLS.add(buildTile(0, 0, TileIDs.LIGHT_PURPLE));
@@ -428,6 +428,10 @@ public class MapManager {
 
         if (obstacleID == IDs.HORIZONTAL_SPIKER) {
             obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.HOR_PLATFORM, Texture.class), pos));
+        } else if(obstacleID == IDs.VERTICAL_SPIKER) {
+            obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.VER_PLATFORM, Texture.class), pos));
+        } else if(obstacleID == IDs.BOX) {
+            obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.BOX, Texture.class), pos));
         }
     }
 

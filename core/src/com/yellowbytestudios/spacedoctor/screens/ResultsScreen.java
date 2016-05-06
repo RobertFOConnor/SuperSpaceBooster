@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 
 /**
  * Created by BobbyBoy on 16-Jan-16.
@@ -71,6 +72,6 @@ public class ResultsScreen implements Screen {
 
     @Override
     public void goBack() {
-        ScreenManager.setScreen(new com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen());
+        ScreenManager.setScreen(new MainMenuScreen());
     }
 }

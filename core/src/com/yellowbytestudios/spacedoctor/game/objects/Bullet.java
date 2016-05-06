@@ -8,12 +8,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
-/**
- * Created by BobbyBoy on 08-Jan-16.
- */
 public class Bullet extends Box2DSprite {
 
-    private int dir;
     private Vector2 speed;
 
     public Bullet(Body body, int dir, int id) {
@@ -25,12 +21,11 @@ public class Bullet extends Box2DSprite {
             speed = new Vector2(2100*dir, 0);
         } else {
             texture = Assets.manager.get(Assets.BULLET, Texture.class);
-            speed = new Vector2(1200*dir, 0);
+            speed = new Vector2(1700*dir, 0);
         }
 
         width = texture.getWidth();
         height = texture.getHeight();
-        this.dir = dir;
     }
 
     public void update() {

@@ -34,7 +34,7 @@ public class AndroidController implements BasicController {
         shoot = new Button(Assets.manager.get(Assets.SHOOT, Texture.class), Assets.manager.get(Assets.SHOOT_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330 - 280, 30));
         mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
 
-        exit = new Button(Assets.manager.get(Assets.EXIT, Texture.class), Assets.manager.get(Assets.EXIT, Texture.class), new Vector2(MainGame.WIDTH-80, MainGame.HEIGHT-80));
+        //exit = new Button(Assets.manager.get(Assets.EXIT, Texture.class), Assets.manager.get(Assets.EXIT, Texture.class), new Vector2(MainGame.WIDTH-80, MainGame.HEIGHT-80));
 
 
         touch1 = new Vector2();
@@ -73,10 +73,10 @@ public class AndroidController implements BasicController {
             }
             mapEditor.render(sb);
         } else {
-            if(exit.checkTouch(touch1) || exit.checkTouch(touch2)) {
+            /*if(exit.checkTouch(touch1) || exit.checkTouch(touch2)) {
                 GUIManager.paused = true;
-            }
-            exit.render(sb);
+            }*/
+            //exit.render(sb);
         }
 
         sb.end();

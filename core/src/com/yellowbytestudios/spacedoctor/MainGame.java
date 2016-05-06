@@ -47,6 +47,7 @@ public class MainGame extends ApplicationAdapter {
     private boolean backPressed = false;
     public static boolean firstTime = false;
     public static final boolean TEST_MODE = false;
+    public static final boolean DUNGEON_MODE = false;
     public static final boolean QUICK_BOOT = false; //Boots straight into first level.
     public static I18NBundle languageFile;
     public static Cursor cursor;
@@ -160,7 +161,7 @@ public class MainGame extends ApplicationAdapter {
     private void checkForController() {
         if (Controllers.getControllers().size != 0) {
             hasControllers = true;
-            controller = Controllers.getControllers().get(0);
+            controller = Controllers.getControllers().get(Controllers.getControllers().size-1);
         }
     }
 }

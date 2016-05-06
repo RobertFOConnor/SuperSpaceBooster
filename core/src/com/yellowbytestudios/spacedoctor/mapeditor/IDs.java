@@ -19,6 +19,8 @@ public class IDs {
 
     //OBSTACLES
     public static final int HORIZONTAL_SPIKER = 500;
+    public static final int VERTICAL_SPIKER = 501;
+    public static final int BOX = 502;
 
 
 

@@ -2,17 +2,14 @@ package com.yellowbytestudios.spacedoctor.screens;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen;
@@ -46,7 +43,9 @@ public class SplashScreen implements Screen {
 
         if (!displayImage) {
             if (Assets.manager.getProgress() > 0.02) {
-                loadScreen = new Sprite(Assets.manager.get(Assets.LOADSCREEN, Texture.class));
+                Texture texture = Assets.manager.get(Assets.LOADSCREEN, Texture.class);
+                texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                loadScreen = new Sprite(texture);
                 loadWheel = new Sprite(Assets.manager.get(Assets.LOADWHEEL, Texture.class));
                 loadWheel.setPosition(MainGame.WIDTH - 180, 100);
 
@@ -90,7 +89,7 @@ public class SplashScreen implements Screen {
             tfs.fontColor = Color.BLACK;
             tbs.font = Fonts.GUIFont;
 
-            if(MainGame.QUICK_BOOT) {
+            if (MainGame.QUICK_BOOT) {
                 ScreenManager.setScreen(new GameScreen(1));
             } else {
                 ScreenManager.setScreen(new TitleScreen());

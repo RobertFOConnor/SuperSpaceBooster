@@ -9,7 +9,7 @@ import com.badlogic.gdx.controllers.Controllers;
 public class XBoxController implements BasicController {
 
     private Controller controller;
-    private boolean rightTriggerJustPressed, switchGunJustPressed = false;
+    private boolean rightTriggerJustPressed, switchGunJustPressed, pauseJustPressed = false;
 
     public XBoxController(int controllerNumber) {
         controller = Controllers.getControllers().get(controllerNumber);
@@ -38,6 +38,7 @@ public class XBoxController implements BasicController {
     @Override
     public boolean shootPressed() {
         if (controller.getAxis(XBox360Pad.AXIS_RIGHT_TRIGGER) < -0.5f) {
+            System.out.println("bang");
             if (!rightTriggerJustPressed) {
                 rightTriggerJustPressed = true;
                 return true;
@@ -52,7 +53,17 @@ public class XBoxController implements BasicController {
 
     @Override
     public boolean pausePressed() {
-        return controller.getButton(XBox360Pad.BUTTON_START);
+        if (controller.getButton(XBox360Pad.BUTTON_START)) {
+            if (!pauseJustPressed) {
+                pauseJustPressed = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            pauseJustPressed = false;
+            return false;
+        }
     }
 
     @Override

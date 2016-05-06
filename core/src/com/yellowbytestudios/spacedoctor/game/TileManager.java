@@ -8,9 +8,8 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
-import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
+import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.TileIDs;
-import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 
 /**
  * Created by BobbyBoy on 26-Dec-15.
@@ -86,7 +85,7 @@ public class TileManager {
                         lineCountX++;
 
                         if (getTileId(main_cell) == TileIDs.DOWN_SPIKE) {
-                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.1f, 0.01f), top_R.cpy().add(-0.1f, 0.01f), row, col);
+                            drawSpikeHitBox(world, top_L.cpy().add(0.1f, 0.01f), top_R.cpy().add(-0.1f, 0.01f), row, col);
                         }
 
                     } else {
@@ -108,7 +107,7 @@ public class TileManager {
                         main_cell = above_cell;
 
                         if (getTileId(main_cell) == TileIDs.UP_SPIKE) {
-                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.1f, -0.01f), top_R.cpy().add(-0.1f, -0.01f), row, col);
+                            drawSpikeHitBox(world, top_L.cpy().add(0.1f, -0.01f), top_R.cpy().add(-0.1f, -0.01f), row, col);
                         }
                     } else {
                         checkDrawVector();
@@ -117,7 +116,7 @@ public class TileManager {
 
 
                 if (shouldDrawVector) {
-                    drawVector(world, main_cell, start, finish, row, col);
+                    drawVector(world, start, finish, row, col);
                     lineCountX = 0;
                 }
             }
@@ -136,7 +135,7 @@ public class TileManager {
 
 
                 if (cell != null) {
-                    if (left_cell == null) {
+                    if (left_cell == null && col != 0) {
                         if (!lineStarted) {
                             start = top_L;
                             finish = bot_L;
@@ -147,7 +146,7 @@ public class TileManager {
                         lineCountY++;
 
                         if (getTileId(main_cell) == TileIDs.LEFT_SPIKE) {
-                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(-0.01f, -0.1f), bot_L.cpy().add(-0.01f, 0.1f), row, col);
+                            drawSpikeHitBox(world, top_L.cpy().add(-0.01f, -0.1f), bot_L.cpy().add(-0.01f, 0.1f), row, col);
                         }
                     } else {
                         checkDrawVector();
@@ -166,7 +165,7 @@ public class TileManager {
                         main_cell = left_cell;
 
                         if (getTileId(main_cell) == TileIDs.RIGHT_SPIKE) {
-                            drawSpikeHitBox(world, main_cell, top_L.cpy().add(0.01f, -0.1f), bot_L.cpy().add(0.01f, 0.1f), row, col);
+                            drawSpikeHitBox(world, top_L.cpy().add(0.01f, -0.1f), bot_L.cpy().add(0.01f, 0.1f), row, col);
                         }
 
                     } else {
@@ -175,8 +174,29 @@ public class TileManager {
                 }
 
                 if (shouldDrawVector) {
-                    drawVector(world, main_cell, start, finish, row, col);
+                    drawVector(world, start, finish, row, col);
                     lineCountY = 0;
+                }
+            }
+        }
+    }
+
+
+    public void createLights(LightManager lightManager, TiledMap tileMap) {
+        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get(0);
+        setMapWidthHeight(tileMap);
+
+        tileSize = (int) layer.getTileWidth();
+
+        for (int row = 0; row < layer.getHeight(); row++) {
+            for (int col = 0; col < layer.getWidth(); col++) {
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
+                if (cell != null) {
+                    if (getTileId(cell) == TileIDs.DARK_PURPLE) {
+                        lightManager.createTileLight(new Vector2(col+0.5f, row+0.5f));
+                    } else if(getTileId(cell) == TileIDs.CAGED_WALL) {
+                        //lightManager.createConeLight(new Vector2(col+0.5f, row+0.5f));
+                    }
                 }
             }
         }
@@ -193,7 +213,7 @@ public class TileManager {
         }
     }
 
-    private void drawVector(World world, TiledMapTileLayer.Cell main_cell, Vector2 start, Vector2 finish, int row, int col) {
+    private void drawVector(World world, Vector2 start, Vector2 finish, int row, int col) {
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.StaticBody;
         bdef.position.set(((col - lineCountX) + 0.5f), ((row - lineCountY) + 0.5f));
@@ -220,7 +240,7 @@ public class TileManager {
     }
 
 
-    private void drawSpikeHitBox(World world, TiledMapTileLayer.Cell main_cell, Vector2 start, Vector2 finish, int row, int col) {
+    private void drawSpikeHitBox(World world, Vector2 start, Vector2 finish, int row, int col) {
 
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.StaticBody;

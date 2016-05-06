@@ -28,6 +28,17 @@ public class CustomMap {
     public CustomMap(String name, TiledMap tm, MapManager.DraggableObject exit, MapManager.DraggableObject playerSpawn, Array<Array<MapManager.DraggableObject>> draggableLists) {
         this.name = name;
 
+        setupTileArray(tm);
+
+        exitPos = new Vector2(exit.getCenter().x / Box2DVars.PPM, exit.getCenter().y / Box2DVars.PPM);
+        startPos = new Vector2(playerSpawn.getCenter().x / Box2DVars.PPM, playerSpawn.getCenter().y / Box2DVars.PPM);
+
+        draggableToMapObject(draggableLists.get(0), enemyArray);
+        draggableToMapObject(draggableLists.get(1), itemArray);
+        draggableToMapObject(draggableLists.get(2), obstacleArray);
+    }
+
+    public void setupTileArray(TiledMap tm) {
         TiledMapTileLayer layer = (TiledMapTileLayer) tm.getLayers().get(0);
         tileArray = new int[layer.getWidth()][layer.getHeight()];
 
@@ -42,13 +53,26 @@ public class CustomMap {
                 }
             }
         }
+    }
 
-        exitPos = new Vector2(exit.getCenter().x / Box2DVars.PPM, exit.getCenter().y / Box2DVars.PPM);
-        startPos = new Vector2(playerSpawn.getCenter().x / Box2DVars.PPM, playerSpawn.getCenter().y / Box2DVars.PPM);
+    public void addEnemy(CustomMapObject object) {
+        enemyArray.add(object);
+    }
 
-        draggableToMapObject(draggableLists.get(0), enemyArray);
-        draggableToMapObject(draggableLists.get(1), itemArray);
-        draggableToMapObject(draggableLists.get(2), obstacleArray);
+    public void addItem(CustomMapObject object) {
+        itemArray.add(object);
+    }
+
+    public void addObstacle(CustomMapObject object) {
+        obstacleArray.add(object);
+    }
+
+    public void setStartPos(Vector2 pos) {
+        startPos = pos;
+    }
+
+    public void setExitPos(Vector2 pos) {
+        exitPos = pos;
     }
 
     private void draggableToMapObject(Array<MapManager.DraggableObject> draggableList, Array<CustomMapObject> mapObjectList) {

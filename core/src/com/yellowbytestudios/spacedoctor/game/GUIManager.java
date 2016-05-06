@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
@@ -72,16 +73,18 @@ public class GUIManager {
             timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            paused = !paused;
-            SoundManager.stop(Assets.JETPACK_SOUND);
+        for(SpacemanPlayer p : players) {
+            if (p.getController().pausePressed()) {
+                paused = !paused;
+                SoundManager.stop(Assets.JETPACK_SOUND);
 
-            if (paused) {
-                Gdx.input.setCursorCatched(false);
-                pauseMenu.setMenuListener();
-            } else {
-                Gdx.input.setCursorCatched(true);
-                Gdx.input.setInputProcessor(null);
+                if (paused) {
+                    Gdx.input.setCursorCatched(false);
+                    pauseMenu.setMenuListener();
+                } else {
+                    Gdx.input.setCursorCatched(true);
+                    Gdx.input.setInputProcessor(null);
+                }
             }
         }
     }
@@ -97,10 +100,10 @@ public class GUIManager {
             SpacemanPlayer player = players.get(i);
 
             shapeRenderer.setColor(Color.BLACK);
-            shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
+            shapeRenderer.rect(100 + (i * 200), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
 
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(215 + (i * 1425), MainGame.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
+            shapeRenderer.rect(100 + (i * 200), MainGame.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
         }
         shapeRenderer.end();
 
@@ -109,7 +112,7 @@ public class GUIManager {
         sb.draw(alpha, 0, MainGame.HEIGHT, MainGame.WIDTH, -120);
         for (int i = 0; i < players.size; i++) {
 
-            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getCurrAmmo()), 225 + (i * 1425), MainGame.HEIGHT - 70);
+            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getGun().getAmmo()), 100 + (i * 200), MainGame.HEIGHT - 70);
 
             //Fonts.GUIFont.draw(sb, String.format("%07d", players.get(i).getCoins()), (MainGame.WIDTH - 250)+(i*1425), MainGame.HEIGHT - 70);
         }
@@ -118,7 +121,7 @@ public class GUIManager {
             drawTimer(sb);
         }
 
-        Fonts.GUIFont.draw(sb, worldString, 1500, MainGame.HEIGHT - 55);
+        Fonts.GUIFont.draw(sb, worldString, 1600, MainGame.HEIGHT - 55);
         sb.end();
 
         if (paused) {

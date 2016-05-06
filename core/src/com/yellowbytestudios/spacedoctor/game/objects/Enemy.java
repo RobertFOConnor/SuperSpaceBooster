@@ -118,21 +118,23 @@ public class Enemy extends Character {
             }
         }
 
-        if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
+        /*if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
             int random = (int) (Math.random() * 40);
 
             if (random == 0) {
                 shooting = true;
             }
-        }
+        }*/
     }
 
     private void followPlayer(SpacemanPlayer player) {
         if (Math.abs(player.getPos().x - posX) < 8 && Math.abs(player.getPos().y - posY) < 5) {
             if (player.getPos().x < posX) {
                 moveLeft();
-            } else {
+            } else if (player.getPos().x > posX) {
                 moveRight();
+            } else {
+                body.setLinearVelocity(0f, velY);
             }
         } else {
             body.setLinearVelocity(0f, velY);

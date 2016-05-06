@@ -80,11 +80,11 @@ public class LevelBackgroundManager {
         sb.begin();
 
         for (int i = 0; i < hills.size; i++) {
-            sb.draw(hills.get(0), (i * MainGame.WIDTH) + (camera.position.x - MainGame.WIDTH / 2) / 2, (camera.position.y - MainGame.HEIGHT / 2) / 2);
+            //sb.draw(hills.get(0), (i * MainGame.WIDTH) + (camera.position.x - MainGame.WIDTH / 2) / 2, (camera.position.y - MainGame.HEIGHT / 2) / 2);
         }
 
         for (BackgroundObject bo : farLayer) {
-            bo.render(sb);
+            //bo.render(sb);
         }
     }
 
@@ -134,6 +134,9 @@ public class LevelBackgroundManager {
             BColors = new int[]{131, 58, 130};
         }
 
+        //TEMP - BLACK
+        TColors = new int[]{87 , 0, 128};
+        BColors = new int[]{158, 160, 224};
 
         skyTop = new Color( ((float)TColors[0] / 255), ((float)TColors[1] / 255), ((float)TColors[2] / 255), 1);
         skyBot = new Color( ((float)BColors[0] / 255), ((float)BColors[1] / 255), ((float)BColors[2] / 255), 1);

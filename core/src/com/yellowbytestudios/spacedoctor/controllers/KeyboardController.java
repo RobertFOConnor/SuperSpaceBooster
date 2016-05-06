@@ -40,6 +40,6 @@ public class KeyboardController implements BasicController {
 
     @Override
     public boolean pausePressed() {
-        return Gdx.input.isKeyJustPressed(Input.Keys.R);
+        return Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }
 }
