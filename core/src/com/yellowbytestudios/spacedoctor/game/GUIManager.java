@@ -38,9 +38,12 @@ public class GUIManager {
 
     private PauseMenu pauseMenu;
     private String worldString;
+    private String time = "";
 
+    private GameScreen gameScreen;
 
-    public GUIManager(Array<SpacemanPlayer> players, boolean isTimed) {
+    public GUIManager(GameScreen gameScreen, Array<SpacemanPlayer> players, boolean isTimed) {
+        this.gameScreen = gameScreen;
         camera = new OrthoCamera();
         camera.resize();
         this.players = players;
@@ -69,10 +72,6 @@ public class GUIManager {
 
     public void update() {
 
-        if (isTimed) {
-            timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
-        }
-
         for(SpacemanPlayer p : players) {
             if (p.getController().pausePressed()) {
                 paused = !paused;
@@ -84,6 +83,8 @@ public class GUIManager {
                 } else {
                     Gdx.input.setCursorCatched(true);
                     Gdx.input.setInputProcessor(null);
+                    duration = timeElapsed;
+                    startTurnTime = System.nanoTime();
                 }
             }
         }
@@ -114,7 +115,8 @@ public class GUIManager {
 
             Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getGun().getAmmo()), 100 + (i * 200), MainGame.HEIGHT - 70);
 
-            //Fonts.GUIFont.draw(sb, String.format("%07d", players.get(i).getCoins()), (MainGame.WIDTH - 250)+(i*1425), MainGame.HEIGHT - 70);
+            //Fonts.GUIFont.draw(sb, "COINS", 220 + (i * 200), MainGame.HEIGHT - 30);
+            //Fonts.GUIFont.draw(sb, String.format("%02d", players.get(i).getCoins()), 220 + (i * 200), MainGame.HEIGHT - 70);
         }
 
         if (isTimed) {
@@ -129,7 +131,8 @@ public class GUIManager {
         }
     }
 
-    private void drawTimer(SpriteBatch sb) {
+    public void updateTimer() {
+        timeElapsed = duration - ((System.nanoTime() - startTurnTime) / 1000000);
 
         String seconds;
         if ((timeElapsed / 1000) < 10) {
@@ -139,7 +142,11 @@ public class GUIManager {
             seconds = (timeElapsed / 1000) + "";
         }
 
-        String time = seconds + "." + ((timeElapsed % 1000) / 10);
+        time = seconds + "." + ((timeElapsed % 1000) / 10);
+    }
+
+    private void drawTimer(SpriteBatch sb) {
+
         Fonts.timerFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.timerFont, time)/2), MainGame.HEIGHT - 30);
         Fonts.timerFont.setColor(Color.WHITE);
     }
@@ -211,7 +218,7 @@ public class GUIManager {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     SoundManager.play(Assets.BUTTON_CLICK);
-                    GameScreen.exit();
+                    gameScreen.exit();
                     stage.dispose();
                     paused = false;
                     Gdx.input.setInputProcessor(null);

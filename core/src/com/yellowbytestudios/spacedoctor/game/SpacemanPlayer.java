@@ -167,7 +167,11 @@ public class SpacemanPlayer extends Character {
     }
 
     private void moveLeft() {
-        walk(-1);
+        if (velX > -SPEED) {
+            body.applyForce(-ACCELERATION, 0, posX, posY, true);
+        } else {
+            body.setLinearVelocity(-SPEED, velY);
+        }
 
         if (!movingLeft) {
             movingLeft = true;
@@ -182,7 +186,11 @@ public class SpacemanPlayer extends Character {
 
 
     private void moveRight() {
-        walk(1);
+        if (velX < SPEED) {
+            body.applyForce(ACCELERATION, 0, posX, posY, true);
+        } else {
+            body.setLinearVelocity(SPEED, velY);
+        }
 
         if (!movingRight) {
             movingRight = true;
@@ -193,14 +201,6 @@ public class SpacemanPlayer extends Character {
             flipSprite();
         }
         setMovingHorImage();
-    }
-
-    private void walk(int right) {
-        if (Math.abs(velX) < SPEED) {
-            body.applyForce(ACCELERATION * right, 0, posX, posY, true);
-        } else {
-            body.setLinearVelocity(SPEED * right, velY);
-        }
     }
 
 

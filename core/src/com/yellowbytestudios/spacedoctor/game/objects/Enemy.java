@@ -25,6 +25,7 @@ public class Enemy extends Character {
     private boolean followsPlayer = true;
     private boolean movingLeft = true;
     private int numFootContacts = 0;
+    private float height;
 
     public Enemy(Body body, int id) {
         super(body);
@@ -32,12 +33,14 @@ public class Enemy extends Character {
 
         if (id == IDs.EYEGUY) {
             spriter = MainGame.spriterManager.getSpiter("eyeball", "walking", 0.8f);
-            health = 1;
+            health = 3;
             enemySpeed = 150f;
+            height = 48;
         } else if (id == IDs.PLATTY) {
             spriter = MainGame.spriterManager.getSpiter("platty", "walking", 0.8f);
             health = 2;
             enemySpeed = 300f;
+            height = 70;
         }
 
         assignVariables();
@@ -45,7 +48,7 @@ public class Enemy extends Character {
     }
 
     private void setSpriterPos() {
-        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM) - 48);
+        spriter.setPosition((posX * Box2DVars.PPM), (posY * Box2DVars.PPM)-height);
     }
 
     public void render(SpriteBatch sb) {

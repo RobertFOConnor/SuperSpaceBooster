@@ -94,8 +94,6 @@ public class DungeonGenerator {
 
                 if (i == 0) {
                     startPos = new Vector2(newRoom.center.x, newRoom.y1+2);
-
-                    //map.addObstacle(new CustomMapObject(IDs.BOX, new Vector2(newRoom.center.x * 100, newRoom.center.y * 100)));
                 }
 
                 if(rooms.size > 1) {

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
@@ -47,12 +48,16 @@ public class MainGame extends ApplicationAdapter {
     private boolean backPressed = false;
     public static boolean firstTime = false;
     public static final boolean UNLIM_JETPACK = false;
-    public static final boolean TEST_MODE = false;
+    public static boolean BOX2D_LIGHTS = false;
+    public static boolean TEST_MODE = false;
     public static final boolean DUNGEON_MODE = false;
     public static final boolean QUICK_BOOT = false; //Boots straight into first level.
     public static I18NBundle languageFile;
     public static Cursor cursor;
     private FPSLogger fps;
+    private boolean fullscreen = false;
+
+    public static ShaderProgram shaderProgram;
 
 
     public MainGame(String device) {
@@ -62,6 +67,8 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void create() {
+        ShaderProgram.pedantic = false;
+        shaderProgram = new ShaderProgram(Gdx.files.internal("shaders/vignette.vsh"), Gdx.files.internal("shaders/vignette.fsh"));
 
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
@@ -120,6 +127,19 @@ public class MainGame extends ApplicationAdapter {
         } else {
             backPressed = false;
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
+            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+
+                if (!fullscreen) {
+                    Graphics.DisplayMode mode = Gdx.graphics.getDisplayMode();
+                    Gdx.graphics.setFullscreenMode(mode);
+                } else {
+                    Gdx.graphics.setWindowedMode(1280, 720);
+                }
+                fullscreen = !fullscreen;
+            }
+        }
     }
 
     @Override
@@ -162,7 +182,7 @@ public class MainGame extends ApplicationAdapter {
     private void checkForController() {
         if (Controllers.getControllers().size != 0) {
             hasControllers = true;
-            controller = Controllers.getControllers().get(Controllers.getControllers().size-1);
+            controller = Controllers.getControllers().get(Controllers.getControllers().size - 1);
         }
     }
 }

@@ -8,16 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.brashmonkey.spriter.Animation;
-import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.box2d.BodyFactory;
-import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
@@ -27,14 +20,7 @@ import com.yellowbytestudios.spacedoctor.game.DungeonGenerator;
 import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
-import com.yellowbytestudios.spacedoctor.game.TileManager;
-import com.yellowbytestudios.spacedoctor.game.objects.Box;
-import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
-import com.yellowbytestudios.spacedoctor.game.objects.Character;
-import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
-import com.yellowbytestudios.spacedoctor.game.objects.Exit;
-import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
-import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.game.WorldManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -43,7 +29,6 @@ import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorSplashScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
-import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
 public class GameScreen implements Screen {
@@ -53,32 +38,17 @@ public class GameScreen implements Screen {
     public static int worldNo = 1;
     public static int levelNo = 1;
     private BoundedCamera cam, b2dCam;
-    private static World world;
     private TiledMap tileMap;
     private Box2DDebugRenderer b2dr; //DEBUG
     private OrthogonalTiledMapRenderer tmr;
-    private float PPM = 100;
+    private static final float PPM = 100;
 
     private Sprite transition;
 
     //Map Editor
     public static CustomMap customMap;
 
-    //Player objects.
-    private Array<SpacemanPlayer> players;
-
-    //Contact Listener.
-    private Box2DContactListeners contactListener;
-
-    //GAME-OBJECT ARRAYS.
-    private Array<Bullet> bullets;
-    private Array<Box> boxes;
-    private Array<PickUp> pickups;
-    private Array<Enemy> enemies;
-    private Array<Platform> platforms;
-    private Exit exit;
-
-    //Background manager.
+    private WorldManager worldManager;
     private LevelBackgroundManager bgManager;
     public static ParticleManager particleManager;
     public static LightManager lightManager;
@@ -101,7 +71,7 @@ public class GameScreen implements Screen {
         //TEMP!!!!
         CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_" + levelNo + ".json", true);
         CustomMap customMap;
-        if(MainGame.DUNGEON_MODE) {
+        if (MainGame.DUNGEON_MODE) {
             customMap = DungeonGenerator.getGeneratedMap();
         } else {
             customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
@@ -146,17 +116,9 @@ public class GameScreen implements Screen {
     }
 
 
-    private void setupMap() {
+    public void setupMap() {
 
-        //Setup camera.
-        world = new World(new Vector2(0, -9.8f), true);
-
-        //Setup contact listeners.
-        contactListener = new Box2DContactListeners();
-        world.setContactListener(contactListener);
-
-        TileManager tileManager = new TileManager();
-        tileManager.createWalls(world, tileMap);
+        worldManager = new WorldManager(this, tileMap);
 
         mapWidth = customMap.getMapWidth();
         mapHeight = customMap.getMapHeight();
@@ -164,41 +126,18 @@ public class GameScreen implements Screen {
         b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
         cam.setBounds(0, mapWidth, 0, mapHeight);
 
-        //Custom map will specify player spawn point.
-        float startX = customMap.getStartPos().x;
-        float startY = customMap.getStartPos().y;
-
-        players = new Array<SpacemanPlayer>();
-        players.add(BodyFactory.createPlayer(world, 0, MainGame.saveData.getHead()));
-        players.get(0).setPos(new Vector2(startX, startY));
-
-        //TEMP PLAYER 2!
-
-        //if (Controllers.getControllers().size > 1) {
-        //players.add(BodyFactory.createPlayer(world, 1, 7));
-        //players.get(1).setPos(new Vector2(startX, startY));
-        //}
-
+        Array<SpacemanPlayer> players = worldManager.getPlayers();
         cam.setPosition(players.get(0).getPos().x * PPM + MainGame.WIDTH / 50, players.get(0).getPos().y * PPM + MainGame.WIDTH / 50);
         b2dCam.setPosition(players.get(0).getPos().x * PPM + MainGame.WIDTH / 50 / PPM, players.get(0).getPos().y * PPM + MainGame.WIDTH / 50 / PPM);
 
+        gui = new GUIManager(this, players, true);
 
-        bullets = new Array<Bullet>();
+        //lightManager = new LightManager(world, players, exit, b2dCam);
 
-        boxes = BodyFactory.createBoxes(world);
-        pickups = BodyFactory.createPickups(world, tileMap);
-        enemies = BodyFactory.createEnemies(world, tileMap);
-        platforms = BodyFactory.createPlatforms(world, tileMap);
-        exit = BodyFactory.createExits(world, tileMap);
 
-        gui = new GUIManager(players, true);
-
-        lightManager = new LightManager(world, players, exit, b2dCam);
-        tileManager.createLights(lightManager, tileMap);
-
-        for (PickUp p : pickups) {
+        /*for (PickUp p : pickups) {
             p.setLight(lightManager.createLight(p.getBody().getPosition()));
-        }
+        }*/
     }
 
     @Override
@@ -206,7 +145,6 @@ public class GameScreen implements Screen {
 
         if (!gui.isPaused()) {
 
-            world.step(step, 8, 3);
             if (MainGame.DEVICE.equals("ANDROID")) {
                 androidController.update();
             }
@@ -215,130 +153,65 @@ public class GameScreen implements Screen {
             }
             updateCameras();
             bgManager.update();
-
-            for (SpacemanPlayer p : players) {
-                p.update();
-
-                if (p.isShooting()) {
-                    addBullet(p, p.getGun().getBullet());
-                    p.setShooting(false);
-                }
-
-                if (p.isDead() || gui.timeIsUp()) {
-                    killPlayer(p);
-                }
-
-                if (p.isFinished()) {
-                    world.destroyBody(p.getBody());
-                    players.removeValue(p, true);
-
-                    if (players.size == 0) {
-                        exitLevel();
-                    }
-                }
-            }
-            updateObjects();
-            removeObjects();
-            removeEnemies();
-            exit.update();
+            worldManager.update(step);
             particleManager.update();
-            lightManager.update();
+
+            if (MainGame.BOX2D_LIGHTS) {
+                lightManager.update();
+            }
+            gui.updateTimer();
         }
         gui.update();
     }
 
-    private void updateObjects() {
 
-        for (Platform p : platforms) {
-            p.update();
+    @Override
+    public void render(SpriteBatch sb) {
+
+        //DRAW BG.
+        sb.setProjectionMatrix(cam.combined);
+        sb.begin();
+        bgManager.render(sb);
+        sb.end();
+
+        //DRAW TILES.
+        tmr.setView(cam);
+        tmr.render();
+
+        //DRAW WORLD.
+        worldManager.render(sb);
+
+        if (MainGame.BOX2D_LIGHTS) {
+            lightManager.render();
         }
 
-        for (Bullet b : bullets) {
-            b.update();
+        sb.setProjectionMatrix(cam.combined);
+        sb.begin();
+        worldManager.renderBullets(sb);
+        particleManager.render(sb);
+        sb.end();
+
+
+        //DRAW GUI!
+        gui.render(sb);
+
+        if (MainGame.DEVICE.equals("ANDROID")) {
+            androidController.render(sb);
         }
 
-        if (players.size != 0) {
-            for (Enemy e : enemies) {
-                e.update(players.get(0));
-
-                if (e.isShooting()) {
-                    addBullet(e, 0);
-                    e.setShooting(false);
-                }
-            }
+        //Render Box2D world.
+        if (MainGame.TEST_MODE) {
+            b2dr.render(worldManager.getWorld(), b2dCam.combined);
         }
+
+        sb.begin();
+        sb.draw(transition, transition.getX(), transition.getY(), MainGame.WIDTH, MainGame.HEIGHT + 100);
+        sb.end();
     }
 
-    private void removeObjects() {
-        if (contactListener.getBodies().size > 0) {
-            for (Fixture f : contactListener.getBodies()) {
-                Body b = f.getBody();
-                if (f.getUserData().equals("bullet")) {
-                    bullets.removeValue((Bullet) b.getUserData(), true);
-                } else if (f.getUserData().equals("pickup")) {
-                    PickUp p = (PickUp) b.getUserData();
-                    lightManager.removeLight(p.getLight());
-                    pickups.removeValue(p, true);
-                }
-                world.destroyBody(b);
-            }
-        }
-    }
-
-    private void removeEnemies() {
-        if (contactListener.getEnemy() != null) {
-
-            Body enemyBody = contactListener.getEnemy();
-            Enemy e = (Enemy) enemyBody.getUserData();
-            e.setHealth(e.getHealth() - 1);
-
-            if (e.getHealth() <= 0) {
-                killEnemy(e);
-                world.destroyBody(enemyBody);
-            }
-            contactListener.nullifyEnemy();
-        }
-    }
-
-
-    private void killEnemy(final Enemy e) {
-
-        SoundManager.play(Assets.ENEMY_DEATH);
-
-        PickUp p = BodyFactory.createPickUp(world, e.getPos(), "coin");
-        p.setLight(lightManager.createLight(p.getBody().getPosition()));
-        pickups.add(p);
-
-        if (!e.isDead()) {
-
-            Player.PlayerListener myListener = new MySpriterAnimationListener() {
-                @Override
-                public void animationFinished(Animation animation) {
-                    enemies.removeValue(e, true);
-                }
-            };
-            e.startDeath(myListener);
-            e.setDead(true);
-        }
-    }
-
-
-    public void addBullet(Character player, int bulletId) {
-
-        Bullet bullet;
-        int dir = 1;
-        if (player.facingLeft()) {
-            dir = -1;
-        }
-        bullet = new Bullet(BodyFactory.createBullet(world), dir, bulletId);
-        bullet.getBody().setTransform(player.getPos().x + (dir * 1.2f), player.getPos().y - 0.1f, 0);
-        bullets.add(bullet);
-    }
-
-    private void exitLevel() {
+    public void exitLevel() {
         SoundManager.play(Assets.FINISHED_SOUND);
         SoundManager.stop(Assets.JETPACK_SOUND);
-        //SoundManager.switchMusic(Assets.MAIN_THEME);
 
         if (!coreMap) { // RETURN TO MAP EDITOR.
             ScreenManager.setScreen(new MapEditorScreen(customMap));
@@ -348,7 +221,7 @@ public class GameScreen implements Screen {
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
                 transition.setPosition(0, MainGame.HEIGHT);
-                AnimationManager.applyLevelEndAnimation(transition, 0, 0, new GameScreen(levelNo + 1), world);
+                AnimationManager.applyLevelEndAnimation(transition, 0, 0, new GameScreen(levelNo + 1), worldManager.getWorld());
                 AnimationManager.startAnimation();
             } else {
                 ScreenManager.setScreen(new MainMenuScreen());
@@ -356,27 +229,14 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void killPlayer(final SpacemanPlayer p) {
-        if (!p.isDieing()) {
-            SoundManager.stop(Assets.JETPACK_SOUND);
-            SoundManager.play(Assets.ENEMY_DEATH);
-
-            Player.PlayerListener myListener = new MySpriterAnimationListener() {
-                @Override
-                public void animationFinished(Animation animation) {
-                    setupMap();
-                }
-            };
-            p.startDeath(myListener);
-            p.setDieing(true);
-        }
-    }
 
     private void updateCameras() {
 
         float zoom = 1f;
         float targetX;
         float targetY;
+
+        Array<SpacemanPlayer> players = worldManager.getPlayers();
 
         if (players.size > 0) {
             Vector2 playerPos = players.get(0).getPos();
@@ -412,13 +272,17 @@ public class GameScreen implements Screen {
             b2dCam.zoom = zoom;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.F1)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.F1)) {
             cam.zoom = 20f;
             b2dCam.zoom = 20f;
         }
 
         b2dCam.update();
         cam.update();
+    }
+
+    public GUIManager getGUI() {
+        return gui;
     }
 
     private float newCamPos(float camPos, float target, float speed) {
@@ -431,78 +295,10 @@ public class GameScreen implements Screen {
         }
     }
 
-
-    @Override
-    public void render(SpriteBatch sb) {
-
-        sb.setProjectionMatrix(cam.combined);
-        sb.begin();
-        bgManager.render(sb);
-        sb.end();
-
-        //Render tiles.
-        tmr.setView(cam);
-        tmr.render();
-
-        sb.begin();
-        exit.render(sb);
-        renderObjects(sb);
-        for (SpacemanPlayer p : players) {
-            p.render();
-        }
-        sb.end();
-
-        lightManager.render();
-
-        sb.setProjectionMatrix(cam.combined);
-        sb.begin();
-        for (Bullet b : bullets) { //DRAW BULLETS.
-            b.render(sb);
-        }
-        particleManager.render(sb);
-        sb.end();
-
-
-        //DRAW GUI!
-        gui.render(sb);
-
-        if (MainGame.DEVICE.equals("ANDROID")) {
-            androidController.render(sb);
-        }
-
-        //Render Box2D world.
-        if (MainGame.TEST_MODE) {
-            b2dr.render(world, b2dCam.combined);
-        }
-
-        sb.begin();
-        sb.draw(transition, transition.getX(), transition.getY(), MainGame.WIDTH, MainGame.HEIGHT + 100);
-        sb.end();
-    }
-
-    private void renderObjects(SpriteBatch sb) {
-        for (Platform p : platforms) {
-            p.render(sb);
-        }
-
-        for (Box b : boxes) { //DRAW BOXES.
-            b.render(sb);
-        }
-
-        for (PickUp p : pickups) { //DRAW PICK-UPS.
-            p.render(sb);
-        }
-
-        for (Enemy e : enemies) { //DRAW ENEMIES.
-            e.render(sb);
-        }
-    }
-
-    public static void exit() {
-        //SoundManager.switchMusic(Assets.MAIN_THEME);
+    public void exit() {
         SoundManager.stop(Assets.JETPACK_SOUND);
-        world.dispose();
-        lightManager.dispose();
+        worldManager.dispose();
+        //lightManager.dispose();
 
         if (coreMap) {
             ScreenManager.setScreen(new LevelSelectScreen((levelNo / 10) + 1));

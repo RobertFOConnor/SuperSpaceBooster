@@ -101,6 +101,7 @@ public class BodyFactory {
         // create fixturedef for bullet.
         FixtureDef cfdef = new FixtureDef();
         cfdef.shape = shape;
+        cfdef.isSensor = true;
         cfdef.filter.categoryBits = Box2DVars.BIT_BULLET;
         cfdef.filter.maskBits = Box2DVars.BIT_WALL | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY | Box2DVars.BIT_PLAYER;
         body.createFixture(cfdef).setUserData("bullet");
@@ -153,21 +154,12 @@ public class BodyFactory {
     }
 
 
-    public static Exit createExits(World world, TiledMap tm) {
-
-        MapLayer ml = tm.getLayers().get("exits");
-        float width = 50 / PPM;
-        float height = 100 / PPM;
-        Exit exit = null;
-
-        if (ml == null) { //CUSTOM MAP - TEMP
-            exit = createExitBody(world, GameScreen.customMap.getExitPos().x, GameScreen.customMap.getExitPos().y, width, height);
-        }
-        return exit;
+    public static Exit createExits(World world) {
+        return createExitBody(world, GameScreen.customMap.getExitPos().x, GameScreen.customMap.getExitPos().y);
     }
 
 
-    private static Exit createExitBody(World world, float x, float y, float width, float height) {
+    private static Exit createExitBody(World world, float x, float y) {
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.StaticBody;
         cdef.position.set(x, y);
@@ -191,9 +183,8 @@ public class BodyFactory {
     }
 
 
-    public static Array<PickUp> createPickups(World world, TiledMap tm) {
+    public static Array<PickUp> createPickups(World world) {
 
-        MapLayer ml = tm.getLayers().get("pickups");
         Array<PickUp> pickups = new Array<PickUp>();
 
         if (GameScreen.customMap != null) {
@@ -246,7 +237,7 @@ public class BodyFactory {
     }
 
 
-    public static Array<Platform> createPlatforms(World world, TiledMap tm) {
+    public static Array<Platform> createPlatforms(World world) {
 
         Array<Platform> platforms = new Array<Platform>();
 
@@ -350,9 +341,8 @@ public class BodyFactory {
     }
 
 
-    public static Array<Enemy> createEnemies(World world, TiledMap tm) {
+    public static Array<Enemy> createEnemies(World world) {
 
-        MapLayer ml = tm.getLayers().get("enemies");
         Array<Enemy> enemies = new Array<Enemy>();
 
         if (GameScreen.customMap != null) {
@@ -369,6 +359,11 @@ public class BodyFactory {
         float width = 58 / PPM;
         float height = 48 / PPM;
 
+        if(type == IDs.PLATTY) {
+            width = 55 / PPM;
+            height = 70 / PPM;
+        }
+
         BodyDef cdef = new BodyDef();
         cdef.type = BodyDef.BodyType.DynamicBody;
         cdef.position.set(pos.x + width, pos.y + height);
@@ -380,16 +375,14 @@ public class BodyFactory {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width, height);
         cfdef.shape = shape;
-        cfdef.density = 5f;
         cfdef.filter.categoryBits = Box2DVars.BIT_ENEMY;
         cfdef.filter.maskBits = Box2DVars.BIT_PLAYER | Box2DVars.BIT_BULLET | Box2DVars.BIT_WALL | Box2DVars.BIT_SPIKE | Box2DVars.BIT_BOX | Box2DVars.BIT_ENEMY;
-
 
         body.createFixture(cfdef).setUserData("enemy");
 
         // Create box for enemies foot.
         shape = new PolygonShape();
-        shape.setAsBox(56 / PPM, 10 / PPM, new Vector2(0, -48 / PPM), 0);
+        shape.setAsBox(((width*PPM)-2) / PPM, 4 / PPM, new Vector2(0, -height), 0);
 
         // Create Fixture Definition for foot collision box.
         cfdef.shape = shape;
