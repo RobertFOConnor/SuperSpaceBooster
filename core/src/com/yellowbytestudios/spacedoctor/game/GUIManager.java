@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.brashmonkey.spriter.Player;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
@@ -72,7 +71,7 @@ public class GUIManager {
 
     public void update() {
 
-        for(SpacemanPlayer p : players) {
+        for (SpacemanPlayer p : players) {
             if (p.getController().pausePressed()) {
                 paused = !paused;
                 SoundManager.stop(Assets.JETPACK_SOUND);
@@ -147,7 +146,7 @@ public class GUIManager {
 
     private void drawTimer(SpriteBatch sb) {
 
-        Fonts.timerFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.timerFont, time)/2), MainGame.HEIGHT - 30);
+        Fonts.timerFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.timerFont, time) / 2), MainGame.HEIGHT - 30);
         Fonts.timerFont.setColor(Color.WHITE);
     }
 
@@ -160,7 +159,7 @@ public class GUIManager {
     }
 
     public void setPaused(boolean paused) {
-        this.paused = paused;
+        GUIManager.paused = paused;
 
         if (paused) {
             pauseMenu.setMenuListener();
@@ -174,7 +173,7 @@ public class GUIManager {
 
         public PauseMenu() {
             skin = Assets.manager.get(Assets.SKIN, Skin.class);
-            stage = new Stage();
+            stage = new Stage((new StretchViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight())));
 
             final TextButton resumeButton = new TextButton("Resume Game", skin, "default");
             final TextButton restartButton = new TextButton("Restart Level", skin, "default");

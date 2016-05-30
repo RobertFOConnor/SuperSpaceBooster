@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
 import com.yellowbytestudios.spacedoctor.game.objects.Door;
-import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;

@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
-import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 

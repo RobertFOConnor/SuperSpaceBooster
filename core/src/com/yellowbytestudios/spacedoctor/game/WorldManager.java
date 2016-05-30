@@ -17,7 +17,7 @@ import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
 import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
-import com.yellowbytestudios.spacedoctor.game.objects.Enemy;
+import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;

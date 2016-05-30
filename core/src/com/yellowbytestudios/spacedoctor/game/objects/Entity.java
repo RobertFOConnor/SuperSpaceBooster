@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  * Created by BobbyBoy on 25-Jan-16.
  */
-public class Entity {
+public abstract class Entity {
 
     protected Texture texture;
     protected Vector2 pos;

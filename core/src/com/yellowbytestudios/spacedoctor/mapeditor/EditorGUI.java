@@ -1,10 +1,7 @@
 package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +20,6 @@ import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.Button;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
-import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
@@ -45,6 +41,8 @@ public class EditorGUI {
     private int obstacleID = -1;
 
     private ItemSideMenu sideMenu;
+    private Array<MenuButton> menuButtons;
+
     private MapNameInput mapNameInput;
 
     public EditorGUI(MapManager mapManager) {
@@ -67,6 +65,7 @@ public class EditorGUI {
 
 
         sideMenu = new ItemSideMenu();
+        menuButtons = new Array<MenuButton>();
 
         mapNameInput = new MapNameInput();
     }
@@ -267,6 +266,7 @@ public class EditorGUI {
         }
     }
 
+
     private class ItemSideMenu {
 
         //Menu States.
@@ -340,6 +340,8 @@ public class EditorGUI {
 
             obstacleButtons.get(0).selected = true;
             obstacleID = obstacleButtons.get(0).id;
+
+            menuButtons = tileButtons;
         }
 
         public boolean checkTouch() {
@@ -347,17 +349,13 @@ public class EditorGUI {
             if (showing) {
 
                 if (blockTab.checkTouch(touch)) {
-                    state = BLOCK_STATE;
-                    eraseButton.setPressed(false);
+                    switchTab(BLOCK_STATE, tileButtons);
                 } else if (enemyTab.checkTouch(touch)) {
-                    state = ENEMY_STATE;
-                    eraseButton.setPressed(false);
+                    switchTab(ENEMY_STATE, enemyButtons);
                 } else if (itemTab.checkTouch(touch)) {
-                    state = ITEM_STATE;
-                    eraseButton.setPressed(false);
+                    switchTab(ITEM_STATE, itemButtons);
                 } else if (obstacleTab.checkTouch(touch)) {
-                    state = OBSTACLE_STATE;
-                    eraseButton.setPressed(false);
+                    switchTab(OBSTACLE_STATE, obstacleButtons);
                 }
 
 
@@ -393,6 +391,12 @@ public class EditorGUI {
             return false;
         }
 
+        private void switchTab(String s, Array<MenuButton> mb) {
+            state = s;
+            menuButtons = mb;
+            eraseButton.setPressed(false);
+        }
+
         private int getButtonSelectedId(Array<MenuButton> buttonArray) {
             for (MenuButton button : buttonArray) {
                 if (button.checkTouch(touch)) {
@@ -417,30 +421,8 @@ public class EditorGUI {
                 itemTab.render(sb);
                 obstacleTab.render(sb);
 
-
-                if (state.equals(BLOCK_STATE)) {
-                    for (MenuButton tb : tileButtons) {
-                        tb.render(sb);
-                    }
-                } else if (state.equals(ENEMY_STATE)) {
-
-                    //DRAW ENEMIES
-                    for (MenuButton eb : enemyButtons) {
-                        eb.render(sb);
-                    }
-
-                } else if (state.equals(ITEM_STATE)) {
-
-                    //DRAW ITEMS
-                    for (MenuButton ib : itemButtons) {
-                        ib.render(sb);
-                    }
-                } else if (state.equals(OBSTACLE_STATE)) {
-
-                    //DRAW ITEMS
-                    for (MenuButton ob : obstacleButtons) {
-                        ob.render(sb);
-                    }
+                for (MenuButton menuButton : menuButtons) {
+                    menuButton.render(sb);
                 }
             }
         }
@@ -486,14 +468,11 @@ public class EditorGUI {
 
     private void saveCoreLevel(String text) {
         //TEMP!!!!
-        CustomMap customMap = new CustomMap();
         CoreLevelSaver levelSaver = new CoreLevelSaver("levels/level_" + text.substring(4) + ".json", true);
         levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
 
 
-        if (levelSaver.loadDataValue("LEVEL", CustomMap.class) != null) {
-            customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
-        } else {
+        if (levelSaver.loadDataValue("LEVEL", CustomMap.class) == null) {
             levelSaver.saveDataValue("LEVEL", mapManager.getCustomMap(text));
         }
     }

@@ -324,7 +324,6 @@ public class MapManager {
                             if (layer1.getCell(col, row) != null) {
                                 layer1.setCell(col, row, null);
                                 SoundManager.play(Assets.TILE_ERASE);
-                                System.out.println("ERASED");
                             }
                         }
                     }

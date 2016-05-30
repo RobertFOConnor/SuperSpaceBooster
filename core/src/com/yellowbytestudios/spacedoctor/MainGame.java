@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -49,7 +50,7 @@ public class MainGame extends ApplicationAdapter {
     public static boolean firstTime = false;
     public static final boolean UNLIM_JETPACK = false;
     public static boolean BOX2D_LIGHTS = false;
-    public static boolean TEST_MODE = false;
+    public static boolean TEST_MODE = true;
     public static final boolean DUNGEON_MODE = false;
     public static final boolean QUICK_BOOT = false; //Boots straight into first level.
     public static I18NBundle languageFile;
@@ -102,6 +103,19 @@ public class MainGame extends ApplicationAdapter {
         cursor = Gdx.graphics.newCursor(pm, 0, 0);
         Gdx.graphics.setCursor(cursor);
         pm.dispose();
+
+
+        Controllers.addListener(new ControllerAdapter() {
+            @Override
+            public void connected(Controller controller) {
+                checkForController();
+            }
+
+            public void disconnected(Controller controller) {
+                checkForController();
+                System.out.println("Controller disconnected");
+            }
+        });
     }
 
     @Override
@@ -184,5 +198,6 @@ public class MainGame extends ApplicationAdapter {
             hasControllers = true;
             controller = Controllers.getControllers().get(Controllers.getControllers().size - 1);
         }
+        System.out.println("Num of controllers: " + Controllers.getControllers().size);
     }
 }
