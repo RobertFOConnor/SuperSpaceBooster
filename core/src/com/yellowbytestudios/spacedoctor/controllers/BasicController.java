@@ -12,4 +12,9 @@ public interface BasicController {
     boolean shootPressed();
     boolean switchGunPressed();
     boolean pausePressed();
+
+    boolean menuUp();
+    boolean menuDown();
+    boolean menuSelect();
+    boolean menuBack();
 }

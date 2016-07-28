@@ -1,6 +1,7 @@
 package com.yellowbytestudios.spacedoctor.controllers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -140,6 +141,26 @@ public class AndroidController implements BasicController {
 
     @Override
     public boolean pausePressed() {
+        return false;
+    }
+
+    @Override
+    public boolean menuUp() {
+        return false;
+    }
+
+    @Override
+    public boolean menuDown() {
+        return false;
+    }
+
+    @Override
+    public boolean menuSelect() {
+        return false;
+    }
+
+    @Override
+    public boolean menuBack() {
         return false;
     }
 }

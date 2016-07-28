@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
+import com.yellowbytestudios.spacedoctor.controllers.BasicController;
+import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
+import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
@@ -33,6 +34,7 @@ public class LevelSelectScreen implements Screen {
     private Array<LevelButton> levelButtons;
     private SpriteButton backButton;
     private int worldNum = 1;
+    private BasicController controller;
 
     public LevelSelectScreen(int worldNum) {
         this.worldNum = worldNum;
@@ -43,6 +45,11 @@ public class LevelSelectScreen implements Screen {
         camera = new OrthoCamera();
         camera.resize();
         touch = new Vector2();
+        if (MainGame.hasControllers) {
+            controller = new XBoxController(0);
+        } else {
+            controller = new KeyboardController();
+        }
 
         bg = new BackgroundManager();
 
@@ -66,6 +73,54 @@ public class LevelSelectScreen implements Screen {
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
         Gdx.input.setCursorCatched(false);
+    }
+
+    @Override
+    public void update(float step) {
+        camera.update();
+        bg.update();
+
+        if (controller.menuSelect()) {
+            advanceScreen(1);
+        } else if (controller.menuBack()) {
+            goBack();
+        }
+
+        if (Gdx.input.justTouched()) {
+            touch = camera.unprojectCoordinates(Gdx.input.getX(),
+                    Gdx.input.getY());
+
+            for (LevelButton lb : levelButtons) {
+                if (lb.checkTouch(touch) && lb.unlocked) {
+                    advanceScreen(lb.levelNum);
+                }
+            }
+
+            if (backButton.checkTouch(touch)) {
+                goBack();
+            }
+        }
+    }
+
+    private void advanceScreen(int levelNum) {
+        ScreenManager.setScreen(new GameScreen(((worldNum - 1) * 10) + levelNum));
+        SoundManager.play(Assets.BUTTON_CLICK);
+    }
+
+    @Override
+    public void render(SpriteBatch sb) {
+
+        sb.setProjectionMatrix(camera.combined);
+        sb.begin();
+        bg.render(sb);
+        backButton.draw(sb);
+        title.draw(sb);
+
+        for (LevelButton lb : levelButtons) {
+            lb.draw(sb);
+        }
+
+        sb.end();
     }
 
     private class LevelButton extends SpriteButton {
@@ -108,62 +163,21 @@ public class LevelSelectScreen implements Screen {
         }
     }
 
-    @Override
-    public void update(float step) {
-        camera.update();
-        bg.update();
-
-        if (MainGame.hasControllers) {
-            if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-                advanceScreen(1);
-            } else if (MainGame.controller.getButton(XBox360Pad.BUTTON_BACK)) {
-                goBack();
-            }
-
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            advanceScreen(1);
-        }
-
-        if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
-
-            for (LevelButton lb : levelButtons) {
-                if (lb.checkTouch(touch) && lb.unlocked) {
-                    advanceScreen(lb.levelNum);
-                }
-            }
-
-            if (backButton.checkTouch(touch)) {
-                goBack();
-            }
-        }
-    }
-
-    private void advanceScreen(int levelNum) {
-        ScreenManager.setScreen(new GameScreen(((worldNum - 1) * 10) + levelNum));
-        SoundManager.play(Assets.BUTTON_CLICK);
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
-
-        sb.setProjectionMatrix(camera.combined);
-        sb.begin();
-        bg.render(sb);
-        backButton.draw(sb);
-        title.draw(sb);
-
-        for (LevelButton lb : levelButtons) {
-            lb.draw(sb);
-        }
-
-        sb.end();
-    }
 
     @Override
     public void resize(int width, int height) {
         camera.resize();
+    }
+
+    @Override
+    public void goBack() {
+        for (LevelButton lb : levelButtons) {
+            AnimationManager.applyAnimation(lb, lb.getX(), -300);
+        }
+        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
+        AnimationManager.startAnimation();
+        SoundManager.play(Assets.BUTTON_CLICK);
     }
 
     @Override
@@ -189,16 +203,5 @@ public class LevelSelectScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    @Override
-    public void goBack() {
-        for (LevelButton lb : levelButtons) {
-            AnimationManager.applyAnimation(lb, lb.getX(), -300);
-        }
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
-        AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
-        AnimationManager.startAnimation();
-        SoundManager.play(Assets.BUTTON_CLICK);
     }
 }

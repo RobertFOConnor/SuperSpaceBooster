@@ -1,5 +1,7 @@
 package com.yellowbytestudios.spacedoctor.controllers;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 
@@ -10,6 +12,7 @@ public class XBoxController implements BasicController {
 
     private Controller controller;
     private boolean rightTriggerJustPressed, switchGunJustPressed, pauseJustPressed = false;
+    private boolean menuUp, menuDown, menuSelected, menuBack = false;
 
     public XBoxController(int controllerNumber) {
         controller = Controllers.getControllers().get(controllerNumber);
@@ -77,6 +80,67 @@ public class XBoxController implements BasicController {
             }
         } else {
             switchGunJustPressed = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean menuUp() {
+        if (controller.getAxis(XBox360Pad.AXIS_LEFT_Y) < -0.5f) {
+            if (!menuUp) {
+                menuUp = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            menuUp = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean menuDown() {
+        if (controller.getAxis(XBox360Pad.AXIS_LEFT_Y) > 0.5f) {
+            if (!menuDown) {
+                menuDown = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            menuDown = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean menuSelect() {
+
+        if (controller.getButton(XBox360Pad.BUTTON_A)) {
+            if (!menuSelected) {
+                menuSelected = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            menuSelected = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean menuBack() {
+        if (controller.getButton(XBox360Pad.BUTTON_B)) {
+            if (!menuBack) {
+                menuBack = true;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            menuBack = false;
             return false;
         }
     }

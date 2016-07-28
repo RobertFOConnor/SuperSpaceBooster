@@ -80,11 +80,11 @@ public class LevelBackgroundManager {
         sb.begin();
 
         for (int i = 0; i < hills.size; i++) {
-            //sb.draw(hills.get(0), (i * MainGame.WIDTH) + (camera.position.x - MainGame.WIDTH / 2) / 2, (camera.position.y - MainGame.HEIGHT / 2) / 2);
+            sb.draw(hills.get(0), (i * MainGame.WIDTH) + (camera.position.x - MainGame.WIDTH / 2) / 2, (camera.position.y - MainGame.HEIGHT / 2) / 2);
         }
 
         for (BackgroundObject bo : farLayer) {
-            //bo.render(sb);
+            bo.render(sb);
         }
     }
 

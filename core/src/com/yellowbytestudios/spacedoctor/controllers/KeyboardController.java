@@ -42,4 +42,24 @@ public class KeyboardController implements BasicController {
     public boolean pausePressed() {
         return Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }
+
+    @Override
+    public boolean menuUp() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.UP);
+    }
+
+    @Override
+    public boolean menuDown() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.DOWN);
+    }
+
+    @Override
+    public boolean menuSelect() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.ENTER);
+    }
+
+    @Override
+    public boolean menuBack() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+    }
 }

@@ -58,8 +58,6 @@ public class MainGame extends ApplicationAdapter {
     private FPSLogger fps;
     private boolean fullscreen = false;
 
-    public static ShaderProgram shaderProgram;
-
 
     public MainGame(String device) {
         DEVICE = device;
@@ -68,8 +66,6 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void create() {
-        ShaderProgram.pedantic = false;
-        shaderProgram = new ShaderProgram(Gdx.files.internal("shaders/vignette.vsh"), Gdx.files.internal("shaders/vignette.fsh"));
 
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();

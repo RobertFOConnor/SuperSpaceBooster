@@ -87,6 +87,9 @@ public class GUIManager {
                 }
             }
         }
+        if (paused) {
+            pauseMenu.updateController();
+        }
     }
 
     public void render(SpriteBatch sb) {
@@ -113,9 +116,6 @@ public class GUIManager {
         for (int i = 0; i < players.size; i++) {
 
             Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getGun().getAmmo()), 100 + (i * 200), MainGame.HEIGHT - 70);
-
-            //Fonts.GUIFont.draw(sb, "COINS", 220 + (i * 200), MainGame.HEIGHT - 30);
-            //Fonts.GUIFont.draw(sb, String.format("%02d", players.get(i).getCoins()), 220 + (i * 200), MainGame.HEIGHT - 70);
         }
 
         if (isTimed) {
@@ -170,14 +170,47 @@ public class GUIManager {
 
         private Skin skin;
         private Stage stage;
+        private Array<PauseMenuButton> buttons;
+        private int selectedButton = 0;
 
         public PauseMenu() {
             skin = Assets.manager.get(Assets.SKIN, Skin.class);
-            stage = new Stage((new StretchViewport(Gdx.graphics.getWidth(),Gdx.graphics.getHeight())));
+            stage = new Stage((new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())));
 
-            final TextButton resumeButton = new TextButton("Resume Game", skin, "default");
-            final TextButton restartButton = new TextButton("Restart Level", skin, "default");
-            final TextButton exitButton = new TextButton("Exit Game", skin, "default");
+            final PauseMenuButton resumeButton = new PauseMenuButton("Resume Game", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    paused = false;
+                    Gdx.input.setCursorCatched(true);
+                    Gdx.input.setInputProcessor(null);
+                }
+            };
+            final PauseMenuButton restartButton = new PauseMenuButton("Restart Level", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    for (SpacemanPlayer p : players) {
+                        p.setDead(true);
+                        paused = false;
+                        Gdx.input.setCursorCatched(true);
+                        Gdx.input.setInputProcessor(null);
+                    }
+                }
+            };
+            final PauseMenuButton exitButton = new PauseMenuButton("Exit Game", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    gameScreen.exit();
+                    stage.dispose();
+                    paused = false;
+                    Gdx.input.setInputProcessor(null);
+                }
+            };
+
+            buttons = new Array<PauseMenuButton>();
+            buttons.add(resumeButton);
+            buttons.add(restartButton);
+            buttons.add(exitButton);
+            resumeButton.setHighlighted(true);
 
             float buttonX = Gdx.graphics.getWidth() / 2 - 250f;
 
@@ -193,40 +226,50 @@ public class GUIManager {
             resumeButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    SoundManager.play(Assets.BUTTON_CLICK);
-                    paused = false;
-                    Gdx.input.setCursorCatched(true);
-                    Gdx.input.setInputProcessor(null);
+                    resumeButton.onClick();
                 }
             });
 
             restartButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    SoundManager.play(Assets.BUTTON_CLICK);
-                    for (SpacemanPlayer p : players) {
-                        p.setDead(true);
-                        paused = false;
-                        Gdx.input.setCursorCatched(true);
-                        Gdx.input.setInputProcessor(null);
-                    }
+                    restartButton.onClick();
                 }
             });
 
             exitButton.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    SoundManager.play(Assets.BUTTON_CLICK);
-                    gameScreen.exit();
-                    stage.dispose();
-                    paused = false;
-                    Gdx.input.setInputProcessor(null);
+                    exitButton.onClick();
                 }
             });
 
             stage.addActor(resumeButton);
             stage.addActor(restartButton);
             stage.addActor(exitButton);
+        }
+
+        public void updateController() {
+            if (players.get(0).getController().menuUp()) {
+                buttons.get(selectedButton).setHighlighted(false);
+                selectedButton--;
+                if (selectedButton < 0) {
+                    selectedButton = buttons.size - 1;
+                }
+                buttons.get(selectedButton).setHighlighted(true);
+
+            } else if (players.get(0).getController().menuDown()) {
+                buttons.get(selectedButton).setHighlighted(false);
+                selectedButton++;
+                if (selectedButton > buttons.size - 1) {
+                    selectedButton = 0;
+                }
+                buttons.get(selectedButton).setHighlighted(true);
+            } else if (players.get(0).getController().menuSelect()) {
+                buttons.get(selectedButton).onClick();
+            }
+
+            System.out.println(buttons.get(selectedButton).getText());
         }
 
         public void render(SpriteBatch sb) {
@@ -246,6 +289,32 @@ public class GUIManager {
 
         public void setMenuListener() {
             Gdx.input.setInputProcessor(stage);
+        }
+    }
+
+    private class PauseMenuButton extends TextButton {
+
+        private boolean highlighted = false;
+
+        public PauseMenuButton(String text, Skin skin, String style) {
+            super(text, skin, style);
+        }
+
+        public boolean isHighlighted() {
+            return highlighted;
+        }
+
+        public void setHighlighted(boolean highlighted) {
+            this.highlighted = highlighted;
+            if (highlighted) {
+                this.setColor(Color.MAROON);
+            } else {
+                this.setColor(Color.WHITE);
+            }
+        }
+
+        public void onClick() {
+
         }
     }
 }

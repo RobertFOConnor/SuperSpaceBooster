@@ -298,7 +298,6 @@ public class GameScreen implements Screen {
     public void exit() {
         SoundManager.stop(Assets.JETPACK_SOUND);
         worldManager.dispose();
-        //lightManager.dispose();
 
         if (coreMap) {
             ScreenManager.setScreen(new LevelSelectScreen((levelNo / 10) + 1));
