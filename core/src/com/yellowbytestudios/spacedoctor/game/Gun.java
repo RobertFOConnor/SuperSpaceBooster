@@ -1,5 +1,6 @@
 package com.yellowbytestudios.spacedoctor.game;
 
+import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 
@@ -36,7 +37,7 @@ public class Gun {
     }
 
     public boolean shoot() {
-        if (ammo > 0) {
+        if (ammo > 0 || MainGame.UNLIM_AMMO) {
             SoundManager.play(shootSound);
             ammo -= 1;
             return true;

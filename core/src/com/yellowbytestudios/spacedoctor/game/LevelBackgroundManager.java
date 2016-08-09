@@ -134,9 +134,9 @@ public class LevelBackgroundManager {
             BColors = new int[]{131, 58, 130};
         }
 
-        //TEMP - BLACK
-        //TColors = new int[]{87 , 0, 128};
-        //BColors = new int[]{158, 160, 224};
+        //TEMP
+        TColors = new int[]{40, 102, 83}; //TOP OF BG GRADIENT
+        BColors = new int[]{212, 208, 128}; //BOTTOM OF BG GRADIENT
 
         skyTop = new Color( ((float)TColors[0] / 255), ((float)TColors[1] / 255), ((float)TColors[2] / 255), 1);
         skyBot = new Color( ((float)BColors[0] / 255), ((float)BColors[1] / 255), ((float)BColors[2] / 255), 1);

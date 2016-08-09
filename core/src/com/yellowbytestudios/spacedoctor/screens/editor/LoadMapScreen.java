@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.controllers.XBox360Pad;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -82,8 +81,6 @@ public class LoadMapScreen implements Screen {
         bg.update();
 
         if (MainGame.hasControllers) {
-            if (MainGame.controller.getButton(XBox360Pad.BUTTON_A)) {
-            }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 

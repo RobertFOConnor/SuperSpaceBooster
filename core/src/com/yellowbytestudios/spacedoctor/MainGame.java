@@ -46,9 +46,10 @@ public class MainGame extends ApplicationAdapter {
     public static Controller controller;
 
     public static String DEVICE;
-    private boolean backPressed = false;
+    private boolean backPressed = true;
     public static boolean firstTime = false;
-    public static final boolean UNLIM_JETPACK = false;
+    public static final boolean UNLIM_JETPACK = true;
+    public static final boolean UNLIM_AMMO = true;
     public static boolean BOX2D_LIGHTS = false;
     public static boolean TEST_MODE = false;
     public static final boolean DUNGEON_MODE = false;

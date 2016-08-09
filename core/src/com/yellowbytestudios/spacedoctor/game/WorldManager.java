@@ -72,11 +72,11 @@ public class WorldManager {
         players.add(BodyFactory.createPlayer(world, 0, MainGame.saveData.getHead()));
         players.get(0).setPos(GameScreen.customMap.getStartPos().cpy());
 
-        //TEMP PLAYER 2!
-
         if (Controllers.getControllers().size > 1) {
-            players.add(BodyFactory.createPlayer(world, 1, 7));
-            players.get(1).setPos(new Vector2(GameScreen.customMap.getStartPos().cpy()));
+            for(int i = 1; i < Controllers.getControllers().size; i++) {
+                players.add(BodyFactory.createPlayer(world, i, i+4));
+                players.get(i).setPos(new Vector2(GameScreen.customMap.getStartPos().cpy()));
+            }
         }
     }
 
