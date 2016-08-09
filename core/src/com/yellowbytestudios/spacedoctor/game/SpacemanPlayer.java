@@ -59,7 +59,7 @@ public class SpacemanPlayer extends Character {
         this.body = body;
         this.headType = headType;
         gasColor = HelmetSelectScreen.CHAR_COLORS[headType];
-        spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.58f);
+        spriter = MainGame.spriterManager.getSpiter("player", "idle", 0.45f);
 
         WIDTH = 80;
         HEIGHT = 118;
