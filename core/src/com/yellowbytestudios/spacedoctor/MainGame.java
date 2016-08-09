@@ -46,19 +46,18 @@ public class MainGame extends ApplicationAdapter {
     public static Controller controller;
 
     public static String DEVICE;
-    private boolean backPressed = false;
+    private boolean backPressed = true;
     public static boolean firstTime = false;
-    public static final boolean UNLIM_JETPACK = false;
+    public static final boolean UNLIM_JETPACK = true;
+    public static final boolean UNLIM_AMMO = true;
     public static boolean BOX2D_LIGHTS = false;
-    public static boolean TEST_MODE = true;
+    public static boolean TEST_MODE = false;
     public static final boolean DUNGEON_MODE = false;
     public static final boolean QUICK_BOOT = false; //Boots straight into first level.
     public static I18NBundle languageFile;
     public static Cursor cursor;
     private FPSLogger fps;
     private boolean fullscreen = false;
-
-    public static ShaderProgram shaderProgram;
 
 
     public MainGame(String device) {
@@ -68,8 +67,6 @@ public class MainGame extends ApplicationAdapter {
 
     @Override
     public void create() {
-        ShaderProgram.pedantic = false;
-        shaderProgram = new ShaderProgram(Gdx.files.internal("shaders/vignette.vsh"), Gdx.files.internal("shaders/vignette.fsh"));
 
         Gdx.input.setCatchBackKey(true);
         sb = new SpriteBatch();
