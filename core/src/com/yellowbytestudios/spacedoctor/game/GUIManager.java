@@ -115,8 +115,12 @@ public class GUIManager {
         sb.draw(alpha, 0, MainGame.HEIGHT, MainGame.WIDTH, -120);
         for (int i = 0; i < players.size; i++) {
 
+<<<<<<< HEAD
             String ammo = "x" + String.format("%02d", players.get(i).getGun().getAmmo());
             Fonts.GUIFont.draw(sb, ammo, 100 + (i * 200), MainGame.HEIGHT - 70);
+=======
+            Fonts.GUIFont.draw(sb, "x" + String.format("%02d", players.get(i).getGun().getAmmo()), 100 + (i * 200), MainGame.HEIGHT - 70);
+>>>>>>> 69c16993b609951eef2e213aa50d739b3a1080f3
         }
 
         if (isTimed) {
@@ -177,6 +181,7 @@ public class GUIManager {
         public PauseMenu() {
             skin = Assets.manager.get(Assets.SKIN, Skin.class);
             stage = new Stage((new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())));
+<<<<<<< HEAD
 
             final PauseMenuButton resumeButton = new PauseMenuButton("Resume Game", skin, "default") {
                 public void onClick() {
@@ -207,6 +212,38 @@ public class GUIManager {
                 }
             };
 
+=======
+
+            final PauseMenuButton resumeButton = new PauseMenuButton("Resume Game", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    paused = false;
+                    Gdx.input.setCursorCatched(true);
+                    Gdx.input.setInputProcessor(null);
+                }
+            };
+            final PauseMenuButton restartButton = new PauseMenuButton("Restart Level", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    for (SpacemanPlayer p : players) {
+                        p.setDead(true);
+                        paused = false;
+                        Gdx.input.setCursorCatched(true);
+                        Gdx.input.setInputProcessor(null);
+                    }
+                }
+            };
+            final PauseMenuButton exitButton = new PauseMenuButton("Exit Game", skin, "default") {
+                public void onClick() {
+                    SoundManager.play(Assets.BUTTON_CLICK);
+                    gameScreen.exit();
+                    stage.dispose();
+                    paused = false;
+                    Gdx.input.setInputProcessor(null);
+                }
+            };
+
+>>>>>>> 69c16993b609951eef2e213aa50d739b3a1080f3
             buttons = new Array<PauseMenuButton>();
             buttons.add(resumeButton);
             buttons.add(restartButton);
@@ -269,6 +306,11 @@ public class GUIManager {
             } else if (players.get(0).getController().menuSelect()) {
                 buttons.get(selectedButton).onClick();
             }
+<<<<<<< HEAD
+=======
+
+            System.out.println(buttons.get(selectedButton).getText());
+>>>>>>> 69c16993b609951eef2e213aa50d739b3a1080f3
         }
 
         public void render(SpriteBatch sb) {
