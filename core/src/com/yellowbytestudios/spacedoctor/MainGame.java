@@ -48,8 +48,8 @@ public class MainGame extends ApplicationAdapter {
     public static String DEVICE;
     private boolean backPressed = true;
     public static boolean firstTime = false;
-    public static final boolean UNLIM_JETPACK = true;
-    public static final boolean UNLIM_AMMO = true;
+    public static final boolean UNLIM_JETPACK = false;
+    public static final boolean UNLIM_AMMO = false;
     public static boolean BOX2D_LIGHTS = false;
     public static boolean TEST_MODE = false;
     public static final boolean DUNGEON_MODE = false;
@@ -93,14 +93,7 @@ public class MainGame extends ApplicationAdapter {
 
         fps = new FPSLogger();
 
-
-        //Setup cursor.
-        Gdx.input.setCursorCatched(false);
-        Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
-        cursor = Gdx.graphics.newCursor(pm, 0, 0);
-        Gdx.graphics.setCursor(cursor);
-        pm.dispose();
-
+        setupCursor();
 
         Controllers.addListener(new ControllerAdapter() {
             @Override
@@ -148,9 +141,19 @@ public class MainGame extends ApplicationAdapter {
                 } else {
                     Gdx.graphics.setWindowedMode(1280, 720);
                 }
+                setupCursor();
                 fullscreen = !fullscreen;
             }
         }
+    }
+
+    private void setupCursor() {
+        //Setup cursor.
+        Gdx.input.setCursorCatched(false);
+        Pixmap pm = new Pixmap(Gdx.files.internal("cursor.png"));
+        cursor = Gdx.graphics.newCursor(pm, 0, 0);
+        Gdx.graphics.setCursor(cursor);
+        pm.dispose();
     }
 
     @Override

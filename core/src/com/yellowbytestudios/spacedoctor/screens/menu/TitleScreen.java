@@ -24,7 +24,7 @@ public class TitleScreen implements Screen {
     private OrthoCamera camera;
     private BackgroundManager bg;
     private SpriteButton character, title;
-    private SpriteText continueMessage;
+    private SpriteText continueMessage, versionCode;
     private boolean advancing = false;
 
     private final Vector2 charStartPos = new Vector2(2000, -800);
@@ -42,7 +42,11 @@ public class TitleScreen implements Screen {
         continueMessage = new SpriteText(MainGame.languageFile.get("TOUCH_TO_CONTINUE").toUpperCase(), Fonts.timerFont);
         continueMessage.setPosition(400, -100);
 
+        versionCode = new SpriteText(MainGame.languageFile.get("VERSION_CODE").toUpperCase(), Fonts.smallFont);
+        versionCode.setPosition(70, MainGame.HEIGHT+100);
+
         AnimationManager.applyAnimation(continueMessage, 400, 90);
+        AnimationManager.applyAnimation(versionCode, 70, MainGame.HEIGHT-50);
         AnimationManager.applyAnimation(character, 1080, -250);
         AnimationManager.applyAnimation(title, 70, 350);
         AnimationManager.startAnimation();
@@ -68,6 +72,7 @@ public class TitleScreen implements Screen {
     private void advanceScreen() {
         if (!advancing) {
             AnimationManager.applyAnimation(continueMessage, 400, -100);
+            AnimationManager.applyAnimation(versionCode, 70, MainGame.HEIGHT+100);
             AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
             AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
             AnimationManager.startAnimation();
@@ -86,6 +91,7 @@ public class TitleScreen implements Screen {
         character.draw(sb);
         title.draw(sb);
         continueMessage.draw(sb);
+        versionCode.draw(sb);
         sb.end();
     }
 

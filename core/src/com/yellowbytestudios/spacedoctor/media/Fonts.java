@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 public class Fonts {
 
-    public static BitmapFont GUIFont, timerFont, largeFont;
+    public static BitmapFont GUIFont, timerFont, largeFont, smallFont;
 
     public static void load() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/basic_font.ttf"));
@@ -21,12 +21,16 @@ public class Fonts {
 
         parameter.size = 80;
         largeFont = generator.generateFont(parameter);
+
+        parameter.size = 25;
+        smallFont = generator.generateFont(parameter);
     }
 
     public static void dispose() {
         GUIFont.dispose();
         timerFont.dispose();
         largeFont.dispose();
+        smallFont.dispose();
     }
 
     public static float getWidth(BitmapFont f, String s) {
