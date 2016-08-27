@@ -62,7 +62,6 @@ public class XBoxController implements BasicController {
     @Override
     public boolean shootPressed() {
         if (controller.getAxis(AXIS_RIGHT_TRIGGER) < -0.5f) {
-            System.out.println("bang");
             if (!rightTriggerJustPressed) {
                 rightTriggerJustPressed = true;
                 return true;

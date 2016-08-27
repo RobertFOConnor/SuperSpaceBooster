@@ -146,8 +146,8 @@ public class GUIManager {
 
     private void drawTimer(SpriteBatch sb) {
 
-        Fonts.timerFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.timerFont, time) / 2), MainGame.HEIGHT - 30);
-        Fonts.timerFont.setColor(Color.WHITE);
+        Fonts.GUIFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.GUIFont, time) / 2), MainGame.HEIGHT - 30);
+        Fonts.GUIFont.setColor(Color.WHITE);
     }
 
     public boolean timeIsUp() {
@@ -298,16 +298,14 @@ public class GUIManager {
             super(text, skin, style);
         }
 
-        public boolean isHighlighted() {
-            return highlighted;
-        }
-
         public void setHighlighted(boolean highlighted) {
             this.highlighted = highlighted;
             if (highlighted) {
                 this.setColor(Color.MAROON);
+                getLabel().setFontScale(1.2f);
             } else {
                 this.setColor(Color.WHITE);
+                getLabel().setFontScale(1f);
             }
         }
 

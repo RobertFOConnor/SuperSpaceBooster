@@ -68,7 +68,7 @@ public class SettingsScreen implements Screen {
         settings.get(settings.size - 1).button.switched_on = SoundManager.soundFXEnabled;
 
 
-        settings.add(new Setting("BOX2D BOUNDS", 300) {
+        /*settings.add(new Setting("BOX2D BOUNDS", 300) {
             @Override
             public void onSwitch() {
                 super.onSwitch();
@@ -85,7 +85,7 @@ public class SettingsScreen implements Screen {
                 MainGame.BOX2D_LIGHTS = !MainGame.BOX2D_LIGHTS;
             }
         });
-        settings.get(settings.size - 1).button.switched_on = MainGame.BOX2D_LIGHTS;
+        settings.get(settings.size - 1).button.switched_on = MainGame.BOX2D_LIGHTS;*/
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 

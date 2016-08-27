@@ -236,7 +236,6 @@ public class TileManager {
         chainShape.dispose();
 
         wallCount++;
-        System.out.println(wallCount + ": WALL CREATED!");
     }
 
 
@@ -262,8 +261,6 @@ public class TileManager {
 
         world.createBody(bdef).createFixture(fdef).setUserData("ground");
         chainShape.dispose();
-
-        System.out.println("SPIKES CREATED!");
     }
 
     public int getMapWidth() {

@@ -84,7 +84,9 @@ public class LoadMapScreen implements Screen {
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 
-        } else if (Gdx.input.justTouched()) {
+        }
+
+        if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
                     Gdx.input.getY());
 

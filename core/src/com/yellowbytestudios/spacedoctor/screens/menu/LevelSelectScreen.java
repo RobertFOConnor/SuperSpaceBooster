@@ -22,8 +22,14 @@ import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
+import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenEquations;
 
 public class LevelSelectScreen implements Screen {
 
@@ -35,6 +41,7 @@ public class LevelSelectScreen implements Screen {
     private SpriteButton backButton;
     private int worldNum = 1;
     private BasicController controller;
+    private boolean animationFinished = false;
 
     public LevelSelectScreen(int worldNum) {
         this.worldNum = worldNum;
@@ -70,7 +77,18 @@ public class LevelSelectScreen implements Screen {
         SoundManager.stop(Assets.JETPACK_SOUND);
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
-        AnimationManager.applyAnimation(backButton, 50, backButton.getY());
+
+        TweenCallback myCallBack = new TweenCallback() {
+            @Override
+            public void onEvent(int type, BaseTween<?> source) {
+                animationFinished = true;
+            }
+        };
+
+        Tween.to(backButton, SpriteAccessor.POS_XY, 17f)
+                .target(50, backButton.getY()).ease(TweenEquations.easeOutBack).setCallback(myCallBack)
+                .setCallbackTriggers(TweenCallback.END)
+                .start(AnimationManager.tweenManager);
         AnimationManager.startAnimation();
         Gdx.input.setCursorCatched(false);
     }
@@ -80,7 +98,7 @@ public class LevelSelectScreen implements Screen {
         camera.update();
         bg.update();
 
-        if (controller.menuSelect()) {
+        if (controller.menuSelect() && animationFinished) {
             advanceScreen(1);
         } else if (controller.menuBack()) {
             goBack();
