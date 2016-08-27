@@ -11,6 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
+import com.yellowbytestudios.spacedoctor.controllers.BasicController;
+import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
+import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
@@ -24,7 +27,7 @@ public class SettingsScreen implements Screen {
     private OrthoCamera camera;
     private Vector2 touch;
     private BackgroundManager bg;
-    private Controller controller;
+    private BasicController controller;
     private SpriteText title;
     private SpriteButton backButton;
     private Array<Setting> settings;
@@ -36,7 +39,9 @@ public class SettingsScreen implements Screen {
         camera.resize();
         touch = new Vector2();
         if (MainGame.hasControllers) {
-            controller = Controllers.getControllers().get(0);
+            controller = new XBoxController(0);
+        } else {
+            controller = new KeyboardController();
         }
 
         title = new SpriteText(MainGame.languageFile.get("SETTINGS").toUpperCase(), Fonts.timerFont);
@@ -105,6 +110,10 @@ public class SettingsScreen implements Screen {
     public void update(float step) {
         camera.update();
         bg.update();
+
+        if (controller.menuBack()) {
+            goBack();
+        }
 
         if (Gdx.input.justTouched()) {
             touch = camera.unprojectCoordinates(Gdx.input.getX(),
