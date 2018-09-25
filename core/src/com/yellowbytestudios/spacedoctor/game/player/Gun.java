@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.game;
+package com.yellowbytestudios.spacedoctor.game.player;
 
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;

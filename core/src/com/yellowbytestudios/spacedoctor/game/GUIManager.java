@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
@@ -63,7 +64,7 @@ public class GUIManager {
         Fonts.GUIFont.setColor(Color.WHITE);
 
         if (GameScreen.coreMap) {
-            worldString = "World: " + GameScreen.worldNo + "-" + (GameScreen.levelNo - ((GameScreen.worldNo - 1) * 10));
+            worldString = "World: " + gameScreen.getWorldNo() + "-" + (gameScreen.getLevelNo() - ((gameScreen.getWorldNo() - 1) * 10));
         } else {
             worldString = "Now Testing";
         }
@@ -71,7 +72,7 @@ public class GUIManager {
 
     public void update() {
 
-        for (SpacemanPlayer p : players) {
+        for (com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p : players) {
             if (p.getController().pausePressed()) {
                 paused = !paused;
                 SoundManager.stop(Assets.JETPACK_SOUND);
@@ -100,7 +101,7 @@ public class GUIManager {
         shapeRenderer.identity();
 
         for (int i = 0; i < players.size; i++) {
-            SpacemanPlayer player = players.get(i);
+            com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer player = players.get(i);
 
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.rect(100 + (i * 200), MainGame.HEIGHT - 55, 100 * 1.2f, 40);

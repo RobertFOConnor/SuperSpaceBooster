@@ -5,14 +5,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerAdapter;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.PlayerSaveObject;
@@ -35,11 +32,11 @@ public class MainGame extends ApplicationAdapter {
     public static PlayerSaveObject saveData;
 
     //Frame-rate variables.
-    public static final float STEP = 1 / 60f;
+    private static final float STEP = 1 / 60f;
 
     //Spriter manager. (Smooth Animations)
     public static SpriterManager spriterManager;
-    public static AnimationManager animationManager;
+    private static AnimationManager animationManager;
 
     //Controller support variables.
     public static boolean hasControllers = false;
@@ -74,7 +71,7 @@ public class MainGame extends ApplicationAdapter {
         animationManager = new AnimationManager();
         MapManager.initCells();
 
-        checkForController();
+        //checkForController();
         ScreenManager.setScreen(new SplashScreen());
 
         saveManager = new SaveManager(true);
@@ -95,17 +92,17 @@ public class MainGame extends ApplicationAdapter {
 
         setupCursor();
 
-        Controllers.addListener(new ControllerAdapter() {
-            @Override
-            public void connected(Controller controller) {
-                checkForController();
-            }
-
-            public void disconnected(Controller controller) {
-                checkForController();
-                System.out.println("Controller disconnected");
-            }
-        });
+//        Controllers.addListener(new ControllerAdapter() {
+//            @Override
+//            public void connected(Controller controller) {
+//                //checkForController();
+//            }
+//
+//            public void disconnected(Controller controller) {
+//                //checkForController();
+//                System.out.println("Controller disconnected");
+//            }
+//        });
     }
 
     @Override
@@ -193,11 +190,11 @@ public class MainGame extends ApplicationAdapter {
             ScreenManager.getCurrentScreen().resume();
     }
 
-    private void checkForController() {
-        if (Controllers.getControllers().size != 0) {
-            hasControllers = true;
-            controller = Controllers.getControllers().get(Controllers.getControllers().size - 1);
-        }
-        System.out.println("Num of controllers: " + Controllers.getControllers().size);
-    }
+//    private void checkForController() {
+//        if (Controllers.getControllers().size != 0) {
+//            hasControllers = true;
+//            controller = Controllers.getControllers().get(Controllers.getControllers().size - 1);
+//        }
+//        System.out.println("Num of controllers: " + Controllers.getControllers().size);
+//    }
 }

@@ -1,19 +1,15 @@
 package com.yellowbytestudios.spacedoctor.desktop;
 
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
-import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.yellowbytestudios.spacedoctor.MainGame;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
-        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("Super Space Booster");
-        config.setWindowedMode(1280, 720);
-        config.setResizable(false);
-        config.useVsync(true);
-        config.disableAudio(false);
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = 1280 / 2;
+        config.height = 720 / 2;
 
-        new Lwjgl3Application(new MainGame("DESKTOP"), config);
+        new LwjglApplication(new MainGame("DESKTOP"), config);
     }
 }

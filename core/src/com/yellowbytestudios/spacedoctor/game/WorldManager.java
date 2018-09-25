@@ -1,6 +1,5 @@
 package com.yellowbytestudios.spacedoctor.game;
 
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
+import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
@@ -68,22 +68,22 @@ public class WorldManager {
         exit = BodyFactory.createExits(world);
 
         //Setup player(s).
-        players = new Array<SpacemanPlayer>();
+        players = new Array<com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer>();
         players.add(BodyFactory.createPlayer(world, 0, MainGame.saveData.getHead()));
         players.get(0).setPos(GameScreen.customMap.getStartPos().cpy());
 
-        if (Controllers.getControllers().size > 1) {
-            for(int i = 1; i < Controllers.getControllers().size; i++) {
-                players.add(BodyFactory.createPlayer(world, i, i+4));
-                players.get(i).setPos(new Vector2(GameScreen.customMap.getStartPos().cpy()));
-            }
-        }
+//        if (Controllers.getControllers().size > 1) {
+//            for(int i = 1; i < Controllers.getControllers().size; i++) {
+//                players.add(BodyFactory.createPlayer(world, i, i+4));
+//                players.get(i).setPos(new Vector2(GameScreen.customMap.getStartPos().cpy()));
+//            }
+//        }
     }
 
     public void update(float step) {
         world.step(step, 8, 3);
 
-        for (SpacemanPlayer p : players) {
+        for (com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p : players) {
             p.update();
 
             if (p.isShooting()) {
@@ -114,7 +114,7 @@ public class WorldManager {
         sb.begin();
         exit.render(sb);
         renderObjects(sb);
-        for (SpacemanPlayer p : players) {
+        for (com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p : players) {
             p.render();
         }
         sb.end();
@@ -176,7 +176,7 @@ public class WorldManager {
         }
     }
 
-    private void killPlayer(final SpacemanPlayer p) {
+    private void killPlayer(final com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p) {
         if (!p.isDieing()) {
             SoundManager.stop(Assets.JETPACK_SOUND);
             SoundManager.play(Assets.ENEMY_DEATH);

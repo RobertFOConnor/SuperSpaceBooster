@@ -53,7 +53,7 @@ public class LevelBackgroundManager {
 
         //BG Hills or wateva.
         hills = new Array<Texture>();
-        int hillCount = (width / MainGame.WIDTH)+1;
+        int hillCount = (width / MainGame.WIDTH) + 1;
         for (int i = 0; i < hillCount; i++) {
             hills.add(Assets.manager.get(Assets.HILLS, Texture.class));
         }
@@ -92,54 +92,17 @@ public class LevelBackgroundManager {
         int TColors[];
         int BColors[];
 
-        if(GameScreen.levelNo <= 1) {
-            //GREEN SKY
-            TColors = new int[]{40, 102, 83}; //TOP OF BG GRADIENT
-            BColors = new int[]{212, 208, 128}; //BOTTOM OF BG GRADIENT
+        //BLUE SKY
+        TColors = new int[]{25, 5, 74};
+        BColors = new int[]{145, 9, 106};
 
-        } else if(GameScreen.levelNo <= 2) {
-            //BLUE SKY
-            TColors = new int[]{25 , 5, 74};
-            BColors = new int[]{145 , 9, 106};
 
-        } else if(GameScreen.levelNo <= 3){
-            //RED SKY
-            TColors = new int[]{79 , 0, 0};
-            BColors = new int[]{126, 45, 45};
+        skyTop = new Color(convertColor(TColors[0]), convertColor(TColors[1]), convertColor(TColors[2]), 1);
+        skyBot = new Color(convertColor(BColors[0]), convertColor(BColors[1]), convertColor(BColors[2]), 1);
+    }
 
-        } else if(GameScreen.levelNo <= 4){
-            //PURPLE SKY
-            TColors = new int[]{87 , 0, 128};
-            BColors = new int[]{158, 160, 224};
-
-        } else if(GameScreen.levelNo <= 5){
-
-            //GREY SKY
-            TColors = new int[]{0 , 0, 0};
-            BColors = new int[]{95, 95, 95};
-        } else if(GameScreen.levelNo <= 6){
-
-            //ORANGE DAWN SKY
-            TColors = new int[]{255, 200, 115};
-            BColors = new int[]{255, 232, 198};
-        } else if(GameScreen.levelNo <= 7) {
-
-            //GREEN DARK SKY
-            TColors = new int[]{40, 60, 27};
-            BColors = new int[]{127, 208, 93};
-        } else {
-
-            //PURPLE DARK SKY
-            TColors = new int[]{22, 14, 32};
-            BColors = new int[]{131, 58, 130};
-        }
-
-        //TEMP
-        TColors = new int[]{40, 102, 83}; //TOP OF BG GRADIENT
-        BColors = new int[]{212, 208, 128}; //BOTTOM OF BG GRADIENT
-
-        skyTop = new Color( ((float)TColors[0] / 255), ((float)TColors[1] / 255), ((float)TColors[2] / 255), 1);
-        skyBot = new Color( ((float)BColors[0] / 255), ((float)BColors[1] / 255), ((float)BColors[2] / 255), 1);
+    private float convertColor(int colorVal) {
+        return colorVal / 255f;
     }
 
 

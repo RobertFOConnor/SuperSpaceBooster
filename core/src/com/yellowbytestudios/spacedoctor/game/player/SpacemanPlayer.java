@@ -1,4 +1,4 @@
-package com.yellowbytestudios.spacedoctor.game;
+package com.yellowbytestudios.spacedoctor.game.player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;

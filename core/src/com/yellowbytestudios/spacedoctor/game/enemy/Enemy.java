@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
-import com.yellowbytestudios.spacedoctor.game.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
 import com.yellowbytestudios.spacedoctor.mapeditor.IDs;
 
