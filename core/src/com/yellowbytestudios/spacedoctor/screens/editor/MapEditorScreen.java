@@ -14,6 +14,7 @@ import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class MapEditorScreen implements Screen {
 
@@ -69,7 +70,7 @@ public class MapEditorScreen implements Screen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
         shapeRenderer.setColor(menu_bg);
-        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT);
+        shapeRenderer.rect(0, 0, Metrics.WIDTH, Metrics.HEIGHT);
         shapeRenderer.end();
 
 

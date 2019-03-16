@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 /**
  * Created by Robert on 03/30/16.
@@ -42,9 +43,9 @@ public class WorldSelectScreen implements Screen {
 
         title = new SpriteText(MainGame.languageFile.get("SELECT_WORLD").toUpperCase(), Fonts.timerFont);
         title.centerText();
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
 
-        float levelY = (MainGame.HEIGHT/2)-40;
+        float levelY = (Metrics.HEIGHT/2)-40;
         int levelCount = 1;
 
         levelButtons = new Array<WorldButton>();
@@ -170,7 +171,7 @@ public class WorldSelectScreen implements Screen {
         for (WorldButton lb : levelButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
         }
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
         SoundManager.play(Assets.BUTTON_CLICK);

@@ -15,6 +15,7 @@ import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 /**
  * Created by BobbyBoy on 16-Jan-16.
@@ -43,10 +44,10 @@ public class TitleScreen implements Screen {
         continueMessage.setPosition(400, -100);
 
         versionCode = new SpriteText(MainGame.languageFile.get("VERSION_CODE").toUpperCase(), Fonts.smallFont);
-        versionCode.setPosition(70, MainGame.HEIGHT+100);
+        versionCode.setPosition(70, Metrics.HEIGHT+100);
 
         AnimationManager.applyAnimation(continueMessage, 400, 90);
-        AnimationManager.applyAnimation(versionCode, 70, MainGame.HEIGHT-50);
+        AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT-50);
         AnimationManager.applyAnimation(character, 1080, -250);
         AnimationManager.applyAnimation(title, 70, 350);
         AnimationManager.startAnimation();
@@ -72,7 +73,7 @@ public class TitleScreen implements Screen {
     private void advanceScreen() {
         if (!advancing) {
             AnimationManager.applyAnimation(continueMessage, 400, -100);
-            AnimationManager.applyAnimation(versionCode, 70, MainGame.HEIGHT+100);
+            AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT+100);
             AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
             AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
             AnimationManager.startAnimation();

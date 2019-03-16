@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class LoadMapScreen implements Screen {
 
@@ -45,7 +46,7 @@ public class LoadMapScreen implements Screen {
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.startAnimation();
     }
@@ -62,7 +63,7 @@ public class LoadMapScreen implements Screen {
 
 
         for (CustomMap cm : MainGame.saveData.getMyMaps()) {
-            LoadMapButton lmb = new LoadMapButton(cm.getName(), new Vector2(x, y - MainGame.HEIGHT));
+            LoadMapButton lmb = new LoadMapButton(cm.getName(), new Vector2(x, y - Metrics.HEIGHT));
             mapButtons.add(lmb);
             AnimationManager.applyAnimation(lmb, x, y);
 
@@ -105,9 +106,9 @@ public class LoadMapScreen implements Screen {
 
     private void advanceScreen(final Screen s) {
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         for (LoadMapButton lb : mapButtons) {
-            AnimationManager.applyAnimation(lb, lb.getX(), lb.getY() - MainGame.HEIGHT);
+            AnimationManager.applyAnimation(lb, lb.getX(), lb.getY() - Metrics.HEIGHT);
         }
 
         AnimationManager.applyExitAnimation(backButton, -150, 900, s);
@@ -172,7 +173,7 @@ public class LoadMapScreen implements Screen {
 
             //Setup title.
             mapTitle = mapButton.name;
-            mapTitleX = MainGame.WIDTH - Fonts.getWidth(Fonts.GUIFont, mapTitle) / 2;
+            mapTitleX = Metrics.WIDTH - Fonts.getWidth(Fonts.GUIFont, mapTitle) / 2;
 
             //Setup load/delete/copy map buttons.
             loadButton = new SpriteButton(Assets.GO_BACK, new Vector2(150, 900));

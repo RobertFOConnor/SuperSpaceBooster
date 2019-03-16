@@ -25,6 +25,7 @@ import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class EditorGUI {
 
@@ -51,13 +52,13 @@ public class EditorGUI {
         camera.resize();
         touch = new Vector2();
 
-        zoomIn = new Button(MapEditorAssets.ZOOM_IN, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170), true);
-        zoomOut = new Button(MapEditorAssets.ZOOM_OUT, new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 285), true);
+        zoomIn = new Button(MapEditorAssets.ZOOM_IN, new Vector2(Metrics.WIDTH - 170, Metrics.HEIGHT - 170), true);
+        zoomOut = new Button(MapEditorAssets.ZOOM_OUT, new Vector2(Metrics.WIDTH - 170, Metrics.HEIGHT - 285), true);
         moveButton = new Button(MapEditorAssets.manager.get(MapEditorAssets.MOVE_BUTTON, Texture.class), MapEditorAssets.manager.get(MapEditorAssets.MOVE_BUTTON_SEL, Texture.class), new Vector2(20, 20));
         eraseButton = new Button(MapEditorAssets.manager.get(MapEditorAssets.ERASE, Texture.class), MapEditorAssets.manager.get(MapEditorAssets.ERASE_SEL, Texture.class), new Vector2(180, 20));
-        playMap = new Button(MapEditorAssets.PLAY_MAP, new Vector2(MainGame.WIDTH - 280 - 140, 20), true);
-        saveMap = new Button(MapEditorAssets.SAVE_MAP, new Vector2(MainGame.WIDTH - 280, 20), true);
-        exitButton = new Button(MapEditorAssets.EXIT_EDITOR, new Vector2(MainGame.WIDTH - 140, 20), true);
+        playMap = new Button(MapEditorAssets.PLAY_MAP, new Vector2(Metrics.WIDTH - 280 - 140, 20), true);
+        saveMap = new Button(MapEditorAssets.SAVE_MAP, new Vector2(Metrics.WIDTH - 280, 20), true);
+        exitButton = new Button(MapEditorAssets.EXIT_EDITOR, new Vector2(Metrics.WIDTH - 140, 20), true);
 
         tileButtonSelector = MapEditorAssets.manager.get(MapEditorAssets.TILE_SELECTOR, Texture.class);
 
@@ -159,7 +160,7 @@ public class EditorGUI {
         zoomIn.render(sb);
         zoomOut.render(sb);
 
-        bottom_bg.draw(sb, 0, 0, MainGame.WIDTH, 160);
+        bottom_bg.draw(sb, 0, 0, Metrics.WIDTH, 160);
         sideMenu.render(sb);
         moveButton.render(sb);
         eraseButton.render(sb);
@@ -219,7 +220,7 @@ public class EditorGUI {
 
         public void render(SpriteBatch sb) {
             if (showing) {
-                sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, MainGame.WIDTH, MainGame.HEIGHT);
+                sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, Metrics.WIDTH, Metrics.HEIGHT);
                 sb.end();
                 sb.begin();
                 stage.draw();

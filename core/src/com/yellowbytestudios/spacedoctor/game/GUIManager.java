@@ -19,6 +19,7 @@ import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class GUIManager {
 
@@ -104,26 +105,26 @@ public class GUIManager {
             com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer player = players.get(i);
 
             shapeRenderer.setColor(Color.BLACK);
-            shapeRenderer.rect(100 + (i * 200), MainGame.HEIGHT - 55, 100 * 1.2f, 40);
+            shapeRenderer.rect(100 + (i * 200), Metrics.HEIGHT - 55, 100 * 1.2f, 40);
 
             shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(100 + (i * 200), MainGame.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
+            shapeRenderer.rect(100 + (i * 200), Metrics.HEIGHT - 55, (player.getCurrGas() / (player.getMaxGas() / 100)) * 1.2f, 40);
         }
         shapeRenderer.end();
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
-        sb.draw(alpha, 0, MainGame.HEIGHT, MainGame.WIDTH, -120);
+        sb.draw(alpha, 0, Metrics.HEIGHT, Metrics.WIDTH, -120);
         for (int i = 0; i < players.size; i++) {
             String ammo = "x" + String.format("%02d", players.get(i).getGun().getAmmo());
-            Fonts.GUIFont.draw(sb, ammo, 100 + (i * 200), MainGame.HEIGHT - 70);
+            Fonts.GUIFont.draw(sb, ammo, 100 + (i * 200), Metrics.HEIGHT - 70);
         }
 
         if (isTimed) {
             drawTimer(sb);
         }
 
-        Fonts.GUIFont.draw(sb, worldString, 1600, MainGame.HEIGHT - 55);
+        Fonts.GUIFont.draw(sb, worldString, 1600, Metrics.HEIGHT - 55);
         sb.end();
 
         if (paused) {
@@ -147,7 +148,7 @@ public class GUIManager {
 
     private void drawTimer(SpriteBatch sb) {
 
-        Fonts.GUIFont.draw(sb, time, MainGame.WIDTH / 2 - (Fonts.getWidth(Fonts.GUIFont, time) / 2), MainGame.HEIGHT - 30);
+        Fonts.GUIFont.draw(sb, time, Metrics.WIDTH / 2 - (Fonts.getWidth(Fonts.GUIFont, time) / 2), Metrics.HEIGHT - 30);
         Fonts.GUIFont.setColor(Color.WHITE);
     }
 
@@ -273,7 +274,7 @@ public class GUIManager {
 
         public void render(SpriteBatch sb) {
             sb.begin();
-            sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, MainGame.WIDTH, MainGame.HEIGHT);
+            sb.draw(Assets.manager.get(Assets.ALPHA, Texture.class), 0, 0, Metrics.WIDTH, Metrics.HEIGHT);
             sb.end();
 
             sb.begin();

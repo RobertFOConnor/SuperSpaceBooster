@@ -30,6 +30,7 @@ import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorSplashScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class GameScreen implements Screen {
 
@@ -110,7 +111,7 @@ public class GameScreen implements Screen {
 
         transition = new Sprite(new Texture(Gdx.files.internal("black.png")));
         transition.setPosition(0, 0);
-        AnimationManager.applyLevelStartAnimation(transition, MainGame.WIDTH, 0);
+        AnimationManager.applyLevelStartAnimation(transition, Metrics.WIDTH, 0);
         AnimationManager.startAnimation();
     }
 
@@ -193,7 +194,7 @@ public class GameScreen implements Screen {
         }
 
         sb.begin();
-        sb.draw(transition, transition.getX(), transition.getY(), MainGame.WIDTH, MainGame.HEIGHT + 100);
+        sb.draw(transition, transition.getX(), transition.getY(), Metrics.WIDTH, Metrics.HEIGHT + 100);
         sb.end();
     }
 
@@ -208,7 +209,7 @@ public class GameScreen implements Screen {
                 MainGame.saveData.setCurrLevel(MainGame.saveData.getCurrLevel() + 1);
                 MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
-                transition.setPosition(0, MainGame.HEIGHT);
+                transition.setPosition(0, Metrics.HEIGHT);
                 AnimationManager.applyLevelEndAnimation(transition, 0, 0, new GameScreen(levelNo + 1), worldManager.getWorld());
                 AnimationManager.startAnimation();
             } else {

@@ -11,6 +11,7 @@ import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class MapEditorSplashScreen implements Screen {
 
@@ -37,7 +38,7 @@ public class MapEditorSplashScreen implements Screen {
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         loadScreen = new Sprite(texture);
         loadWheel = new Sprite(Assets.manager.get(Assets.LOADWHEEL, Texture.class));
-        loadWheel.setPosition(MainGame.WIDTH - 180, 100);
+        loadWheel.setPosition(Metrics.WIDTH - 180, 100);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MapEditorSplashScreen implements Screen {
         loadWheel.rotate(10f);
         loadWheel.draw(sb);
         Fonts.GUIFont.setColor(Color.WHITE);
-        Fonts.GUIFont.draw(sb, percentage, MainGame.WIDTH - Fonts.getWidth(Fonts.GUIFont, percentage) - 250, 160);
+        Fonts.GUIFont.draw(sb, percentage, Metrics.WIDTH - Fonts.getWidth(Fonts.GUIFont, percentage) - 250, 160);
         sb.end();
 
         if (MapEditorAssets.update()) { // DONE LOADING. SHOW EDITOR SCREEN.

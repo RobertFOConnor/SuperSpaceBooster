@@ -25,8 +25,6 @@ import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 
 public class MainGame extends ApplicationAdapter {
 
-    public static final int WIDTH = 1920;
-    public static final int HEIGHT = 1080;
     public static SpriteBatch sb;
     public static SaveManager saveManager;
     public static PlayerSaveObject saveData;

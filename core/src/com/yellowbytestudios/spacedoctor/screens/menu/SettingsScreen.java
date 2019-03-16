@@ -21,6 +21,7 @@ import com.yellowbytestudios.spacedoctor.screens.*;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class SettingsScreen implements Screen {
 
@@ -96,7 +97,7 @@ public class SettingsScreen implements Screen {
 
 
         //Apply starting animations. (Switches and title glide into screen view.)
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         for (Setting s : settings) {
             AnimationManager.applyAnimation(s.button, 1200, s.button.getY());
@@ -234,7 +235,7 @@ public class SettingsScreen implements Screen {
         MainGame.saveManager.saveDataValue("PLAYER", MainGame.saveData);
 
         //Apply exit animation.
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         for (Setting s : settings) {
             AnimationManager.applyAnimation(s.button, 1920, s.button.getY());

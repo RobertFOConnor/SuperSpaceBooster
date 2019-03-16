@@ -14,12 +14,12 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class MapManager {
 
@@ -135,7 +135,7 @@ public class MapManager {
     private void initObjects() {
 
         cam = new BoundedCamera();
-        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
+        cam.setToOrtho(false, Metrics.WIDTH, Metrics.HEIGHT);
 
         float zoomBoundsX = 600;
         float zoomBoundsY = 400;

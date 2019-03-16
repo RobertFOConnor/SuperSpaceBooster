@@ -14,6 +14,7 @@ import com.yellowbytestudios.spacedoctor.screens.GameScreen;
 import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 /**
  * Created by BobbyBoy on 20-Jan-16.
@@ -31,9 +32,9 @@ public class AndroidController implements BasicController {
 
         left = new Button(Assets.manager.get(Assets.LEFT, Texture.class), Assets.manager.get(Assets.LEFT_PRESSED, Texture.class), new Vector2(30, 30));
         right = new Button(Assets.manager.get(Assets.RIGHT, Texture.class), Assets.manager.get(Assets.RIGHT_PRESSED, Texture.class), new Vector2(250, 30));
-        up = new Button(Assets.manager.get(Assets.UP, Texture.class), Assets.manager.get(Assets.UP_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330, 30));
-        shoot = new Button(Assets.manager.get(Assets.SHOOT, Texture.class), Assets.manager.get(Assets.SHOOT_PRESSED, Texture.class), new Vector2(MainGame.WIDTH - 330 - 280, 30));
-        mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(MainGame.WIDTH - 170, MainGame.HEIGHT - 170));
+        up = new Button(Assets.manager.get(Assets.UP, Texture.class), Assets.manager.get(Assets.UP_PRESSED, Texture.class), new Vector2(Metrics.WIDTH - 330, 30));
+        shoot = new Button(Assets.manager.get(Assets.SHOOT, Texture.class), Assets.manager.get(Assets.SHOOT_PRESSED, Texture.class), new Vector2(Metrics.WIDTH - 330 - 280, 30));
+        mapEditor = new Button(new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Texture(Gdx.files.internal("mapeditor/map_editor.png")), new Vector2(Metrics.WIDTH - 170, Metrics.HEIGHT - 170));
 
         //exit = new Button(Assets.manager.get(Assets.EXIT, Texture.class), Assets.manager.get(Assets.EXIT, Texture.class), new Vector2(MainGame.WIDTH-80, MainGame.HEIGHT-80));
 

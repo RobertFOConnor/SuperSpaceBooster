@@ -16,6 +16,7 @@ import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 
 public class SizeSelectScreen implements Screen {
@@ -44,7 +45,7 @@ public class SizeSelectScreen implements Screen {
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.applyAnimation(smallButton, 180, buttonY);
         AnimationManager.applyAnimation(mediumButton, 760, buttonY);
@@ -85,7 +86,7 @@ public class SizeSelectScreen implements Screen {
 
     private void advanceScreen(final Screen s) {
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyAnimation(smallButton, 180, -500);
         AnimationManager.applyAnimation(mediumButton, 760, -500);
         AnimationManager.applyAnimation(largeButton, 1340, -500);

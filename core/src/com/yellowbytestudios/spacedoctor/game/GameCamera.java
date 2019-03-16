@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class GameCamera {
 
@@ -15,17 +15,17 @@ public class GameCamera {
 
     public GameCamera() {
         b2dCam = new BoundedCamera();
-        b2dCam.setToOrtho(false, MainGame.WIDTH / PPM, MainGame.HEIGHT / PPM);
+        b2dCam.setToOrtho(false, Metrics.WIDTH / PPM, Metrics.HEIGHT / PPM);
         cam = new BoundedCamera();
-        cam.setToOrtho(false, MainGame.WIDTH, MainGame.HEIGHT);
+        cam.setToOrtho(false, Metrics.WIDTH, Metrics.HEIGHT);
     }
 
     public void setBounds(int mapWidth, int mapHeight, float startX, float startY) {
         b2dCam.setBounds(0, mapWidth / PPM, 0, mapHeight / PPM);
         cam.setBounds(0, mapWidth, 0, mapHeight);
 
-        cam.setPosition(startX * PPM + MainGame.WIDTH / 50, startY * PPM + MainGame.WIDTH / 50);
-        b2dCam.setPosition(startX * PPM + MainGame.WIDTH / 50 / PPM, startY * PPM + MainGame.WIDTH / 50 / PPM);
+        cam.setPosition(startX * PPM + Metrics.WIDTH / 50, startY * PPM + Metrics.WIDTH / 50);
+        b2dCam.setPosition(startX * PPM + Metrics.WIDTH / 50 / PPM, startY * PPM + Metrics.WIDTH / 50 / PPM);
 
     }
 
@@ -41,11 +41,11 @@ public class GameCamera {
 
             if (players.size == 1) { // (1P) Center camera on player.
                 if (players.get(0).facingLeft()) {
-                    targetX = (playerPos.x - 5) * PPM + MainGame.WIDTH / 50;
-                    targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
+                    targetX = (playerPos.x - 5) * PPM + Metrics.WIDTH / 50;
+                    targetY = playerPos.y * PPM + Metrics.HEIGHT / 50;
                 } else {
-                    targetX = (playerPos.x + 5) * PPM + MainGame.WIDTH / 50;
-                    targetY = playerPos.y * PPM + MainGame.HEIGHT / 50;
+                    targetX = (playerPos.x + 5) * PPM + Metrics.WIDTH / 50;
+                    targetY = playerPos.y * PPM + Metrics.HEIGHT / 50;
                 }
 
             } else { // (2P) Center camera on mid-point between players.

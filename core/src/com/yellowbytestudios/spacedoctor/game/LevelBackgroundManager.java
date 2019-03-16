@@ -12,6 +12,7 @@ import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class LevelBackgroundManager {
 
@@ -53,7 +54,7 @@ public class LevelBackgroundManager {
 
         //BG Hills or wateva.
         hills = new Array<Texture>();
-        int hillCount = (width / MainGame.WIDTH) + 1;
+        int hillCount = (width / Metrics.WIDTH) + 1;
         for (int i = 0; i < hillCount; i++) {
             hills.add(Assets.manager.get(Assets.HILLS, Texture.class));
         }
@@ -73,14 +74,14 @@ public class LevelBackgroundManager {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.identity();
 
-        shapeRenderer.rect(0, 0, MainGame.WIDTH, MainGame.HEIGHT, skyBot, skyBot, skyTop, skyTop);
+        shapeRenderer.rect(0, 0, Metrics.WIDTH, Metrics.HEIGHT, skyBot, skyBot, skyTop, skyTop);
         shapeRenderer.end();
 
         sb.end();
         sb.begin();
 
         for (int i = 0; i < hills.size; i++) {
-            sb.draw(hills.get(0), (i * MainGame.WIDTH) + (camera.position.x - MainGame.WIDTH / 2) / 2, (camera.position.y - MainGame.HEIGHT / 2) / 2);
+            sb.draw(hills.get(0), (i * Metrics.WIDTH) + (camera.position.x - Metrics.WIDTH / 2) / 2, (camera.position.y - Metrics.HEIGHT / 2) / 2);
         }
 
         for (BackgroundObject bo : farLayer) {

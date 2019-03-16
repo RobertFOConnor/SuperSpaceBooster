@@ -25,6 +25,7 @@ import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteAccessor;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
@@ -62,9 +63,9 @@ public class LevelSelectScreen implements Screen {
 
         title = new SpriteText(MainGame.languageFile.get("SELECT_LEVEL").toUpperCase(), Fonts.timerFont);
         title.centerText();
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
 
-        float levelY = (MainGame.HEIGHT / 2) - 40;
+        float levelY = (Metrics.HEIGHT / 2) - 40;
         int levelCount = 1;
 
         levelButtons = new Array<LevelButton>();
@@ -192,7 +193,7 @@ public class LevelSelectScreen implements Screen {
         for (LevelButton lb : levelButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
         }
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
         SoundManager.play(Assets.BUTTON_CLICK);

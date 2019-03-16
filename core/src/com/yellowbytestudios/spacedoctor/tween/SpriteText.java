@@ -3,8 +3,8 @@ package com.yellowbytestudios.spacedoctor.tween;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class SpriteText extends Sprite {
 
@@ -27,6 +27,6 @@ public class SpriteText extends Sprite {
 
     //Used for menu titles;
     public void centerText() {
-        setPosition(MainGame.WIDTH / 2 - Fonts.getWidth(font, message), MainGame.HEIGHT + 100);
+        setPosition(Metrics.WIDTH / 2f - Fonts.getWidth(font, message), Metrics.HEIGHT + 100f);
     }
 }

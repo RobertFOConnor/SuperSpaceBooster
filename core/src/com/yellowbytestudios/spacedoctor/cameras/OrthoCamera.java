@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.yellowbytestudios.spacedoctor.MainGame;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class OrthoCamera extends OrthographicCamera {
 	Vector3 tmp = new Vector3();
@@ -14,7 +15,7 @@ public class OrthoCamera extends OrthographicCamera {
 	Vector2 pos = new Vector2();
 
 	public OrthoCamera() {
-		this(new StretchViewport(MainGame.WIDTH, MainGame.HEIGHT));
+		this(new StretchViewport(Metrics.WIDTH, Metrics.HEIGHT));
 	}
 
 	public OrthoCamera(StretchViewport virtualViewport) {
@@ -76,7 +77,7 @@ public class OrthoCamera extends OrthographicCamera {
 	}
 
 	public void resize() {
-		StretchViewport virtualViewport = new StretchViewport(MainGame.WIDTH, MainGame.HEIGHT);
+		StretchViewport virtualViewport = new StretchViewport(Metrics.WIDTH, Metrics.HEIGHT);
 		setVirtualViewport(virtualViewport);
 		updateViewport();
 	}

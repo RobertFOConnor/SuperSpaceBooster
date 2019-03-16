@@ -20,6 +20,7 @@ import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class HelmetSelectScreen implements Screen {
 
@@ -46,9 +47,9 @@ public class HelmetSelectScreen implements Screen {
 
         title = new SpriteText(MainGame.languageFile.get("SELECT_HELMET").toUpperCase(), Fonts.timerFont);
         title.centerText();
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
 
-        float helmetY = MainGame.HEIGHT / 2 + 50;
+        float helmetY = Metrics.HEIGHT / 2f + 50f;
         int helmetCount = 0;
 
 
@@ -195,7 +196,7 @@ public class HelmetSelectScreen implements Screen {
         for (HelmetButton lb : helmetButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
         }
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
 

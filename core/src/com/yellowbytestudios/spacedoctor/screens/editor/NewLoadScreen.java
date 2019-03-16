@@ -14,6 +14,7 @@ import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
+import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 
 public class NewLoadScreen implements Screen {
@@ -35,13 +36,13 @@ public class NewLoadScreen implements Screen {
 
         bg = new BackgroundManager();
         newMapButton = new SpriteButton(Assets.NEW_MAP, new Vector2(-600, buttonY));
-        loadMapButton = new SpriteButton(Assets.LOAD_MAP, new Vector2(MainGame.WIDTH, buttonY));
+        loadMapButton = new SpriteButton(Assets.LOAD_MAP, new Vector2(Metrics.WIDTH, buttonY));
         title = new SpriteText(MainGame.languageFile.get("SELECT_OPTION").toUpperCase(), Fonts.timerFont);
         title.centerText();
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT - 60);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
         AnimationManager.applyAnimation(newMapButton, 200, buttonY);
         AnimationManager.applyAnimation(loadMapButton, 1120, buttonY);
@@ -73,9 +74,9 @@ public class NewLoadScreen implements Screen {
 
     private void advanceScreen(final Screen s) {
 
-        AnimationManager.applyAnimation(title, title.getX(), MainGame.HEIGHT + 100);
+        AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT + 100);
         AnimationManager.applyAnimation(newMapButton, -600, buttonY);
-        AnimationManager.applyAnimation(loadMapButton, MainGame.WIDTH, buttonY);
+        AnimationManager.applyAnimation(loadMapButton, Metrics.WIDTH, buttonY);
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), s);
         AnimationManager.startAnimation();
 
