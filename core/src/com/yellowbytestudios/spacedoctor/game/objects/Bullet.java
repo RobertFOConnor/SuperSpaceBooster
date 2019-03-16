@@ -28,8 +28,8 @@ public class Bullet extends Box2DSprite {
         height = texture.getHeight();
     }
 
-    public void update() {
-        body.setLinearVelocity(speed.x * Gdx.graphics.getDeltaTime(), speed.y * Gdx.graphics.getDeltaTime());
+    public void update(float delta) {
+        body.setLinearVelocity(speed.x * Gdx.graphics.getDeltaTime(), speed.y * delta);
     }
 
     public void render(SpriteBatch sb) {

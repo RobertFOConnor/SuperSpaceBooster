@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.controllers.AndroidController;
 import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
@@ -20,8 +19,8 @@ import com.yellowbytestudios.spacedoctor.game.DungeonGenerator;
 import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.GameCamera;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
-import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.WorldManager;
+import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -80,12 +79,12 @@ public class GameScreen implements Screen {
             customMap = levelSaver.loadDataValue("LEVEL", CustomMap.class);
         }
 
-        GameScreen.customMap = customMap;
+        this.customMap = customMap;
         coreMap = true;
     }
 
     public GameScreen(CustomMap customMap) {
-        GameScreen.customMap = customMap;
+        this.customMap = customMap;
         coreMap = false;
     }
 
@@ -113,19 +112,17 @@ public class GameScreen implements Screen {
         transition.setPosition(0, 0);
         AnimationManager.applyLevelStartAnimation(transition, MainGame.WIDTH, 0);
         AnimationManager.startAnimation();
-
-
     }
 
 
     public void setupMap() {
+        Vector2 startPos = customMap.getStartPos();
 
-        worldManager = new WorldManager(this, tileMap);
+        worldManager = new WorldManager(this, startPos.x, startPos.y);
 
         mapWidth = customMap.getMapWidth();
         mapHeight = customMap.getMapHeight();
         Array<SpacemanPlayer> players = worldManager.getPlayers();
-        Vector2 startPos = players.get(0).getPos();
 
         gameCamera.setBounds(mapWidth, mapHeight, startPos.x, startPos.y);
 
@@ -179,7 +176,6 @@ public class GameScreen implements Screen {
 
         sb.setProjectionMatrix(gameCamera.getCam().combined);
         sb.begin();
-        worldManager.renderBullets(sb);
         particleManager.render(sb);
         sb.end();
 
@@ -253,6 +249,10 @@ public class GameScreen implements Screen {
         if (!gui.isPaused()) {
             gui.setPaused(true);
         }
+    }
+
+    public TiledMap getTileMap() {
+        return tileMap;
     }
 
     @Override

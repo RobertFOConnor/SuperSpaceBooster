@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.yellowbytestudios.spacedoctor.game.objects.Box2DSprite;
 import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
 import com.yellowbytestudios.spacedoctor.game.objects.Door;
@@ -111,8 +112,8 @@ public class BodyFactory {
         return body;
     }
 
-    public static Array<Box> createBoxes(World world) {
-        Array<Box> boxes = new Array<Box>();
+    public static Array<Box2DSprite> createBoxes(World world) {
+        Array<Box2DSprite> boxes = new Array<Box2DSprite>();
         if (GameScreen.customMap != null) {
             for (CustomMapObject mapObject : GameScreen.customMap.getObstacleArray()) {
                 if(mapObject.getId() == IDs.BOX) {
@@ -183,9 +184,9 @@ public class BodyFactory {
     }
 
 
-    public static Array<PickUp> createPickups(World world) {
+    public static Array<Box2DSprite> createPickups(World world) {
 
-        Array<PickUp> pickups = new Array<PickUp>();
+        Array<Box2DSprite> pickups = new Array<Box2DSprite>();
 
         if (GameScreen.customMap != null) {
             for (CustomMapObject mapObject : GameScreen.customMap.getItemArray()) {
@@ -237,9 +238,9 @@ public class BodyFactory {
     }
 
 
-    public static Array<Platform> createPlatforms(World world) {
+    public static Array<Box2DSprite> createPlatforms(World world) {
 
-        Array<Platform> platforms = new Array<Platform>();
+        Array<Box2DSprite> platforms = new Array<Box2DSprite>();
 
         if (GameScreen.customMap != null) {
 
@@ -300,12 +301,12 @@ public class BodyFactory {
     }
 
 
-    public static Array<Door> createDoors(World world, TiledMap tm) {
+    public static Array<Box2DSprite> createDoors(World world, TiledMap tm) {
 
-        Array<Door> doors = new Array<Door>();
+        Array<Box2DSprite> doors = new Array<Box2DSprite>();
 
         MapLayer ml = tm.getLayers().get("doors");
-        if (ml == null) return new Array<Door>();
+        if (ml == null) return new Array<Box2DSprite>();
 
 
         for (MapObject mo : ml.getObjects()) {
@@ -341,9 +342,9 @@ public class BodyFactory {
     }
 
 
-    public static Array<Enemy> createEnemies(World world) {
+    public static Array<Box2DSprite> createEnemies(World world) {
 
-        Array<Enemy> enemies = new Array<Enemy>();
+        Array<Box2DSprite> enemies = new Array<Box2DSprite>();
 
         if (GameScreen.customMap != null) {
             for (CustomMapObject mapObject : GameScreen.customMap.getEnemyArray()) {

@@ -1,7 +1,6 @@
 package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -13,10 +12,11 @@ import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.BodyFactory;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DContactListeners;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
+import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Box;
+import com.yellowbytestudios.spacedoctor.game.objects.Box2DSprite;
 import com.yellowbytestudios.spacedoctor.game.objects.Bullet;
 import com.yellowbytestudios.spacedoctor.game.objects.Character;
-import com.yellowbytestudios.spacedoctor.game.enemy.Enemy;
 import com.yellowbytestudios.spacedoctor.game.objects.Exit;
 import com.yellowbytestudios.spacedoctor.game.objects.PickUp;
 import com.yellowbytestudios.spacedoctor.game.objects.Platform;
@@ -37,16 +37,16 @@ public class WorldManager {
     private Box2DContactListeners contactListener;
 
     //GAME-OBJECT ARRAYS.
-    private Array<Bullet> bullets;
-    private Array<Box> boxes;
-    private Array<PickUp> pickups;
-    private Array<Enemy> enemies;
-    private Array<Platform> platforms;
+    private Array<Box2DSprite> bullets;
+    private Array<Box2DSprite> boxes;
+    private Array<Box2DSprite> pickups;
+    private Array<Box2DSprite> enemies;
+    private Array<Box2DSprite> platforms;
     private Exit exit;
 
     private Array<SpacemanPlayer> players;
 
-    public WorldManager(GameScreen gameScreen, TiledMap tiledMap) {
+    public WorldManager(GameScreen gameScreen, float startX, float startY) {
         this.gameScreen = gameScreen;
         world = new World(new Vector2(0, -9.8f), true);
 
@@ -56,11 +56,11 @@ public class WorldManager {
 
         //Setup map walls.
         TileManager tileManager = new TileManager();
-        tileManager.createWalls(world, tiledMap);
+        tileManager.createWalls(world, gameScreen.getTileMap());
         //tileManager.createLights(lightManager, tileMap);
 
         //Setup world objects.
-        bullets = new Array<Bullet>();
+        bullets = new Array<Box2DSprite>();
         boxes = BodyFactory.createBoxes(world);
         pickups = BodyFactory.createPickups(world);
         enemies = BodyFactory.createEnemies(world);
@@ -68,9 +68,9 @@ public class WorldManager {
         exit = BodyFactory.createExits(world);
 
         //Setup player(s).
-        players = new Array<com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer>();
+        players = new Array<SpacemanPlayer>();
         players.add(BodyFactory.createPlayer(world, 0, MainGame.saveData.getHead()));
-        players.get(0).setPos(GameScreen.customMap.getStartPos().cpy());
+        players.get(0).setPos(new Vector2(startX, startY));
 
 //        if (Controllers.getControllers().size > 1) {
 //            for(int i = 1; i < Controllers.getControllers().size; i++) {
@@ -80,76 +80,74 @@ public class WorldManager {
 //        }
     }
 
-    public void update(float step) {
-        world.step(step, 8, 3);
+    public void update(float delta) {
+        world.step(delta, 8, 3);
 
-        for (com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p : players) {
-            p.update();
+        for (SpacemanPlayer player : players) {
+            player.update();
 
-            if (p.isShooting()) {
-                addBullet(p, p.getGun().getBullet());
-                p.setShooting(false);
+            if (player.isShooting()) {
+                addBullet(player, player.getGun().getBullet());
+                player.setShooting(false);
             }
 
-            if (p.isDead() || gameScreen.getGUI().timeIsUp()) {
-                killPlayer(p);
+            if (player.isDead() || gameScreen.getGUI().timeIsUp()) {
+                killPlayer(player);
             }
 
-            if (p.isFinished()) {
-                world.destroyBody(p.getBody());
-                players.removeValue(p, true);
+            if (player.isFinished()) {
+                world.destroyBody(player.getBody());
+                players.removeValue(player, true);
 
                 if (players.size == 0) {
                     gameScreen.exitLevel();
                 }
             }
         }
-        updateObjects();
+        updateObjects(delta);
         removeObjects();
         removeEnemies();
         exit.update();
+    }
+
+    private void updateGroup(Array<Box2DSprite> array, float delta) {
+        for (Box2DSprite obj : array) {
+            obj.update(delta);
+        }
     }
 
     public void render(SpriteBatch sb) {
         sb.begin();
         exit.render(sb);
         renderObjects(sb);
-        for (com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer p : players) {
-            p.render();
+        for (SpacemanPlayer player : players) {
+            player.render();
         }
         sb.end();
     }
 
     private void renderObjects(SpriteBatch sb) {
-        for (Platform p : platforms) {
-            p.render(sb);
-        }
+        renderGroup(platforms, sb);
+        renderGroup(boxes, sb);
+        renderGroup(pickups, sb);
+        renderGroup(enemies, sb);
+        renderGroup(bullets, sb);
+    }
 
-        for (Box b : boxes) { //DRAW BOXES.
-            b.render(sb);
-        }
-
-        for (PickUp p : pickups) { //DRAW PICK-UPS.
-            p.render(sb);
-        }
-
-        for (Enemy e : enemies) { //DRAW ENEMIES.
-            e.render(sb);
+    private void renderGroup(Array<Box2DSprite> array, SpriteBatch sb) {
+        for (Box2DSprite obj : array) {
+            obj.render(sb);
         }
     }
 
-    private void updateObjects() {
+    private void updateObjects(float delta) {
 
-        for (Platform p : platforms) {
-            p.update();
-        }
-
-        for (Bullet b : bullets) {
-            b.update();
-        }
+        updateGroup(platforms, delta);
+        updateGroup(bullets, delta);
 
         if (players.size != 0) {
-            for (Enemy e : enemies) {
+            for (int i = 0; i < enemies.size; i++) {
+                Enemy e = (Enemy) enemies.get(i);
                 e.update(players.get(0));
 
                 if (e.isShooting()) {
@@ -242,12 +240,6 @@ public class WorldManager {
 
     public Array<SpacemanPlayer> getPlayers() {
         return players;
-    }
-
-    public void renderBullets(SpriteBatch sb) {
-        for (Bullet b : bullets) { //DRAW BULLETS.
-            b.render(sb);
-        }
     }
 
     public void dispose() {

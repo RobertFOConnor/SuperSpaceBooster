@@ -33,7 +33,7 @@ public class Platform extends Box2DSprite {
         height = texture.getHeight();
     }
 
-    public void update() {
+    public void update(float delta) {
 
         if (horizontal) {
             if (Math.abs(body.getPosition().x - startY) > limit) {
