@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
-import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.mapeditor.EditorGUI;
 import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
@@ -16,9 +13,8 @@ import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class MapEditorScreen implements Screen {
+public class MapEditorScreen extends Screen {
 
-    private OrthoCamera camera;
     private MapManager mapManager;
     private Color menu_bg;
     private EditorGUI gui;
@@ -36,18 +32,15 @@ public class MapEditorScreen implements Screen {
         this.height = height;
     }
 
-
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
+        super.create();
 
         if (savedMap != null) {
             mapManager = new MapManager(savedMap);
         } else {
             mapManager = new MapManager(width, height);
         }
-        //SoundManager.switchEditorMusic(MapEditorAssets.EDITOR_THEME);
         gui = new EditorGUI(mapManager);
         shapeRenderer = new ShapeRenderer();
 
@@ -62,6 +55,11 @@ public class MapEditorScreen implements Screen {
         gui.update(step);
     }
 
+    public void resize(int w, int h) {
+        super.resize(w, h);
+        gui.resize(w, h);
+    }
+
 
     @Override
     public void render(SpriteBatch sb) {
@@ -73,44 +71,12 @@ public class MapEditorScreen implements Screen {
         shapeRenderer.rect(0, 0, Metrics.WIDTH, Metrics.HEIGHT);
         shapeRenderer.end();
 
-
         mapManager.render(sb);
 
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         gui.render(sb);
         sb.end();
-    }
-
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

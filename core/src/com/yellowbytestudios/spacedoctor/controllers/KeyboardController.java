@@ -20,7 +20,7 @@ public class KeyboardController implements BasicController {
 
     @Override
     public boolean upPressed() {
-        return Gdx.input.isKeyPressed(Input.Keys.UP);
+        return Gdx.input.isKeyJustPressed(Input.Keys.UP);
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 /**
  * Created by Robert on 03/23/16.
  */
-public class CutsceneScreen implements Screen {
+public class CutsceneScreen extends Screen {
 
     private OrthoCamera camera;
     private Player cutscenePlayer;
@@ -51,8 +51,7 @@ public class CutsceneScreen implements Screen {
     }
 
 
-    @Override
-    public void create() {
+    @Override     public void create() {         super.create();
         camera = new OrthoCamera();
         camera.resize();
     }
@@ -69,39 +68,5 @@ public class CutsceneScreen implements Screen {
         sb.begin();
         MainGame.spriterManager.showScene(cutscenePlayer);
         sb.end();
-    }
-
-    @Override
-    public void resize(int w, int h) {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void goBack() {
     }
 }

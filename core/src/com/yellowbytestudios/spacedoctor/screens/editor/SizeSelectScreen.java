@@ -5,11 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
-import com.yellowbytestudios.spacedoctor.mapeditor.MapManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.media.CoreLevelSaver;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
 import com.yellowbytestudios.spacedoctor.screens.Screen;
@@ -19,22 +16,16 @@ import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 
-public class SizeSelectScreen implements Screen {
+public class SizeSelectScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private BackgroundManager bg;
     private SpriteText title;
     private SpriteButton smallButton, mediumButton, largeButton;
     private SpriteButton backButton;
-    private float buttonY = 180;
-
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
 
         bg = new BackgroundManager();
         smallButton = new SpriteButton(Assets.SMALL_MAP, new Vector2(180, -500));
@@ -44,6 +35,7 @@ public class SizeSelectScreen implements Screen {
         title.centerText();
 
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
+        float buttonY = 180;
 
         AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
         AnimationManager.applyAnimation(backButton, 50, backButton.getY());
@@ -56,14 +48,12 @@ public class SizeSelectScreen implements Screen {
 
     @Override
     public void update(float step) {
-        camera.update();
         bg.update();
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
-            if(touch.y < 100) {
+            if (touch.y < 100) {
 
                 MyTextInputListener listener = new MyTextInputListener();
                 Gdx.input.getTextInput(listener, "Specify map size", "", "Input map dimensions");
@@ -71,11 +61,10 @@ public class SizeSelectScreen implements Screen {
             } else if (smallButton.checkTouch(touch)) {
 
                 advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(25, 25)));
-            } else if(mediumButton.checkTouch(touch)) {
+            } else if (mediumButton.checkTouch(touch)) {
 
                 advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(40, 40)));
-            } else if(largeButton.checkTouch(touch)) {
-
+            } else if (largeButton.checkTouch(touch)) {
                 advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(70, 70)));
             } else if (backButton.checkTouch(touch)) {
                 goBack();
@@ -114,44 +103,13 @@ public class SizeSelectScreen implements Screen {
         @Override
         public void input(String text) {
             int width = Integer.parseInt(text.substring(0, text.indexOf(",")));
-            int height = Integer.parseInt(text.substring(text.indexOf(",")+1, text.length()));
+            int height = Integer.parseInt(text.substring(text.indexOf(",") + 1, text.length()));
             advanceScreen(new MapEditorSplashScreen(new MapEditorScreen(width, height)));
         }
 
         @Override
         public void canceled() {
         }
-    }
-
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

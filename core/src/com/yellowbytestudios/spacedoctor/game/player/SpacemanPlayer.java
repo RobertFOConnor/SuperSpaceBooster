@@ -27,6 +27,7 @@ public class SpacemanPlayer extends Character {
     private float ACCELERATION;
     private float SPEED;
     private float JETPACK_POWER;
+    private float JUMP_POWER;
     private float posX, posY;
     private float velX, velY;
     private boolean movingLeft, movingRight, movingUp = false;
@@ -206,7 +207,8 @@ public class SpacemanPlayer extends Character {
 
     private void moveUp() {
         if (velY < JETPACK_POWER) {
-            body.applyForce(0, ACCELERATION * 0.56f, posX, posY, true);
+            body.setLinearVelocity(velX, 0);
+            body.applyForce(0, JUMP_POWER, posX, posY, true);
         } else {
             body.setLinearVelocity(velX, JETPACK_POWER);
         }
@@ -216,7 +218,7 @@ public class SpacemanPlayer extends Character {
             movingUp = true;
         }
 
-        if(!MainGame.UNLIM_JETPACK) {
+        if (!MainGame.UNLIM_JETPACK) {
             currGas--;
         }
 
@@ -269,9 +271,10 @@ public class SpacemanPlayer extends Character {
 
     private void assignVariables() {
 
-        ACCELERATION = Gdx.graphics.getDeltaTime() * 2000f;
+        ACCELERATION = Gdx.graphics.getDeltaTime() * 3000f;
         SPEED = Gdx.graphics.getDeltaTime() * 500f;
         JETPACK_POWER = Gdx.graphics.getDeltaTime() * 600f;
+        JUMP_POWER = Gdx.graphics.getDeltaTime() * 70000f;
 
         velX = body.getLinearVelocity().x;
         velY = body.getLinearVelocity().y;

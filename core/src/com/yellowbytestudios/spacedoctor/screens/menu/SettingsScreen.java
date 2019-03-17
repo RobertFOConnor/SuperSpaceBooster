@@ -1,8 +1,6 @@
 package com.yellowbytestudios.spacedoctor.screens.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,35 +8,30 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
-import com.yellowbytestudios.spacedoctor.screens.*;
+import com.yellowbytestudios.spacedoctor.screens.BackgroundManager;
+import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class SettingsScreen implements Screen {
+public class SettingsScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private BackgroundManager bg;
     private BasicController controller;
     private SpriteText title;
     private SpriteButton backButton;
     private Array<Setting> settings;
 
-
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
         if (MainGame.hasControllers) {
             controller = new XBoxController(0);
         } else {
@@ -50,10 +43,7 @@ public class SettingsScreen implements Screen {
 
         bg = new BackgroundManager();
 
-
-        //Initialize settings and switches.
         settings = new Array<Setting>();
-
         settings.add(new Setting(MainGame.languageFile.get("MUSIC").toUpperCase(), 700) {
             @Override
             public void onSwitch() {
@@ -63,7 +53,6 @@ public class SettingsScreen implements Screen {
         });
         settings.get(settings.size - 1).button.switched_on = SoundManager.musicEnabled;
 
-
         settings.add(new Setting(MainGame.languageFile.get("SOUND_FX").toUpperCase(), 500) {
             @Override
             public void onSwitch() {
@@ -72,27 +61,6 @@ public class SettingsScreen implements Screen {
             }
         });
         settings.get(settings.size - 1).button.switched_on = SoundManager.soundFXEnabled;
-
-
-        /*settings.add(new Setting("BOX2D BOUNDS", 300) {
-            @Override
-            public void onSwitch() {
-                super.onSwitch();
-                MainGame.TEST_MODE = !MainGame.TEST_MODE;
-            }
-        });
-        settings.get(settings.size - 1).button.switched_on = MainGame.TEST_MODE;
-
-
-        settings.add(new Setting("LIGHTS", 100) {
-            @Override
-            public void onSwitch() {
-                super.onSwitch();
-                MainGame.BOX2D_LIGHTS = !MainGame.BOX2D_LIGHTS;
-            }
-        });
-        settings.get(settings.size - 1).button.switched_on = MainGame.BOX2D_LIGHTS;*/
-
         backButton = new SpriteButton(Assets.GO_BACK, new Vector2(-150, 900));
 
 
@@ -109,7 +77,6 @@ public class SettingsScreen implements Screen {
 
     @Override
     public void update(float step) {
-        camera.update();
         bg.update();
 
         if (controller.menuBack()) {
@@ -117,8 +84,7 @@ public class SettingsScreen implements Screen {
         }
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             for (Setting s : settings) {
                 if (s.button.checkTouch(touch)) {
@@ -194,36 +160,6 @@ public class SettingsScreen implements Screen {
                 sb.draw(offImg, getX(), getY());
             }
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

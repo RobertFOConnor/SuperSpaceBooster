@@ -2,11 +2,13 @@ package com.yellowbytestudios.spacedoctor.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.BoundedCamera;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
@@ -21,7 +23,7 @@ public class LevelBackgroundManager {
     private Array<Texture> hills;
     private BoundedCamera camera;
     private int width, height;
-    private OrthoCamera windowCamera;
+    private OrthographicCamera windowCamera;
     private Color skyTop, skyBot;
 
     public LevelBackgroundManager(BoundedCamera camera, int width, int height) {
@@ -30,7 +32,15 @@ public class LevelBackgroundManager {
         this.camera = camera;
         shapeRenderer = new ShapeRenderer();
         windowCamera = new OrthoCamera();
-        windowCamera.resize();
+
+        windowCamera = new OrthographicCamera();
+        FitViewport viewport = new FitViewport(Metrics.WIDTH, Metrics.HEIGHT, windowCamera);
+        viewport.apply();
+
+        windowCamera.position.set(windowCamera.viewportWidth / 2, windowCamera.viewportHeight / 2, 0);
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        windowCamera.update();
+
         setSkyColor();
 
         farLayer = new Array<BackgroundObject>();

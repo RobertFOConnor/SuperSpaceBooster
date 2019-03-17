@@ -16,7 +16,7 @@ import com.yellowbytestudios.spacedoctor.effects.LightManager;
 import com.yellowbytestudios.spacedoctor.effects.ParticleManager;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.DungeonGenerator;
-import com.yellowbytestudios.spacedoctor.game.GUIManager;
+import com.yellowbytestudios.spacedoctor.game.gui.GUIManager;
 import com.yellowbytestudios.spacedoctor.game.GameCamera;
 import com.yellowbytestudios.spacedoctor.game.LevelBackgroundManager;
 import com.yellowbytestudios.spacedoctor.game.WorldManager;
@@ -32,7 +32,7 @@ import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class GameScreen implements Screen {
+public class GameScreen extends Screen {
 
 
     //Tiled map properties.
@@ -91,6 +91,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void create() {
+        super.create();
         //SoundManager.switchMusic(Assets.LEVEL_THEME);
 
         b2dr = new Box2DDebugRenderer();
@@ -127,7 +128,7 @@ public class GameScreen implements Screen {
 
         gameCamera.setBounds(mapWidth, mapHeight, startPos.x, startPos.y);
 
-        gui = new GUIManager(this, players, true);
+        gui = new GUIManager(this, players, false);
     }
 
     @Override
@@ -199,6 +200,7 @@ public class GameScreen implements Screen {
     }
 
     public void exitLevel() {
+        System.out.println("EXIT");
         SoundManager.play(Assets.FINISHED_SOUND);
         SoundManager.stop(Assets.JETPACK_SOUND);
 
@@ -254,35 +256,5 @@ public class GameScreen implements Screen {
 
     public TiledMap getTileMap() {
         return tileMap;
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 }

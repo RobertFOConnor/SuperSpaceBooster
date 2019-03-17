@@ -1,11 +1,13 @@
 package com.yellowbytestudios.spacedoctor.mapeditor;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -13,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.game.Button;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -29,8 +31,8 @@ import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 public class EditorGUI {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
+    private OrthographicCamera camera;
+    private FitViewport viewport;
     private MapManager mapManager;
     private Button zoomIn, zoomOut, moveButton, eraseButton, playMap, saveMap, exitButton;
 
@@ -48,9 +50,13 @@ public class EditorGUI {
 
     public EditorGUI(MapManager mapManager) {
         this.mapManager = mapManager;
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Metrics.WIDTH, Metrics.HEIGHT, camera);
+        viewport.apply();
+
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.update();
 
         zoomIn = new Button(MapEditorAssets.ZOOM_IN, new Vector2(Metrics.WIDTH - 170, Metrics.HEIGHT - 170), true);
         zoomOut = new Button(MapEditorAssets.ZOOM_OUT, new Vector2(Metrics.WIDTH - 170, Metrics.HEIGHT - 285), true);
@@ -71,12 +77,22 @@ public class EditorGUI {
         mapNameInput = new MapNameInput();
     }
 
+    public Vector2 getTouchPos() {
+        Vector3 rawtouch = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(rawtouch);
+        return new Vector2(rawtouch.x, rawtouch.y);
+    }
+
+    public void resize(int w, int h) {
+        viewport.update(w, h);
+        camera.update();
+    }
+
     public void update(float step) {
         if (!mapNameInput.isShowing()) {
 
             if (Gdx.input.isTouched()) {
-                touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                        Gdx.input.getY());
+                Vector2 touch = getTouchPos();
 
                 if (zoomIn.checkTouch(touch)) { //ZOOM IN
                     mapManager.zoomIn();
@@ -123,8 +139,7 @@ public class EditorGUI {
 
 
             if (Gdx.input.justTouched()) {
-                touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                        Gdx.input.getY());
+                Vector2 touch = getTouchPos();
 
                 if (moveButton.checkTouch(touch)) {
                     SoundManager.play(Assets.BUTTON_CLICK);
@@ -348,7 +363,7 @@ public class EditorGUI {
         public boolean checkTouch() {
 
             if (showing) {
-
+                Vector2 touch = getTouchPos();
                 if (blockTab.checkTouch(touch)) {
                     switchTab(BLOCK_STATE, tileButtons);
                 } else if (enemyTab.checkTouch(touch)) {
@@ -399,6 +414,7 @@ public class EditorGUI {
         }
 
         private int getButtonSelectedId(Array<MenuButton> buttonArray) {
+            Vector2 touch = getTouchPos();
             for (MenuButton button : buttonArray) {
                 if (button.checkTouch(touch)) {
 

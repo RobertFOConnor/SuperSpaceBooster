@@ -1,11 +1,10 @@
 package com.yellowbytestudios.spacedoctor.screens.editor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
 import com.yellowbytestudios.spacedoctor.media.MapEditorAssets;
@@ -13,27 +12,23 @@ import com.yellowbytestudios.spacedoctor.screens.Screen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class MapEditorSplashScreen implements Screen {
+public class MapEditorSplashScreen extends Screen {
 
-    private OrthoCamera camera;
     private Sprite loadScreen;
     private Sprite loadWheel;
-    private String percentage="";
+    private String percentage = "";
     private Screen mapScreen;
 
 
     public MapEditorSplashScreen(Screen mapScreen) {
-        camera = new OrthoCamera();
-        camera.resize();
         this.mapScreen = mapScreen;
         MapEditorAssets.load();
+        Gdx.input.setCursorCatched(false);
     }
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-
+        super.create();
         Texture texture = Assets.manager.get(Assets.LOADSCREEN, Texture.class);
         texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         loadScreen = new Sprite(texture);
@@ -43,13 +38,11 @@ public class MapEditorSplashScreen implements Screen {
 
     @Override
     public void update(float dt) {
-        camera.update();
         percentage = ((int) (MapEditorAssets.manager.getProgress() * 100) + "%");
     }
 
     @Override
     public void render(SpriteBatch sb) {
-
         sb.setProjectionMatrix(camera.combined);
         sb.begin();
         loadScreen.draw(sb);
@@ -62,40 +55,5 @@ public class MapEditorSplashScreen implements Screen {
         if (MapEditorAssets.update()) { // DONE LOADING. SHOW EDITOR SCREEN.
             ScreenManager.setScreen(mapScreen);
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void goBack() {
-
     }
 }

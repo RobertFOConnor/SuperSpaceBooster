@@ -23,6 +23,7 @@ import com.yellowbytestudios.spacedoctor.game.objects.Platform;
 import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
+import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.spriter.MySpriterAnimationListener;
 
 /**
@@ -48,7 +49,7 @@ public class WorldManager {
 
     public WorldManager(GameScreen gameScreen, float startX, float startY) {
         this.gameScreen = gameScreen;
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -90f), true);
 
         //Setup contact listeners.
         contactListener = new Box2DContactListeners();
@@ -182,7 +183,7 @@ public class WorldManager {
             Player.PlayerListener myListener = new MySpriterAnimationListener() {
                 @Override
                 public void animationFinished(Animation animation) {
-                    gameScreen.setupMap();
+                    ScreenManager.setScreen(new GameScreen(gameScreen.getLevelNo()));
                 }
             };
             p.startDeath(myListener);

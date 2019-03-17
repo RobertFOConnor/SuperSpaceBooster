@@ -12,13 +12,12 @@ import com.yellowbytestudios.spacedoctor.screens.menu.MainMenuScreen;
 /**
  * Created by BobbyBoy on 16-Jan-16.
  */
-public class ResultsScreen implements Screen {
+public class ResultsScreen extends Screen {
 
     private OrthoCamera camera;
     private Texture bg;
 
-    @Override
-    public void create() {
+    @Override     public void create() {         super.create();
         camera = new OrthoCamera();
         camera.resize();
         SoundManager.stop(Assets.JETPACK_SOUND);
@@ -38,36 +37,6 @@ public class ResultsScreen implements Screen {
         sb.begin();
         sb.draw(bg, 0, 0);
         sb.end();
-    }
-
-    @Override
-    public void resize(int w, int h) {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 
     @Override

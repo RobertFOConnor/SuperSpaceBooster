@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -21,19 +20,15 @@ import com.yellowbytestudios.spacedoctor.utils.Metrics;
 /**
  * Created by BobbyBoy on 26-Jan-16.
  */
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private BackgroundManager bg;
     private SpriteText title;
     private SpriteButton editorButton, playButton, statButton, settings;
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
 
         bg = new BackgroundManager();
         playButton = new SpriteButton(Assets.START_GAME, new Vector2(660, Metrics.HEIGHT));
@@ -56,7 +51,6 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void update(float step) {
-        camera.update();
         bg.update();
 
         if (MainGame.hasControllers) {
@@ -73,8 +67,7 @@ public class MainMenuScreen implements Screen {
         }
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             if (playButton.checkTouch(touch)) {
                 advanceScreen(new LevelSelectScreen(1));
@@ -113,36 +106,6 @@ public class MainMenuScreen implements Screen {
         playButton.draw(sb);
         settings.draw(sb);
         sb.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

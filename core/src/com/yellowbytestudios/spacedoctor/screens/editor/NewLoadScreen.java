@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
@@ -17,10 +16,8 @@ import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
 
-public class NewLoadScreen implements Screen {
+public class NewLoadScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private BackgroundManager bg;
     private SpriteText title;
     private SpriteButton newMapButton, loadMapButton;
@@ -30,9 +27,7 @@ public class NewLoadScreen implements Screen {
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
 
         bg = new BackgroundManager();
         newMapButton = new SpriteButton(Assets.NEW_MAP, new Vector2(-600, buttonY));
@@ -56,12 +51,11 @@ public class NewLoadScreen implements Screen {
         bg.update();
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             if (newMapButton.checkTouch(touch)) {
                 advanceScreen(new SizeSelectScreen());
-            } else if(loadMapButton.checkTouch(touch)) {
+            } else if (loadMapButton.checkTouch(touch)) {
                 if (MainGame.saveData.getMyMaps().size > 0) {
                     advanceScreen(new LoadMapScreen());
                 }
@@ -94,36 +88,6 @@ public class NewLoadScreen implements Screen {
         newMapButton.draw(sb);
         loadMapButton.draw(sb);
         sb.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

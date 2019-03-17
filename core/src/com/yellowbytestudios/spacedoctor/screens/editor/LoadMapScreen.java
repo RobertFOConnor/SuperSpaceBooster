@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.mapeditor.CustomMap;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -22,10 +21,8 @@ import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class LoadMapScreen implements Screen {
+public class LoadMapScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private BackgroundManager bg;
     private SpriteText title;
     private Array<LoadMapButton> mapButtons;
@@ -34,9 +31,7 @@ public class LoadMapScreen implements Screen {
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
 
         bg = new BackgroundManager();
         title = new SpriteText(MainGame.languageFile.get("SELECT_MAP_TO_LOAD").toUpperCase(), Fonts.timerFont);
@@ -88,8 +83,7 @@ public class LoadMapScreen implements Screen {
         }
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             for (LoadMapButton lmb : mapButtons) {
                 if (lmb.checkTouch(touch)) {
@@ -184,8 +178,7 @@ public class LoadMapScreen implements Screen {
         public void update() {
 
             if (Gdx.input.justTouched()) {
-                touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                        Gdx.input.getY());
+                Vector2 touch = getTouchPos();
 
                 if (loadButton.checkTouch(touch)) {
                     ScreenManager.setScreen(new MapEditorSplashScreen(new MapEditorScreen(MainGame.saveData.getMyMaps().get(mapButtons.indexOf(mapButton, true)))));
@@ -193,46 +186,12 @@ public class LoadMapScreen implements Screen {
             }
         }
 
-
         public void render(SpriteBatch sb) {
             Fonts.GUIFont.draw(sb, mapTitle, mapTitleX, 900);
-
             loadButton.draw(sb);
             deleteButton.draw(sb);
             copyButton.draw(sb);
         }
-
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

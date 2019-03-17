@@ -43,7 +43,7 @@ public class MainGame extends ApplicationAdapter {
     public static String DEVICE;
     private boolean backPressed = true;
     public static boolean firstTime = false;
-    public static final boolean UNLIM_JETPACK = false;
+    public static final boolean UNLIM_JETPACK = true;
     public static final boolean UNLIM_AMMO = false;
     public static boolean BOX2D_LIGHTS = false;
     public static boolean TEST_MODE = false;
@@ -70,13 +70,17 @@ public class MainGame extends ApplicationAdapter {
         MapManager.initCells();
 
         //checkForController();
+        Fonts.load();
+        Assets.load();
         ScreenManager.setScreen(new SplashScreen());
 
         saveManager = new SaveManager(true);
         saveData = new PlayerSaveObject();
 
-        if (saveManager.loadDataValue("PLAYER", PlayerSaveObject.class) != null) {
-            saveData = saveManager.loadDataValue("PLAYER", PlayerSaveObject.class);
+        PlayerSaveObject playerSaveObject = saveManager.loadDataValue("PLAYER", PlayerSaveObject.class);
+
+        if (playerSaveObject != null) {
+            saveData = playerSaveObject;
         } else {
             firstTime = true;
         }
@@ -127,6 +131,10 @@ public class MainGame extends ApplicationAdapter {
             backPressed = false;
         }
 
+        checkForFullscreen();
+    }
+
+    private void checkForFullscreen() {
         if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
             if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
 

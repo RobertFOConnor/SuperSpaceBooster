@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.BasicController;
 import com.yellowbytestudios.spacedoctor.controllers.KeyboardController;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
@@ -32,10 +31,8 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
 import aurelienribon.tweenengine.TweenEquations;
 
-public class LevelSelectScreen implements Screen {
+public class LevelSelectScreen extends Screen {
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private SpriteText title;
     private BackgroundManager bg;
     private Array<LevelButton> levelButtons;
@@ -50,9 +47,7 @@ public class LevelSelectScreen implements Screen {
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
+        super.create();
         if (MainGame.hasControllers) {
             controller = new XBoxController(0);
         } else {
@@ -61,11 +56,12 @@ public class LevelSelectScreen implements Screen {
 
         bg = new BackgroundManager();
 
-        title = new SpriteText(MainGame.languageFile.get("SELECT_LEVEL").toUpperCase(), Fonts.timerFont);
+        Fonts.GUIFont.setColor(Color.WHITE);
+        title = new SpriteText(MainGame.languageFile.get("SELECT_LEVEL").toUpperCase(), Fonts.GUIFont);
         title.centerText();
         AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
 
-        float levelY = (Metrics.HEIGHT / 2) - 40;
+        float levelY = (Metrics.HEIGHT / 2f) - 40;
         int levelCount = 1;
 
         levelButtons = new Array<LevelButton>();
@@ -106,8 +102,7 @@ public class LevelSelectScreen implements Screen {
         }
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             for (LevelButton lb : levelButtons) {
                 if (lb.checkTouch(touch) && lb.unlocked) {
@@ -184,11 +179,6 @@ public class LevelSelectScreen implements Screen {
 
 
     @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
     public void goBack() {
         for (LevelButton lb : levelButtons) {
             AnimationManager.applyAnimation(lb, lb.getX(), -300);
@@ -197,30 +187,5 @@ public class LevelSelectScreen implements Screen {
         AnimationManager.applyExitAnimation(backButton, -150, backButton.getY(), new MainMenuScreen());
         AnimationManager.startAnimation();
         SoundManager.play(Assets.BUTTON_CLICK);
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -20,9 +19,8 @@ import com.yellowbytestudios.spacedoctor.utils.Metrics;
 /**
  * Created by BobbyBoy on 16-Jan-16.
  */
-public class TitleScreen implements Screen {
+public class TitleScreen extends Screen {
 
-    private OrthoCamera camera;
     private BackgroundManager bg;
     private SpriteButton character, title;
     private SpriteText continueMessage, versionCode;
@@ -32,11 +30,8 @@ public class TitleScreen implements Screen {
 
     @Override
     public void create() {
-
+        super.create();
         bg = new BackgroundManager();
-
-        camera = new OrthoCamera();
-        camera.resize();
 
         character = new SpriteButton(Assets.CHARACTER, charStartPos);
         title = new SpriteButton(Assets.TITLE, new Vector2(-1100, 350));
@@ -44,10 +39,10 @@ public class TitleScreen implements Screen {
         continueMessage.setPosition(400, -100);
 
         versionCode = new SpriteText(MainGame.languageFile.get("VERSION_CODE").toUpperCase(), Fonts.smallFont);
-        versionCode.setPosition(70, Metrics.HEIGHT+100);
+        versionCode.setPosition(70, Metrics.HEIGHT + 100);
 
         AnimationManager.applyAnimation(continueMessage, 400, 90);
-        AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT-50);
+        AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT - 50);
         AnimationManager.applyAnimation(character, 1080, -250);
         AnimationManager.applyAnimation(title, 70, 350);
         AnimationManager.startAnimation();
@@ -73,7 +68,7 @@ public class TitleScreen implements Screen {
     private void advanceScreen() {
         if (!advancing) {
             AnimationManager.applyAnimation(continueMessage, 400, -100);
-            AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT+100);
+            AnimationManager.applyAnimation(versionCode, 70, Metrics.HEIGHT + 100);
             AnimationManager.applyAnimation(character, charStartPos.x, charStartPos.y);
             AnimationManager.applyExitAnimation(title, -1100, 350, new MainMenuScreen());
             AnimationManager.startAnimation();
@@ -94,36 +89,6 @@ public class TitleScreen implements Screen {
         continueMessage.draw(sb);
         versionCode.draw(sb);
         sb.end();
-    }
-
-    @Override
-    public void resize(int w, int h) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 
     @Override

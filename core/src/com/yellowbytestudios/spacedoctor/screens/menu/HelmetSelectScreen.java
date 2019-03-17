@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.brashmonkey.spriter.Player;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.controllers.XBoxController;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
@@ -22,13 +21,11 @@ import com.yellowbytestudios.spacedoctor.tween.SpriteButton;
 import com.yellowbytestudios.spacedoctor.tween.SpriteText;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class HelmetSelectScreen implements Screen {
+public class HelmetSelectScreen extends Screen {
 
     private static final String[] HELMET_NAMES = {"S-BOOSTER", "LOU-LOU", "G1-BTH", "T-DOGG", "SMITH", "FROGG-E", "NINJA", "ROBO-GOB"};
     public static final float[][] CHAR_COLORS = {{0.7f, 0.9f, 0.9f}, {1f, 0.1f, 0.6f}, {0.97f, 0.89f, 0.13f}, {0.23f, 0.9f, 0.9f}, {0.72f, 0.5f, 0.22f}, {0.3f, 0.78f, 0.17f}, {0.4f, 0.4f, 0.4f}, {0.49f, 0.28f, 0.53f}};
 
-    private OrthoCamera camera;
-    private Vector2 touch;
     private SpriteText title;
     private BackgroundManager bg;
     private Array<HelmetButton> helmetButtons;
@@ -39,10 +36,7 @@ public class HelmetSelectScreen implements Screen {
 
     @Override
     public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-        touch = new Vector2();
-
+        super.create();
         bg = new BackgroundManager();
 
         title = new SpriteText(MainGame.languageFile.get("SELECT_HELMET").toUpperCase(), Fonts.timerFont);
@@ -128,8 +122,7 @@ public class HelmetSelectScreen implements Screen {
         }
 
         if (Gdx.input.justTouched()) {
-            touch = camera.unprojectCoordinates(Gdx.input.getX(),
-                    Gdx.input.getY());
+            Vector2 touch = getTouchPos();
 
             for (HelmetButton lb : helmetButtons) {
                 if (lb.checkTouch(touch) && lb.unlocked) {
@@ -159,36 +152,6 @@ public class HelmetSelectScreen implements Screen {
         }
 
         sb.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override

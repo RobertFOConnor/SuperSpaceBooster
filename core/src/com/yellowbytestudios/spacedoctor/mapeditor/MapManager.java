@@ -207,7 +207,7 @@ public class MapManager {
 
         if (holdingObject) {
 
-            for(Array<DraggableObject> draggableList : draggableLists) {
+            for (Array<DraggableObject> draggableList : draggableLists) {
                 deselectDraggable(draggableList);
             }
 
@@ -238,7 +238,7 @@ public class MapManager {
                         setDraggableSelected(exit);
                     }
 
-                    for(Array<DraggableObject> draggableList : draggableLists) {
+                    for (Array<DraggableObject> draggableList : draggableLists) {
                         selectDraggable(draggableList);
                     }
 
@@ -330,7 +330,7 @@ public class MapManager {
                 }
             }
 
-            for(Array<DraggableObject> draggableList : draggableLists) {
+            for (Array<DraggableObject> draggableList : draggableLists) {
                 removeDraggableObjects(draggableList);
             }
         }
@@ -370,7 +370,7 @@ public class MapManager {
         exit.draw(sb);
         playerSpawn.draw(sb);
 
-        for(Array<DraggableObject> draggableList : draggableLists) {
+        for (Array<DraggableObject> draggableList : draggableLists) {
             drawDraggableObjects(draggableList, sb);
         }
         sb.end();
@@ -427,9 +427,9 @@ public class MapManager {
 
         if (obstacleID == IDs.HORIZONTAL_SPIKER) {
             obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.HOR_PLATFORM, Texture.class), pos));
-        } else if(obstacleID == IDs.VERTICAL_SPIKER) {
+        } else if (obstacleID == IDs.VERTICAL_SPIKER) {
             obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.VER_PLATFORM, Texture.class), pos));
-        } else if(obstacleID == IDs.BOX) {
+        } else if (obstacleID == IDs.BOX) {
             obstacleList.add(new DraggableObject(obstacleID, MapEditorAssets.manager.get(MapEditorAssets.BOX, Texture.class), pos));
         }
     }

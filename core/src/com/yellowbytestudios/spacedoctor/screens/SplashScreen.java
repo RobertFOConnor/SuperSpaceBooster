@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.yellowbytestudios.spacedoctor.MainGame;
-import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.effects.SoundManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
 import com.yellowbytestudios.spacedoctor.media.Fonts;
@@ -17,26 +16,12 @@ import com.yellowbytestudios.spacedoctor.screens.menu.TitleScreen;
 import com.yellowbytestudios.spacedoctor.tween.AnimationManager;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
 
-public class SplashScreen implements Screen {
+public class SplashScreen extends Screen {
 
-    private OrthoCamera camera;
     private String percentage;
     private Sprite loadScreen;
     private Sprite loadWheel;
     private boolean displayImage = false;
-
-    public SplashScreen() {
-        camera = new OrthoCamera();
-        camera.resize();
-        Fonts.load();
-        Assets.load();
-    }
-
-    @Override
-    public void create() {
-        camera = new OrthoCamera();
-        camera.resize();
-    }
 
     @Override
     public void update(float dt) {
@@ -82,8 +67,6 @@ public class SplashScreen implements Screen {
             SoundManager.setMusic(Assets.MAIN_THEME);
             MainGame.languageFile = Assets.manager.get(Assets.LANGUAGE_FILE, I18NBundle.class);
 
-
-            //Setup skin (scene2d)
             Skin skin = Assets.manager.get(Assets.SKIN, Skin.class);
             TextField.TextFieldStyle tfs = skin.get("default", TextField.TextFieldStyle.class);
             TextButton.TextButtonStyle tbs = skin.get("default", TextButton.TextButtonStyle.class);
@@ -97,40 +80,5 @@ public class SplashScreen implements Screen {
                 ScreenManager.setScreen(new TitleScreen());
             }
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.resize();
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void goBack() {
-
     }
 }

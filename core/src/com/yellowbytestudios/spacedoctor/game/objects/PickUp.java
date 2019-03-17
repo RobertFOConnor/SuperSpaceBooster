@@ -3,7 +3,7 @@ package com.yellowbytestudios.spacedoctor.game.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.game.GUIManager;
+import com.yellowbytestudios.spacedoctor.game.gui.GUIManager;
 import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.game.player.SpacemanPlayer;
 import com.yellowbytestudios.spacedoctor.box2d.Box2DVars;

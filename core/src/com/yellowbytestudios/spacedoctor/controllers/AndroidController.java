@@ -1,17 +1,13 @@
 package com.yellowbytestudios.spacedoctor.controllers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.yellowbytestudios.spacedoctor.game.Button;
-import com.yellowbytestudios.spacedoctor.game.GUIManager;
 import com.yellowbytestudios.spacedoctor.media.Assets;
-import com.yellowbytestudios.spacedoctor.MainGame;
 import com.yellowbytestudios.spacedoctor.cameras.OrthoCamera;
 import com.yellowbytestudios.spacedoctor.screens.GameScreen;
-import com.yellowbytestudios.spacedoctor.screens.menu.LevelSelectScreen;
 import com.yellowbytestudios.spacedoctor.screens.editor.MapEditorScreen;
 import com.yellowbytestudios.spacedoctor.screens.ScreenManager;
 import com.yellowbytestudios.spacedoctor.utils.Metrics;
