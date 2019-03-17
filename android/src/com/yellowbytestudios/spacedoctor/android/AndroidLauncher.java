@@ -7,10 +7,11 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.yellowbytestudios.spacedoctor.MainGame;
 
 public class AndroidLauncher extends AndroidApplication {
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new MainGame("ANDROID"), config);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.useImmersiveMode = true;
+        initialize(new MainGame("ANDROID"), config);
+    }
 }

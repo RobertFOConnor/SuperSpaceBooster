@@ -52,7 +52,7 @@ public class MainGame extends ApplicationAdapter {
     public static I18NBundle languageFile;
     public static Cursor cursor;
     private FPSLogger fps;
-    private boolean fullscreen = false;
+    private boolean fullscreen = true;
 
 
     public MainGame(String device) {
@@ -93,6 +93,10 @@ public class MainGame extends ApplicationAdapter {
         fps = new FPSLogger();
 
         setupCursor();
+        if (fullscreen) {
+            Graphics.DisplayMode mode = Gdx.graphics.getDisplayMode();
+            Gdx.graphics.setFullscreenMode(mode);
+        }
 
 //        Controllers.addListener(new ControllerAdapter() {
 //            @Override

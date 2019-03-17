@@ -31,21 +31,22 @@ public class MainMenuScreen extends Screen {
         super.create();
 
         bg = new BackgroundManager();
-        playButton = new SpriteButton(Assets.START_GAME, new Vector2(660, Metrics.HEIGHT));
-        editorButton = new SpriteButton(Assets.LEVEL_BUILDER, new Vector2(Metrics.WIDTH, Metrics.HEIGHT - 850));
-        statButton = new SpriteButton(Assets.STATS, new Vector2(-600, Metrics.HEIGHT - 850));
-        settings = new SpriteButton(Assets.SETTINGS, new Vector2(Metrics.WIDTH, Metrics.HEIGHT - 130));
+        playButton = setupButton(Assets.START_GAME, 660, Metrics.HEIGHT, 660, Metrics.HEIGHT - 650);
+        editorButton = setupButton(Assets.LEVEL_BUILDER, Metrics.WIDTH, Metrics.HEIGHT - 850, 1160, Metrics.HEIGHT - 850);
+        statButton = setupButton(Assets.STATS, -600, Metrics.HEIGHT - 850, 160, Metrics.HEIGHT - 850);
+        settings = setupButton(Assets.SETTINGS, Metrics.WIDTH, Metrics.HEIGHT - 130, Metrics.WIDTH - 130, Metrics.HEIGHT - 130);
+
         title = new SpriteText(MainGame.languageFile.get("MAIN_MENU").toUpperCase(), Fonts.timerFont);
         title.centerText();
-
         AnimationManager.applyAnimation(title, title.getX(), Metrics.HEIGHT - 60);
-        AnimationManager.applyAnimation(playButton, 660, Metrics.HEIGHT - 650);
-        AnimationManager.applyAnimation(editorButton, 1160, Metrics.HEIGHT - 850);
-        AnimationManager.applyAnimation(statButton, 160, Metrics.HEIGHT - 850);
-        AnimationManager.applyAnimation(settings, Metrics.WIDTH - 130, Metrics.HEIGHT - 130);
         AnimationManager.startAnimation();
-
         Gdx.input.setCursorCatched(false);
+    }
+
+    private SpriteButton setupButton(String ref, float startX, float startY, float endX, float endY) {
+        SpriteButton button = new SpriteButton(ref, new Vector2(startX, startY));
+        AnimationManager.applyAnimation(button, endX, endY);
+        return button;
     }
 
 
